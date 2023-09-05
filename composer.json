@@ -68,6 +68,18 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": {
+        "larvolt-qa": {
+            "type": "vcs",
+            "url": "https://javan_qa:KCHss3R93d4Rd2aJw49E@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/quality-assurance.git"
+        },
+        "larvolt-auth": {
+            "type": "vcs",
+            "url": "https://alurkerja-auth:javan-NL3GcMKVeodLit9nbje2@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth"
+        },
+        "larvolt-crud": {
+            "type": "vcs",
+            "url": "https://javan_crud:C4sgu31k-WEMnCz24-uV@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/crud"
+        },
         "laravolt-auth": {
             "type": "vcs",
             "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth.git"
