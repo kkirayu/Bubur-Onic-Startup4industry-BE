@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec669a717ded804e94e38218b743e40c",
+    "content-hash": "1ea5205abf1da6c40a6dfd21ee4ff57f",
     "packages": [
         {
             "name": "akaunting/laravel-setting",
@@ -72,6 +72,64 @@
                 "source": "https://github.com/akaunting/laravel-setting/tree/1.2.8"
             },
             "time": "2022-09-23T10:56:17+00:00"
+        },
+        {
+            "name": "alurkerja-laravolt/alurkerja-auth",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth.git",
+                "reference": "d1455d545ee75be13202edf28db22f0e8265919b"
+            },
+            "require": {
+                "doctrine/dbal": "^3.6",
+                "laravolt/camunda": "^2.3",
+                "laravolt/laravolt": "^5.6",
+                "php": "^8.1"
+            },
+            "default-branch": true,
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravolt\\Rbac\\AclServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravolt\\Rbac\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+                    "@php artisan package:discover --ansi"
+                ],
+                "post-update-cmd": [
+                    "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+                ],
+                "post-root-package-install": [
+                    "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+                ],
+                "post-create-project-cmd": [
+                    "@php artisan key:generate --ansi"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "The Laravel Framework.",
+            "keywords": [
+                "framework",
+                "laravel"
+            ],
+            "time": "2023-08-16T02:45:02+00:00"
         },
         {
             "name": "alurkerja-laravolt/crud",
@@ -7755,6 +7813,84 @@
             "time": "2023-08-23T09:04:39+00:00"
         },
         {
+            "name": "spatie/laravel-route-discovery",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-route-discovery.git",
+                "reference": "d82193bdd2c79be0ba83a9e334259bab4b2d5732"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-route-discovery/zipball/d82193bdd2c79be0ba83a9e334259bab4b2d5732",
+                "reference": "d82193bdd2c79be0ba83a9e334259bab4b2d5732",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^8.67|^9.0|^10.0",
+                "illuminate/support": "^8.77|^9.0|^10.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.10",
+                "symfony/finder": "^5.4.2|^6.0"
+            },
+            "require-dev": {
+                "nunomaduro/larastan": "^1.0.2|^2.0",
+                "orchestra/testbench": "^6.23.2|^7.0|^8.0",
+                "pestphp/pest": "^1.21",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "spatie/laravel-ray": "^1.27"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\RouteDiscovery\\RouteDiscoveryServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\RouteDiscovery\\": "src",
+                    "Spatie\\RouteDiscovery\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Auto register routes using PHP attributes",
+            "homepage": "https://github.com/spatie/laravel-route-discovery",
+            "keywords": [
+                "laravel-route-discovery",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-route-discovery/issues",
+                "source": "https://github.com/spatie/laravel-route-discovery/tree/1.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/spatie",
+                    "type": "github"
+                },
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "other"
+                }
+            ],
+            "time": "2023-02-15T07:47:59+00:00"
+        },
+        {
             "name": "spatie/laravel-signal-aware-command",
             "version": "1.3.0",
             "source": {
@@ -13284,6 +13420,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "alurkerja-laravolt/alurkerja-auth": 20,
         "alurkerja-laravolt/crud": 20,
         "alurkerja-laravolt/qa": 20
     },
