@@ -79,18 +79,6 @@
         "larvolt-crud": {
             "type": "vcs",
             "url": "https://javan_crud:C4sgu31k-WEMnCz24-uV@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/crud"
-        },
-        "laravolt-auth": {
-            "type": "vcs",
-            "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth.git"
-        },
-        "laravolt-qa": {
-            "type": "vcs",
-            "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/quality-assurance.git"
-        },
-        "laravolt-crud": {
-            "type": "vcs",
-            "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-crud"
         }
     }
 }
