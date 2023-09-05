@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "alurkerja-laravolt/crud": "dev-master",
+        "alurkerja-laravolt/qa": "dev-master",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
@@ -62,5 +64,15 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "laravolt-qa": {
+            "type": "vcs",
+            "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/quality-assurance.git"
+        },
+        "laravolt-crud": {
+            "type": "vcs",
+            "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-crud"
+        }
+    }
 }
