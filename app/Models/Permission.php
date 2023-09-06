@@ -20,7 +20,7 @@ class Permission extends CrudModel
     protected $keyType = 'string';
 
 
-    protected string $path = "/api/crud/acl_permissions";
+    protected string $path = "/api/crud/permissions";
 
     protected bool $canDetail = false;
 

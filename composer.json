@@ -9,6 +9,8 @@
         "alurkerja-laravolt/alurkerja-auth": "dev-master",
         "alurkerja-laravolt/crud": "dev-master",
         "alurkerja-laravolt/qa": "dev-master",
+        "alurkerja-laravolt/uitemplate": "dev-master",
+        "brunocfalcao/blade-feather-icons": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
@@ -68,6 +70,10 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": {
+        "uitemplate": {
+            "type": "vcs",
+            "url": "https://uitemplate:javan-tfu-Qk5DtaEGsCsqs6Us@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/uitemplate"
+        },
         "larvolt-qa": {
             "type": "vcs",
             "url": "https://javan_qa:KCHss3R93d4Rd2aJw49E@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/quality-assurance.git"

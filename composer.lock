@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba62ae4e361ed69fafd75a46218fd9f4",
+    "content-hash": "f1d119d1e78c1bf5ae2ce39441062e9f",
     "packages": [
         {
             "name": "akaunting/laravel-setting",
@@ -78,7 +78,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://alurkerja-auth:javan-NL3GcMKVeodLit9nbje2@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth.git",
+                "url": "https://alurkerja-auth:javan-NL3GcMKVeodLit9nbje2@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth",
                 "reference": "d1455d545ee75be13202edf28db22f0e8265919b"
             },
             "require": {
@@ -219,6 +219,48 @@
                 "laravel"
             ],
             "time": "2023-03-30T06:58:58+00:00"
+        },
+        {
+            "name": "alurkerja-laravolt/uitemplate",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://uitemplate:javan-tfu-Qk5DtaEGsCsqs6Us@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/uitemplate",
+                "reference": "88e0940a16f1b2e4755241715651cbc479b2506e"
+            },
+            "require": {
+                "laravel/framework": "^10.10",
+                "laravel/ui": "^4.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Alurkerja\\Ui\\AlurkerjaUiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Alurkerja\\Ui\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mosab Ibrahim",
+                    "email": "miaababikir@gmail.com"
+                }
+            ],
+            "description": "Laravel tailwind css dashboard preset",
+            "keywords": [
+                "laravel",
+                "preset",
+                "tailwindcss"
+            ],
+            "time": "2023-08-25T02:35:03+00:00"
         },
         {
             "name": "anhskohbo/no-captcha",
@@ -749,6 +791,67 @@
                 }
             ],
             "time": "2023-01-15T23:15:59+00:00"
+        },
+        {
+            "name": "brunocfalcao/blade-feather-icons",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/brunocfalcao/blade-feather-icons.git",
+                "reference": "0813eff9d1bc8cbde9642bf6fdc1933a8a95e059"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/brunocfalcao/blade-feather-icons/zipball/0813eff9d1bc8cbde9642bf6fdc1933a8a95e059",
+                "reference": "0813eff9d1bc8cbde9642bf6fdc1933a8a95e059",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.0",
+                "illuminate/support": "^7.14|^8.0|^9.0|^10.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.0|^6.0|^8.0",
+                "phpunit/phpunit": "^8.0|^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Brunocfalcao\\BladeFeatherIcons\\BladeFeatherIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Brunocfalcao\\BladeFeatherIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Falcao",
+                    "email": "bruno.c.falcao@brunofalcao.me",
+                    "homepage": "https://www.laraning.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package to easily make use of Feather Icons in your Laravel Blade views.",
+            "homepage": "https://github.com/brunocfalcao/blade-feather-icons",
+            "keywords": [
+                "Feather Icons",
+                "blade",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/brunocfalcao/blade-feather-icons/issues",
+                "source": "https://github.com/brunocfalcao/blade-feather-icons/tree/v3.0.0"
+            },
+            "time": "2023-02-14T19:29:09+00:00"
         },
         {
             "name": "calebporzio/sushi",
@@ -3436,6 +3539,68 @@
                 "source": "https://github.com/laravel/tinker/tree/v2.8.2"
             },
             "time": "2023-08-15T14:27:00+00:00"
+        },
+        {
+            "name": "laravel/ui",
+            "version": "v4.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/ui.git",
+                "reference": "a58ec468db4a340b33f3426c778784717a2c144b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/a58ec468db4a340b33f3426c778784717a2c144b",
+                "reference": "a58ec468db4a340b33f3426c778784717a2c144b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^9.21|^10.0",
+                "illuminate/filesystem": "^9.21|^10.0",
+                "illuminate/support": "^9.21|^10.0",
+                "illuminate/validation": "^9.21|^10.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.0|^8.0",
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Ui\\UiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Ui\\": "src/",
+                    "Illuminate\\Foundation\\Auth\\": "auth-backend/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel UI utilities and presets.",
+            "keywords": [
+                "laravel",
+                "ui"
+            ],
+            "support": {
+                "source": "https://github.com/laravel/ui/tree/v4.2.2"
+            },
+            "time": "2023-05-09T19:47:28+00:00"
         },
         {
             "name": "laravolt/avatar",
@@ -13422,7 +13587,8 @@
     "stability-flags": {
         "alurkerja-laravolt/alurkerja-auth": 20,
         "alurkerja-laravolt/crud": 20,
-        "alurkerja-laravolt/qa": 20
+        "alurkerja-laravolt/qa": 20,
+        "alurkerja-laravolt/uitemplate": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
