@@ -1,0 +1,16 @@
+stages:
+  - staging
+
+deploy_staging:
+  only:
+    - develop
+  tags:
+    - merapi
+  stage: staging
+  image: javanlabs/ssh-client:latest
+  environment:
+    name: internalsopbe
+    url: https://api.projectmanbe.merapi.javan.id
+  script:
+    - echo "Deploy ke server merapi"
+    - ssh root@192.168.88.210 "cd /opt/alurkerja/onic/onic-be && bash k8s_update.sh onic-be --force"
