@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ea5205abf1da6c40a6dfd21ee4ff57f",
+    "content-hash": "ba62ae4e361ed69fafd75a46218fd9f4",
     "packages": [
         {
             "name": "akaunting/laravel-setting",
@@ -78,7 +78,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth.git",
+                "url": "https://alurkerja-auth:javan-NL3GcMKVeodLit9nbje2@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-auth.git",
                 "reference": "d1455d545ee75be13202edf28db22f0e8265919b"
             },
             "require": {
@@ -187,7 +187,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/quality-assurance.git",
+                "url": "https://javan_qa:KCHss3R93d4Rd2aJw49E@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/quality-assurance.git",
                 "reference": "db58b204733fa4c3b7525006ca2fb132d1f6fdac"
             },
             "require": {
@@ -13430,5 +13430,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
