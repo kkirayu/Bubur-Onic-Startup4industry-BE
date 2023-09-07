@@ -85,7 +85,7 @@
         },
         "larvolt-crud": {
             "type": "vcs",
-            "url": "https://javan_crud:C4sgu31k-WEMnCz24-uV@gitlab.javan.co.id/alurkerja/alurkerja-laravolt/crud"
+            "url": "https://gitlab.javan.co.id/alurkerja/alurkerja-laravolt/alurkerja-crud"
         }
     }
 }
