@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\RouteDiscovery\Discovery\Discover;
@@ -23,6 +25,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
+Route::prefix('/auth/password')->group(function () {
+    Route::post('/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    Route::post('/reset', [ResetPasswordController::class, 'reset']);
+});
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Discover::controllers()->in(app_path('Http/Controllers/Api/Crud'));

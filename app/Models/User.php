@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
@@ -12,11 +14,12 @@ use Laravolt\Crud\CrudModel;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 use Laravolt\Crud\Contracts\CrudUser;
 
-class User extends CrudModel implements Authenticatable, CrudUser
+class User extends CrudModel implements Authenticatable, CrudUser, CanResetPassword
 {
-    use HasApiTokens, HasFactory, Notifiable, AuthenticableTrait;
+    use HasApiTokens, HasFactory, Notifiable, AuthenticableTrait, CanResetPasswordTrait;
 
-    /** 
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
