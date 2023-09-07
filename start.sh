@@ -20,8 +20,6 @@ php artisan storage:link
 
 php artisan laravolt:link
 
-php artisan optimize
-
 php artisan optimize:clear
 
 php artisan migrate
