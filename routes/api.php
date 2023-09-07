@@ -29,7 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/auth/info', [AuthController::class, 'info']);
+    Route::get('/auth/info', [AuthController::class, 'info']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
 
