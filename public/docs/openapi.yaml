@@ -7,6 +7,28 @@ servers:
   -
     url: 'http://localhost'
 paths:
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
   /api/auth/login:
     post:
       summary: ''
@@ -26,16 +48,67 @@ paths:
                 email:
                   type: string
                   description: ''
-                  example: saepe
+                  example: magnam
                 password:
                   type: string
                   description: ''
-                  example: eos
+                  example: quia
               required:
                 - email
                 - password
       security: []
   /api/crud/user:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: et
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: et
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: aut
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: aut
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: aut
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: aut
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
     post:
       summary: 'POST. Create Data'
       operationId: pOSTCreateData
@@ -45,7 +118,81 @@ paths:
       tags:
         - Endpoints
       security: []
+  '/api/crud/user/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: s
+        required: true
+        schema:
+          type: string
+  /api/crud/user/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
   '/api/crud/user/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
     post:
       summary: 'POST. PUT. Update Data'
       operationId: pOSTPUTUpdateData
@@ -69,7 +216,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user.'
-        example: 3
+        example: 1
         required: true
         schema:
           type: integer
@@ -83,7 +230,58 @@ paths:
       tags:
         - Endpoints
       security: []
-  /api/crud/role:
+  /api/crud/permissions:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: vero
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: vero
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: corrupti
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: corrupti
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: temporibus
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: temporibus
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
     post:
       summary: 'POST. Create Data'
       operationId: pOSTCreateData
@@ -93,55 +291,81 @@ paths:
       tags:
         - Endpoints
       security: []
-  '/api/crud/role/{id}':
-    post:
-      summary: 'POST. PUT. Update Data'
-      operationId: pOSTPUTUpdateData
+  '/api/crud/permissions/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
       description: ''
       parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-    delete:
-      summary: 'DELETE. Data'
-      operationId: dELETEData
-      description: ''
-      parameters: []
-      responses: {  }
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
       tags:
         - Endpoints
       security: []
     parameters:
       -
         in: path
-        name: id
-        description: 'The ID of the role.'
-        example: '36'
+        name: scope
+        description: 'The scope.'
+        example: Wz
         required: true
         schema:
           type: string
-  /api/crud/role/bulk:
-    post:
-      summary: 'POST. Bulk Data'
-      operationId: pOSTBulkData
+  /api/crud/permissions/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
       description: ''
       parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-  /api/crud/permissions:
-    post:
-      summary: 'POST. Create Data'
-      operationId: pOSTCreateData
-      description: ''
-      parameters: []
-      responses: {  }
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
       tags:
         - Endpoints
       security: []
   '/api/crud/permissions/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
     post:
       summary: 'POST. PUT. Update Data'
       operationId: pOSTPUTUpdateData
@@ -165,7 +389,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the permission.'
-        example: '344369'
+        example: '333'
         required: true
         schema:
           type: string
@@ -179,13 +403,198 @@ paths:
       tags:
         - Endpoints
       security: []
-  /api/auth/info:
+  /api/crud/role:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: cum
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: cum
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: hic
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: hic
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: qui
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: qui
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
     post:
-      summary: ''
-      operationId: postApiAuthInfo
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
       description: ''
       parameters: []
       responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/role/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: '95'
+        required: true
+        schema:
+          type: string
+  /api/crud/role/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/role/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the role.'
+        example: '7441834'
+        required: true
+        schema:
+          type: string
+  /api/crud/role/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/auth/info:
+    get:
+      summary: ''
+      operationId: getApiAuthInfo
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
       tags:
         - Endpoints
       security: []
