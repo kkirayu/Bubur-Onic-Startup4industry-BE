@@ -17,7 +17,7 @@
 
     <script type="module" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine-ie11.min.js" defer></script>
-    @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
+    @vite([ 'resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-200 min-h-screen font-base">
 <div id="app">

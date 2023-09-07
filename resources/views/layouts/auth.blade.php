@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-    @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-200 min-h-screen font-base">
 <div id="app">
