@@ -16,11 +16,14 @@ class User extends CrudModel implements Authenticatable, CrudUser
 {
     use HasApiTokens, HasFactory, Notifiable, AuthenticableTrait;
 
-    /**
+    /** 
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+
+     protected $table = 'users';
+     protected string $path= '/api/crud/user';
     protected $fillable = [
         'name',
         'email',
