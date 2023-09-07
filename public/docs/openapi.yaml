@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: Laravel
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+paths:
+  /api/auth/login:
+    post:
+      summary: ''
+      operationId: postApiAuthLogin
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: ''
+                  example: saepe
+                password:
+                  type: string
+                  description: ''
+                  example: eos
+              required:
+                - email
+                - password
+      security: []
+  /api/crud/user:
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/user/{id}':
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: 3
+        required: true
+        schema:
+          type: integer
+  /api/crud/user/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/crud/role:
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/role/{id}':
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the role.'
+        example: '36'
+        required: true
+        schema:
+          type: string
+  /api/crud/role/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/crud/permissions:
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/permissions/{id}':
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the permission.'
+        example: '344369'
+        required: true
+        schema:
+          type: string
+  /api/crud/permissions/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/auth/info:
+    post:
+      summary: ''
+      operationId: postApiAuthInfo
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/auth/logout:
+    post:
+      summary: ''
+      operationId: postApiAuthLogout
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+tags:
+  -
+    name: Endpoints
+    description: ''

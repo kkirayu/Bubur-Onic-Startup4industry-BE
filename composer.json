@@ -12,6 +12,7 @@
         "alurkerja-laravolt/uitemplate": "dev-master",
         "brunocfalcao/blade-feather-icons": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
+        "knuckleswtf/scribe": "^4.23",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",

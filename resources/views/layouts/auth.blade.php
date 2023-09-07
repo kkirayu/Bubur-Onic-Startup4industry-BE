@@ -9,7 +9,6 @@
 
     <title>Laravel</title>
 
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
