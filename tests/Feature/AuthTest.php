@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     /**
      * Test Register If Input Not Filled
@@ -148,5 +148,32 @@ class AuthTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+    }
+
+    public function test_forgot_password_send_email_not_found()
+    {
+        $response = $this->postJson('/api/auth/password/email', [
+            'email' => $this->faker()->email(),
+            'type' => 'api'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'email'
+            ]);
+    }
+
+    public function test_forgot_password_send_email_success()
+    {
+        $user = User::factory()->create();
+        $response = $this->postJson('/api/auth/password/email', [
+            'email' => $user->email,
+            'type' => 'api'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJsonStructure([
+                'message'
+            ]);
     }
 }
