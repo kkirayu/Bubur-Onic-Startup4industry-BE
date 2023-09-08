@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Http\Request;
@@ -38,5 +39,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/info', [AuthController::class, 'info']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::post('/auth/password/confirm', [AuthController::class, 'confirm']);
 });
 

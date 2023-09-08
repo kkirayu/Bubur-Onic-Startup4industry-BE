@@ -176,4 +176,72 @@ class AuthTest extends TestCase
                 'message'
             ]);
     }
+
+    public function test_confirm_password_user_not_login()
+    {
+        $response = $this->postJson('/api/auth/password/confirm', [
+            'current_password' => 'asdf1234',
+            'new_password' => 'asdf1234',
+            'new_password_confirmation' => 'asdf1234'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_UNAUTHORIZED)
+            ->assertJsonStructure([
+                'message'
+            ]);
+    }
+
+    public function test_confirm_password_current_password_not_match()
+    {
+        $this->createUser();
+        $response = $this->postJson('/api/auth/password/confirm', [
+            'current_password' => 'asdf1234',
+            'new_password' => 'Asdf1234!',
+            'new_password_confirmation' => 'Asdf1234!'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_UNAUTHORIZED)
+            ->assertJsonStructure([
+                'message'
+            ]);
+    }
+
+
+    public function test_confirm_password_new_password_confirmation_does_not_match()
+    {
+
+        $this->createUser();
+        $response = $this->postJson('/api/auth/password/confirm', [
+            'current_password' => 'asdf1234',
+            'new_password' => 'Asdf1234!',
+            'new_password_confirmation' => 'Asdf1234!1'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'new_password'
+            ]);
+    }
+
+    public function test_confirm_password_success()
+    {
+        $this->createUser();
+        $response = $this->postJson('/api/auth/password/confirm', [
+            'current_password' => 'password',
+            'new_password' => 'Asdf1234!',
+            'new_password_confirmation' => 'Asdf1234!'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJsonStructure([
+                'message'
+            ]);
+    }
+
+    private function createUser()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        return $user;
+    }
 }
