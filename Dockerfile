@@ -7,7 +7,8 @@ RUN composer velocita:enable http://192.168.88.210:8999/
 RUN apt-get update
 RUN apt-get install -y \
 			php8.1-bcmath \
-			php8.1-gd \
+            php8.1-mbstring \
+            php8.1-gd \
             php8.1-ldap
 
 COPY ./nginx/website.conf /etc/nginx/sites-enabled/website.conf
