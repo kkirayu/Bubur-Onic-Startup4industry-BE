@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * Test Register If Input Not Filled
@@ -235,6 +235,54 @@ class AuthTest extends TestCase
         $response->assertStatus(ResponseAlias::HTTP_OK)
             ->assertJsonStructure([
                 'message'
+            ]);
+    }
+
+    public function test_reset_password_empty_fields()
+    {
+        // $this->test_forgot_password_send_email_success();
+        // $user = User::query()->first();
+        // $token = PasswordResetToken::query()->where('email', $user->email)->first('token');
+        $response = $this->postJson('/api/auth/password/reset');
+
+        $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'email',
+                'token',
+                'password',
+            ]);
+    }
+
+    public function test_reset_password_email_not_valid()
+    {
+        $response = $this->postJson('/api/auth/password/reset', [
+            'token' => '123',
+            'email' => 'hello@example.com',
+            'password' => 'Asdf1234!',
+            'password_confirmation' => 'Asdf1234!'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors([
+                'email',
+            ]);
+    }
+
+    public function test_reset_password_success()
+    {
+        $user = User::factory()->create();
+        $token = \Password::broker()->createToken($user);
+
+        $response = $this->postJson('/api/auth/password/reset', [
+            'token' => $token,
+            'email' => $user->email,
+            'password' => 'Asdf1234!',
+            'password_confirmation' => 'Asdf1234!'
+        ]);
+
+        $response->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJsonStructure([
+                'message',
             ]);
     }
 
