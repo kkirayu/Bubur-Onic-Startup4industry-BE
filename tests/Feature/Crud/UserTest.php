@@ -172,7 +172,9 @@ class UserTest extends BaseCrudTest
 
         $response->assertStatus(ResponseAlias::HTTP_OK)
             ->assertJsonStructure([
-                'message'
+                'message',
+                'status',
+                'data'
             ]);
     }
 }
