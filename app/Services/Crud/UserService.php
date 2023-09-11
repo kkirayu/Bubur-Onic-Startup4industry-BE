@@ -42,9 +42,9 @@ class UserService extends CrudService
             }
         }
 
-        if (! $request->has('role_id') || empty($request->input('role_id'))) {
-            throw new \InvalidArgumentException('role_id is required');
-        }
+        // if (! $request->has('role_id') || empty($request->input('role_id'))) {
+        //     throw new \InvalidArgumentException('role_id is required');
+        // }
 
         try {
             DB::beginTransaction();
@@ -52,19 +52,19 @@ class UserService extends CrudService
             $model = $this->model->newQuery()->create($validated);
 
             // $user->roles()->attach($request->input('role_id')); //use attach id table role_users not auto generate???
-            $roleIds = $request->input('role_id');
+            // $roleIds = $request->input('role_id');
 
-            if (count($roleIds) !== count(array_unique($roleIds))) {
-                throw new \InvalidArgumentException('Each role_id must be unique.');
-            }
+            // if (count($roleIds) !== count(array_unique($roleIds))) {
+            //     throw new \InvalidArgumentException('Each role_id must be unique.');
+            // }
 
-            foreach ($roleIds as $roleId) {
-                RoleUsers::create([
-                    'id' => Uuid::uuid4()->toString(),
-                    'user_id' => $model->id,
-                    'role_id' => $roleId,
-                ]);
-            }
+            // foreach ($roleIds as $roleId) {
+            //     RoleUsers::create([
+            //         'id' => Uuid::uuid4()->toString(),
+            //         'user_id' => $model->id,
+            //         'role_id' => $roleId,
+            //     ]);
+            // }
 
             DB::commit();
         } catch (\Exception $e) {

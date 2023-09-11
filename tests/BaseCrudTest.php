@@ -26,6 +26,8 @@ class BaseCrudTest extends TestCase
             'Authorization' => 'Bearer '.$this->accessToken,
             'Accept' => 'application/json'
         ]);
+
+        $this->actingAs($this->user);
     }
 
     protected function login(): void
@@ -39,5 +41,6 @@ class BaseCrudTest extends TestCase
 
         $this->accessToken = $responseRegister->json('data.access_token');
         $this->user = (new User())->find($responseRegister->json('data.id'));
+
     }
 }

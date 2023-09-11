@@ -75,4 +75,9 @@ class User extends CrudModel implements Authenticatable, CrudUser, CanResetPassw
             $this->notify(new ResetPasswordNotification($token));
         }
     }
+
+    public function scopeNotActive($query)
+    {
+        return $query->whereNull('email_verified_at');
+    }
 }
