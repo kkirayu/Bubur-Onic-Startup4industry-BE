@@ -91,36 +91,7 @@ class UserService extends CrudService
 
         $validated = $request->all();
 
-        DB::beginTransaction();
-
-        try {
-            if ($request['role_id'] && ! empty($request['role_id'])) {
-                $newRoleIds = $request['role_id'];
-                $existingRoleIds = $model->roles()->pluck('role_id')->toArray();
-
-                $rolesToRemove = array_diff($existingRoleIds, $newRoleIds);
-                $rolesToAdd = array_diff($newRoleIds, $existingRoleIds);
-
-                if (! empty($rolesToRemove)) {
-                    $model->roles()->detach($rolesToRemove);
-                }
-
-                if (! empty($rolesToAdd)) {
-                    foreach ($rolesToAdd as $roleId) {
-                        RoleUsers::create([
-                            'id' => Uuid::uuid4()->toString(),
-                            'user_id' => $model->id,
-                            'role_id' => $roleId,
-                        ]);
-                    }
-                }
-            }
-
-            $model->update(collect($validated)->except('role_id')->toArray());
-            DB::commit();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $model->update(collect($validated)->toArray());
 
         $model->load($this->autoLoadRelations);
         $model->refresh();
