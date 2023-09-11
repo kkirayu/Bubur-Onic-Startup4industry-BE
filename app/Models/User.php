@@ -32,6 +32,7 @@ class User extends CrudModel implements Authenticatable, CrudUser, CanResetPassw
         'name',
         'email',
         'password',
+        'email_verified_at'
     ];
 
     /**
