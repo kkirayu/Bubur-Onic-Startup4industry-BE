@@ -22,12 +22,13 @@ return new class extends Migration
             $table->string('posisi_akun');
             $table->integer('is_kas');
             $table->integer('parent_akun');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->integer('created_by');
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamps();
+            $table->userstamps();
+
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaans');
+            $table->foreign('cabang_id')->references('id')->on('cabangs');
+            $table->foreign('kategori_akun_id')->references('id')->on('kategori_akuns');
+            
         });
     }
 

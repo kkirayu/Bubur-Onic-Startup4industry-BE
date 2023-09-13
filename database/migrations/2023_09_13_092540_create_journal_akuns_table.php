@@ -20,13 +20,13 @@ return new class extends Migration
             $table->string('posisi_akun');
             $table->text('deskripsi');
             $table->double('jumlah');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
-            $table->integer('created_by');
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamps();
+            $table->userstamps();
             $table->foreign('journal_id')->references('id')->on('journals');
+            $table->foreign('akun')->references('id')->on('akuns');
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaans');
+            $table->foreign('cabang_id')->references('id')->on('cabangs');
+            
         });
     }
 

@@ -21,12 +21,12 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->timestamp('posted_at');
             $table->integer('posted_by');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at')->nullable();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamps();
+            $table->userstamps();
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaans');
+            $table->foreign('cabang_id')->references('id')->on('cabangs');
+            
+
         });
     }
 
