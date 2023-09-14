@@ -22,7 +22,7 @@ class CreatePerusahaanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nama" => "required",
+            "nama" => "required|unique:perusahaans,nama",
             "alamat" => "required",
             "domain" => "required",
             "cabang.nama" => "required",

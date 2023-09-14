@@ -27,4 +27,23 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * Render an exception into an HTTP response.
+     */
+    public function render($request, Throwable $e)
+    {
+        if ($request->is('api/*')) {
+            if($e instanceof \Illuminate\Validation\ValidationException){
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => $e->validator->getMessageBag()->toArray()
+                ], 422);
+                
+            };
+            // handle unique validation 
+        }
+
+        return parent::render($request, $e);
+    }
 }
