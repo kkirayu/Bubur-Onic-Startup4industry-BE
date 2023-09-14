@@ -10,4 +10,11 @@ class Perusahaan extends CrudModel
 
     protected string $path = "/api/saas/perusahaan";
 
+
+    public function cabang(){
+        return $this->hasOne(Cabang::class, 'perusahaan_id', 'id');
+    }
+
+
+
 }
