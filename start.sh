@@ -24,6 +24,7 @@ php artisan optimize:clear
 
 php artisan migrate
 
+php artisan scribe:generate
 
 
 echo "Watch Laravel Logs "
