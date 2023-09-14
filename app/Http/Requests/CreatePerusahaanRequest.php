@@ -29,7 +29,7 @@ class CreatePerusahaanRequest extends FormRequest
             "cabang.alamat" => "required",
             "cabang.kode" => "required",
             "owner.nama" => "required",
-            "owner.email" => "required",
+            "owner.email" => "required|unique:users,email",
             "owner.password" => "required",
             
         ];
