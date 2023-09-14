@@ -10,7 +10,6 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase;
 
     /**
      * Test Register If Input Not Filled

@@ -2,6 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cabang;
+use App\Models\Perusahaan;
+use App\Models\Role;
+use App\Models\UserRoleCabang;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -17,7 +21,7 @@ class CreatePerusahaanTest extends TestCase
     use WithFaker;
 
     
-    public function createPerusahaanWithValidData(): void
+    public function testCreatePerusahaanWithValidData(): void
     {
         // create payload from  CreatePeruysahaanRequest
         $payload = [
@@ -57,6 +61,7 @@ class CreatePerusahaanTest extends TestCase
 
         $response->assertStatus(201);
     }
+
     public function testCreatePerusahaanWithExsistingPerusahaanName(): void
     {
         // create payload from  CreatePeruysahaanRequest
@@ -127,5 +132,55 @@ class CreatePerusahaanTest extends TestCase
                 'owner.password',
             ]);
 
+    }
+
+    public function testGetCompanyDataDetail(): void
+    {
+        $this->artisan("db:seed");
+
+        $payload = [
+            "nama" => $this->faker->name,
+            "alamat" => "Jl. Test",
+            "domain" => "test.com",
+            "cabang" => [
+                "nama" => $this->faker->name,
+                "alamat" => "Jl. Cabang Test",
+                "kode" => "CT"
+            ],
+            "owner" => [
+                "nama" => $this->faker->name,
+                "email" => $this->faker->email,
+                "password" => "password"
+            ]
+        ];
+
+
+        $user = \App\Models\User::factory()->create();
+        // $this->actingAs($user);
+        
+        
+
+        $this->actingAs($user);
+
+        $response = $this->postJson('api/saas/perusahaan/register-perusahaan', $payload);
+
+        $companyId = $response->json("data.id");
+
+
+        $newUser = \App\Models\User::factory()->create();
+        
+
+        $roleKeuangan = Role::where('name', 'STAFF_KEUANGAN_CABANG')->first();
+
+        $user_role_cabang = new  UserRoleCabang();
+        $user_role_cabang->cabang_id = Cabang::where("perusahaan_id", "=", $companyId)->first()->id;
+        $user_role_cabang->user_id = $user->id;
+        $user_role_cabang->perusahaan_id = $companyId;
+        $user_role_cabang->acl_roles_id = $roleKeuangan->id;
+        $user_role_cabang->save();
+
+        $response = $this->getJson('api/saas/perusahaan/' . $companyId);
+
+        dd($response->json());
     }
 }

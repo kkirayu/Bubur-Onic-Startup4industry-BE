@@ -40,12 +40,14 @@ class PerusahaanService extends CrudService
                 "password" => bcrypt($request->owner['password']),
             ]);
 
-            $roleOwner = Role::where('name', 'owner')->first();
+            $roleOwner = Role::where('name', 'OWNER_CABANG')->first();
 
             $user_role_cabang = new  UserRoleCabang();
             $user_role_cabang->cabang_id = $cabang->id;
             $user_role_cabang->user_id = $owner->id;
             $user_role_cabang->perusahaan_id = $perusahaan->id;
+            $user_role_cabang->acl_roles_id = $roleOwner->id;
+            $user_role_cabang->save();
 
             return  $perusahaan;
 
