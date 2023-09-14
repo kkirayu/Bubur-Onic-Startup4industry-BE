@@ -22,10 +22,7 @@ return new class extends Migration
             $table->integer('posted_by');
 
             $table->timestamps();
-            $table->integer('created_by');
-            $table->integer('updated_by');
-            $table->integer('deleted_by');
-            $table->timestamp('deleted_at')->nullable();
+            $table->userstamps();
         });
     }
 
