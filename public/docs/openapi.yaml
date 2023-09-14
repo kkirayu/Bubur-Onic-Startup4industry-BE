@@ -48,16 +48,69 @@ paths:
                 email:
                   type: string
                   description: ''
-                  example: magnam
+                  example: et
                 password:
                   type: string
                   description: ''
-                  example: quia
+                  example: esse
               required:
                 - email
                 - password
       security: []
-  /api/crud/user:
+  /api/auth/register:
+    post:
+      summary: ''
+      operationId: postApiAuthRegister
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: abajnktsuefzl
+                email:
+                  type: string
+                  description: ''
+                  example: magni
+                password:
+                  type: string
+                  description: 'Must match the regex /[a-z]/. Must match the regex /[A-Z]/. Must match the regex /[0-9]/. Must match the regex /[@$!%*#?&]/. Must be at least 8 characters.'
+                  example: ';g`-}/]"N*'
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/auth/password/email:
+    post:
+      summary: 'Send a reset link to the given user.'
+      operationId: sendAResetLinkToTheGivenUser
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/auth/password/reset:
+    post:
+      summary: "Reset the given user's password."
+      operationId: resetTheGivenUsersPassword
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/journal/journal-akun:
     get:
       summary: 'GET. List Data'
       operationId: gETListData
@@ -77,22 +130,22 @@ paths:
           in: query
           name: filter
           description: 'For filtering data.'
-          example: aut
+          example: ipsam
           required: false
           schema:
             type: string
             description: 'For filtering data.'
-            example: aut
+            example: ipsam
         -
           in: query
           name: sort
           description: 'For sorting data.'
-          example: aut
+          example: maxime
           required: false
           schema:
             type: string
             description: 'For sorting data.'
-            example: aut
+            example: maxime
       responses:
         401:
           description: ''
@@ -118,7 +171,7 @@ paths:
       tags:
         - Endpoints
       security: []
-  '/api/crud/user/scope/{scope}':
+  '/api/journal/journal-akun/scope/{scope}':
     get:
       summary: 'GET. Scope'
       operationId: gETScope
@@ -145,11 +198,11 @@ paths:
         in: path
         name: scope
         description: 'The scope.'
-        example: s
+        example: vYkZ3
         required: true
         schema:
           type: string
-  /api/crud/user/spec:
+  /api/journal/journal-akun/spec:
     get:
       summary: 'GET. Spec'
       operationId: gETSpec
@@ -171,7 +224,7 @@ paths:
       tags:
         - Endpoints
       security: []
-  '/api/crud/user/{id}':
+  '/api/journal/journal-akun/{id}':
     get:
       summary: 'GET. Detail Data'
       operationId: gETDetailData
@@ -215,12 +268,531 @@ paths:
       -
         in: path
         name: id
-        description: 'The ID of the user.'
-        example: 1
+        description: 'The ID of the journal akun.'
+        example: '3'
         required: true
         schema:
-          type: integer
-  /api/crud/user/bulk:
+          type: string
+  /api/journal/journal-akun/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/journal/journal:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: provident
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: provident
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: sit
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: sit
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: rerum
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: rerum
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/journal/journal/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: cD
+        required: true
+        schema:
+          type: string
+  /api/journal/journal/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/journal/journal/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the journal.'
+        example: '85651'
+        required: true
+        schema:
+          type: string
+  /api/journal/journal/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/akun/kategori-akun:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: minima
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: minima
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: unde
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: unde
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: perferendis
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: perferendis
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/akun/kategori-akun/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: a6fY4
+        required: true
+        schema:
+          type: string
+  /api/akun/kategori-akun/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/akun/kategori-akun/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the kategori akun.'
+        example: '7745'
+        required: true
+        schema:
+          type: string
+  /api/akun/kategori-akun/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/akun/akun:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: provident
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: provident
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: sapiente
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: sapiente
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: aliquam
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: aliquam
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/akun/akun/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: gi
+        required: true
+        schema:
+          type: string
+  /api/akun/akun/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/akun/akun/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the akun.'
+        example: '445537'
+        required: true
+        schema:
+          type: string
+  /api/akun/akun/bulk:
     post:
       summary: 'POST. Bulk Data'
       operationId: pOSTBulkData
@@ -240,32 +812,32 @@ paths:
           in: query
           name: search
           description: 'For searching data.'
-          example: vero
-          required: false
-          schema:
-            type: string
-            description: 'For searching data.'
-            example: vero
-        -
-          in: query
-          name: filter
-          description: 'For filtering data.'
-          example: corrupti
-          required: false
-          schema:
-            type: string
-            description: 'For filtering data.'
-            example: corrupti
-        -
-          in: query
-          name: sort
-          description: 'For sorting data.'
           example: temporibus
           required: false
           schema:
             type: string
-            description: 'For sorting data.'
+            description: 'For searching data.'
             example: temporibus
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: et
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: et
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: exercitationem
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: exercitationem
       responses:
         401:
           description: ''
@@ -318,7 +890,7 @@ paths:
         in: path
         name: scope
         description: 'The scope.'
-        example: Wz
+        example: e
         required: true
         schema:
           type: string
@@ -389,7 +961,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the permission.'
-        example: '333'
+        example: '84'
         required: true
         schema:
           type: string
@@ -413,32 +985,32 @@ paths:
           in: query
           name: search
           description: 'For searching data.'
-          example: cum
+          example: quia
           required: false
           schema:
             type: string
             description: 'For searching data.'
-            example: cum
+            example: quia
         -
           in: query
           name: filter
           description: 'For filtering data.'
-          example: hic
+          example: impedit
           required: false
           schema:
             type: string
             description: 'For filtering data.'
-            example: hic
+            example: impedit
         -
           in: query
           name: sort
           description: 'For sorting data.'
-          example: qui
+          example: et
           required: false
           schema:
             type: string
             description: 'For sorting data.'
-            example: qui
+            example: et
       responses:
         401:
           description: ''
@@ -491,7 +1063,7 @@ paths:
         in: path
         name: scope
         description: 'The scope.'
-        example: '95'
+        example: ubVZG
         required: true
         schema:
           type: string
@@ -562,11 +1134,770 @@ paths:
         in: path
         name: id
         description: 'The ID of the role.'
-        example: '7441834'
+        example: '460961'
         required: true
         schema:
           type: string
   /api/crud/role/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/crud/user:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: accusamus
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: accusamus
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: possimus
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: possimus
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: veritatis
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: veritatis
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/user/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: TvM
+        required: true
+        schema:
+          type: string
+  /api/crud/user/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/crud/user/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: 12
+        required: true
+        schema:
+          type: integer
+  /api/crud/user/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/saas/cabang:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: ullam
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: ullam
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: dignissimos
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: dignissimos
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: non
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: non
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/saas/cabang/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: rwUH
+        required: true
+        schema:
+          type: string
+  /api/saas/cabang/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/saas/cabang/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the cabang.'
+        example: '4493'
+        required: true
+        schema:
+          type: string
+  /api/saas/cabang/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/saas/perusahaan/register-perusahaan:
+    post:
+      summary: ''
+      operationId: postApiSaasPerusahaanRegisterPerusahaan
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  description: ''
+                  example: ipsam
+                alamat:
+                  type: string
+                  description: ''
+                  example: placeat
+                domain:
+                  type: string
+                  description: ''
+                  example: et
+                cabang:
+                  type: object
+                  description: ''
+                  example: []
+                  properties:
+                    nama:
+                      type: string
+                      description: ''
+                      example: neque
+                    alamat:
+                      type: string
+                      description: ''
+                      example: maiores
+                    kode:
+                      type: string
+                      description: ''
+                      example: nostrum
+                owner:
+                  type: object
+                  description: ''
+                  example: []
+                  properties:
+                    nama:
+                      type: string
+                      description: ''
+                      example: non
+                    email:
+                      type: string
+                      description: ''
+                      example: quia
+                    password:
+                      type: string
+                      description: ''
+                      example: exercitationem
+              required:
+                - nama
+                - alamat
+                - domain
+      security: []
+  /api/saas/perusahaan:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: incidunt
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: incidunt
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: culpa
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: culpa
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: est
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: est
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/saas/perusahaan/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: A
+        required: true
+        schema:
+          type: string
+  /api/saas/perusahaan/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/saas/perusahaan/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the perusahaan.'
+        example: '5'
+        required: true
+        schema:
+          type: string
+  /api/saas/perusahaan/bulk:
+    post:
+      summary: 'POST. Bulk Data'
+      operationId: pOSTBulkData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  /api/saas/user-role-cabang:
+    get:
+      summary: 'GET. List Data'
+      operationId: gETListData
+      description: ''
+      parameters:
+        -
+          in: query
+          name: search
+          description: 'For searching data.'
+          example: soluta
+          required: false
+          schema:
+            type: string
+            description: 'For searching data.'
+            example: soluta
+        -
+          in: query
+          name: filter
+          description: 'For filtering data.'
+          example: porro
+          required: false
+          schema:
+            type: string
+            description: 'For filtering data.'
+            example: porro
+        -
+          in: query
+          name: sort
+          description: 'For sorting data.'
+          example: voluptatem
+          required: false
+          schema:
+            type: string
+            description: 'For sorting data.'
+            example: voluptatem
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. Create Data'
+      operationId: pOSTCreateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+  '/api/saas/user-role-cabang/scope/{scope}':
+    get:
+      summary: 'GET. Scope'
+      operationId: gETScope
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: scope
+        description: 'The scope.'
+        example: '5'
+        required: true
+        schema:
+          type: string
+  /api/saas/user-role-cabang/spec:
+    get:
+      summary: 'GET. Spec'
+      operationId: gETSpec
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+  '/api/saas/user-role-cabang/{id}':
+    get:
+      summary: 'GET. Detail Data'
+      operationId: gETDetailData
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'POST. PUT. Update Data'
+      operationId: pOSTPUTUpdateData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    delete:
+      summary: 'DELETE. Data'
+      operationId: dELETEData
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user role cabang.'
+        example: '3'
+        required: true
+        schema:
+          type: string
+  /api/saas/user-role-cabang/bulk:
     post:
       summary: 'POST. Bulk Data'
       operationId: pOSTBulkData
@@ -607,6 +1938,34 @@ paths:
       responses: {  }
       tags:
         - Endpoints
+      security: []
+  /api/auth/password/confirm:
+    post:
+      summary: ''
+      operationId: postApiAuthPasswordConfirm
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_password:
+                  type: string
+                  description: ''
+                  example: aliquid
+                new_password:
+                  type: string
+                  description: 'Must match the regex /[a-z]/. Must match the regex /[A-Z]/. Must match the regex /[0-9]/. Must match the regex /[@$!%*#?&]/. Must be at least 8 characters.'
+                  example: tgigrgwjmnmwhfphntymnyjzcpcrwjkypikyv
+              required:
+                - current_password
+                - new_password
       security: []
 tags:
   -
