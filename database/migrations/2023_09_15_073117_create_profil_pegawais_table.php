@@ -49,6 +49,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cuti');
+        Schema::dropIfExists('profil_pegawais');
     }
 };
