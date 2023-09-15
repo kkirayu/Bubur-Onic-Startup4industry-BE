@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ok9pkj" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.14.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:collaboration id="Collaboration_1uhc20d">
+    <bpmn:participant id="Participant_17w4upz" name="Pengajuan Perubahan Journal Dan Kas" processRef="PengajuanPerubahanJournalDanKas" />
+  </bpmn:collaboration>
+  <bpmn:process id="PengajuanPerubahanJournalDanKas" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:laneSet id="LaneSet_0ngri1t">
+      <bpmn:lane id="DIREKSI" name="Direksi">
+        <bpmn:flowNodeRef>Gateway_155omlq</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>notifikasiDireksi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>reviewDireksi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_13yti7i</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>penghapusanJournal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pengeditanJournal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pembuatanKas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>pembuatanJournal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>perubahanKas</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="ADMIN_KEUANGAN" name="Admin Keuangan">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>notifikasiReject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0pw1b96</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>notifikasiSelesaiProses</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_09shv00</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>revisiPengajuan</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:exclusiveGateway id="Gateway_155omlq">
+      <bpmn:incoming>Flow_1tsfco4</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fz8ov6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ywvgxf</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1r1onm9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_01purm3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="notifikasiReject" name="Notifikasi Email Reject" camunda:type="external" camunda:topic="PengajuanJournalDanKas.notifikasiReject">
+      <bpmn:incoming>Flow_0ywvgxf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m6lskc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0pw1b96">
+      <bpmn:incoming>Flow_1m6lskc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="notifikasiDireksi" name="Notifikasi Direksi" camunda:type="external" camunda:topic="PengajuanJournalDanKas.notifikasiDireksi">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_01purm3</bpmn:incoming>
+      <bpmn:incoming>Flow_1b1kcup</bpmn:incoming>
+      <bpmn:outgoing>Flow_19j822c</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="reviewDireksi" name="Review Direksi">
+      <bpmn:incoming>Flow_19j822c</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tsfco4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="notifikasiSelesaiProses" name="Notifikasi  Email" camunda:type="external" camunda:topic="PengajuanJournalDanKas.notifikasiSelesaiProses">
+      <bpmn:incoming>Flow_13mzo6p</bpmn:incoming>
+      <bpmn:incoming>Flow_1u2z9wb</bpmn:incoming>
+      <bpmn:incoming>Flow_0h8p8h0</bpmn:incoming>
+      <bpmn:incoming>Flow_1adbx51</bpmn:incoming>
+      <bpmn:incoming>Flow_038q5dm</bpmn:incoming>
+      <bpmn:outgoing>Flow_078e2eb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_09shv00">
+      <bpmn:incoming>Flow_078e2eb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_13yti7i" name="Jenis Aksi">
+      <bpmn:incoming>Flow_1fz8ov6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1e1b4w3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_14172jn</bpmn:outgoing>
+      <bpmn:outgoing>Flow_039thhb</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1rpz626</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0kpk8f9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="penghapusanJournal" name="Penghapusan Jurnal" camunda:type="external" camunda:topic="PengajuanJournalDanKas.penghapusanJournal">
+      <bpmn:incoming>Flow_14172jn</bpmn:incoming>
+      <bpmn:outgoing>Flow_1u2z9wb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="pengeditanJournal" name="Pengeditan Jurnal" camunda:type="external" camunda:topic="PengajuanJournalDanKas.pengeditanJournal">
+      <bpmn:incoming>Flow_039thhb</bpmn:incoming>
+      <bpmn:outgoing>Flow_038q5dm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="pembuatanKas" name="Pembuatan KAS" camunda:type="external" camunda:topic="PengajuanJournalDanKas.pembuatanKas">
+      <bpmn:incoming>Flow_1rpz626</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h8p8h0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="pembuatanJournal" name="Pembuatan Jurnal" camunda:type="external" camunda:topic="PengajuanJournalDanKas.pembuatanJournal">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_1e1b4w3</bpmn:incoming>
+      <bpmn:outgoing>Flow_13mzo6p</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="perubahanKas" name="Perubahan KAS" camunda:type="external" camunda:topic="PengajuanJournalDanKas.perubahanKas">
+      <bpmn:incoming>Flow_0kpk8f9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1adbx51</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="revisiPengajuan" name="Revisi Pengajuan">
+      <bpmn:incoming>Flow_1r1onm9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1b1kcup</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1tsfco4" name="" sourceRef="reviewDireksi" targetRef="Gateway_155omlq" />
+    <bpmn:sequenceFlow id="Flow_1fz8ov6" name="Diterima" sourceRef="Gateway_155omlq" targetRef="Gateway_13yti7i">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${review_direksi == "TERIMA"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ywvgxf" name="Reject&#10;Pengajuan" sourceRef="Gateway_155omlq" targetRef="notifikasiReject">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${review_direksi == "REJECT"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1r1onm9" name="Revisi" sourceRef="Gateway_155omlq" targetRef="revisiPengajuan">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${review_direksi == "REVISI"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_01purm3" sourceRef="StartEvent_1" targetRef="notifikasiDireksi" />
+    <bpmn:sequenceFlow id="Flow_1m6lskc" sourceRef="notifikasiReject" targetRef="Event_0pw1b96" />
+    <bpmn:sequenceFlow id="Flow_1b1kcup" sourceRef="revisiPengajuan" targetRef="notifikasiDireksi" />
+    <bpmn:sequenceFlow id="Flow_19j822c" sourceRef="notifikasiDireksi" targetRef="reviewDireksi" />
+    <bpmn:sequenceFlow id="Flow_1u2z9wb" sourceRef="penghapusanJournal" targetRef="notifikasiSelesaiProses" />
+    <bpmn:sequenceFlow id="Flow_038q5dm" sourceRef="pengeditanJournal" targetRef="notifikasiSelesaiProses" />
+    <bpmn:sequenceFlow id="Flow_0h8p8h0" sourceRef="pembuatanKas" targetRef="notifikasiSelesaiProses" />
+    <bpmn:sequenceFlow id="Flow_13mzo6p" sourceRef="pembuatanJournal" targetRef="notifikasiSelesaiProses" />
+    <bpmn:sequenceFlow id="Flow_1adbx51" sourceRef="perubahanKas" targetRef="notifikasiSelesaiProses" />
+    <bpmn:sequenceFlow id="Flow_078e2eb" sourceRef="notifikasiSelesaiProses" targetRef="Event_09shv00" />
+    <bpmn:sequenceFlow id="Flow_1e1b4w3" sourceRef="Gateway_13yti7i" targetRef="pembuatanJournal">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${jenis_aksi == "PEMBUATAN_JURNAL"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_14172jn" sourceRef="Gateway_13yti7i" targetRef="penghapusanJournal">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${jenis_aksi == "PENGHAPUSAN_JURNAL"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_039thhb" sourceRef="Gateway_13yti7i" targetRef="pengeditanJournal">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${jenis_aksi == "PENGEDITAN_JURNAL"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1rpz626" sourceRef="Gateway_13yti7i" targetRef="pembuatanKas">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${jenis_aksi == "PEMBUATAN_KAS"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0kpk8f9" sourceRef="Gateway_13yti7i" targetRef="perubahanKas">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${jenis_aksi == "PERUBAHAN_KAS"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1uhc20d">
+      <bpmndi:BPMNShape id="Participant_17w4upz_di" bpmnElement="Participant_17w4upz" isHorizontal="true">
+        <dc:Bounds x="201" y="80" width="1417" height="800" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1loerdc_di" bpmnElement="ADMIN_KEUANGAN" isHorizontal="true">
+        <dc:Bounds x="231" y="80" width="1387" height="220" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1mkguwi_di" bpmnElement="DIREKSI" isHorizontal="true">
+        <dc:Bounds x="231" y="300" width="1387" height="580" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_155omlq_di" bpmnElement="Gateway_155omlq" isMarkerVisible="true">
+        <dc:Bounds x="715" y="555" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="272" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0l68piu_di" bpmnElement="notifikasiReject">
+        <dc:Bounds x="850" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0pw1b96_di" bpmnElement="Event_0pw1b96">
+        <dc:Bounds x="1022" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_164t4v6_di" bpmnElement="notifikasiDireksi">
+        <dc:Bounds x="370" y="320" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07kmnjy_di" bpmnElement="reviewDireksi">
+        <dc:Bounds x="540" y="320" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0boz431_di" bpmnElement="notifikasiSelesaiProses">
+        <dc:Bounds x="1320" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09shv00_di" bpmnElement="Event_09shv00">
+        <dc:Bounds x="1482" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_13yti7i_di" bpmnElement="Gateway_13yti7i" isMarkerVisible="true">
+        <dc:Bounds x="885" y="625" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="855" y="682" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0g5sbqh_di" bpmnElement="penghapusanJournal">
+        <dc:Bounds x="1030" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lyz6by_di" bpmnElement="pengeditanJournal">
+        <dc:Bounds x="1030" y="540" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18jvgjj_di" bpmnElement="pembuatanKas">
+        <dc:Bounds x="1030" y="650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1f7wjot_di" bpmnElement="pembuatanJournal">
+        <dc:Bounds x="1030" y="320" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12sq2lw_di" bpmnElement="perubahanKas">
+        <dc:Bounds x="1030" y="760" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ovxwcu_di" bpmnElement="revisiPengajuan">
+        <dc:Bounds x="610" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1tsfco4_di" bpmnElement="Flow_1tsfco4">
+        <di:waypoint x="640" y="360" />
+        <di:waypoint x="680" y="360" />
+        <di:waypoint x="680" y="580" />
+        <di:waypoint x="715" y="580" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fz8ov6_di" bpmnElement="Flow_1fz8ov6">
+        <di:waypoint x="740" y="605" />
+        <di:waypoint x="740" y="650" />
+        <di:waypoint x="885" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="787" y="625" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ywvgxf_di" bpmnElement="Flow_0ywvgxf">
+        <di:waypoint x="765" y="580" />
+        <di:waypoint x="790" y="580" />
+        <di:waypoint x="790" y="190" />
+        <di:waypoint x="850" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="793" y="466" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r1onm9_di" bpmnElement="Flow_1r1onm9">
+        <di:waypoint x="740" y="555" />
+        <di:waypoint x="740" y="190" />
+        <di:waypoint x="710" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="705" y="353" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01purm3_di" bpmnElement="Flow_01purm3">
+        <di:waypoint x="308" y="190" />
+        <di:waypoint x="339" y="190" />
+        <di:waypoint x="339" y="360" />
+        <di:waypoint x="370" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m6lskc_di" bpmnElement="Flow_1m6lskc">
+        <di:waypoint x="950" y="190" />
+        <di:waypoint x="1022" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b1kcup_di" bpmnElement="Flow_1b1kcup">
+        <di:waypoint x="610" y="190" />
+        <di:waypoint x="420" y="190" />
+        <di:waypoint x="420" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19j822c_di" bpmnElement="Flow_19j822c">
+        <di:waypoint x="470" y="360" />
+        <di:waypoint x="540" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1u2z9wb_di" bpmnElement="Flow_1u2z9wb">
+        <di:waypoint x="1130" y="470" />
+        <di:waypoint x="1200" y="470" />
+        <di:waypoint x="1200" y="190" />
+        <di:waypoint x="1320" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_038q5dm_di" bpmnElement="Flow_038q5dm">
+        <di:waypoint x="1130" y="580" />
+        <di:waypoint x="1200" y="580" />
+        <di:waypoint x="1200" y="190" />
+        <di:waypoint x="1320" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h8p8h0_di" bpmnElement="Flow_0h8p8h0">
+        <di:waypoint x="1130" y="690" />
+        <di:waypoint x="1200" y="690" />
+        <di:waypoint x="1200" y="190" />
+        <di:waypoint x="1320" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13mzo6p_di" bpmnElement="Flow_13mzo6p">
+        <di:waypoint x="1130" y="360" />
+        <di:waypoint x="1200" y="360" />
+        <di:waypoint x="1200" y="190" />
+        <di:waypoint x="1320" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1adbx51_di" bpmnElement="Flow_1adbx51">
+        <di:waypoint x="1130" y="800" />
+        <di:waypoint x="1200" y="800" />
+        <di:waypoint x="1200" y="190" />
+        <di:waypoint x="1320" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_078e2eb_di" bpmnElement="Flow_078e2eb">
+        <di:waypoint x="1420" y="190" />
+        <di:waypoint x="1482" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e1b4w3_di" bpmnElement="Flow_1e1b4w3">
+        <di:waypoint x="910" y="625" />
+        <di:waypoint x="910" y="360" />
+        <di:waypoint x="1030" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14172jn_di" bpmnElement="Flow_14172jn">
+        <di:waypoint x="910" y="625" />
+        <di:waypoint x="910" y="470" />
+        <di:waypoint x="1030" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_039thhb_di" bpmnElement="Flow_039thhb">
+        <di:waypoint x="935" y="650" />
+        <di:waypoint x="983" y="650" />
+        <di:waypoint x="983" y="580" />
+        <di:waypoint x="1030" y="580" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rpz626_di" bpmnElement="Flow_1rpz626">
+        <di:waypoint x="935" y="650" />
+        <di:waypoint x="983" y="650" />
+        <di:waypoint x="983" y="690" />
+        <di:waypoint x="1030" y="690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kpk8f9_di" bpmnElement="Flow_0kpk8f9">
+        <di:waypoint x="910" y="675" />
+        <di:waypoint x="910" y="800" />
+        <di:waypoint x="1030" y="800" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

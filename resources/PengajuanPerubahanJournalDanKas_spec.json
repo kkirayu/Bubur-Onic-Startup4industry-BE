@@ -1,0 +1,64 @@
+{
+    "tasks": {
+        "StartEvent_1": {
+            "type": "startEvent",
+            "name": "StartEvent_1"
+        },
+        "notifikasiReject": {
+            "type": "serviceTask",
+            "name": "notifikasiReject",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.notifikasiReject"
+        },
+        "notifikasiDireksi": {
+            "type": "serviceTask",
+            "name": "notifikasiDireksi",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.notifikasiDireksi"
+        },
+        "reviewDireksi": {
+            "type": "userTask",
+            "name": "reviewDireksi"
+        },
+        "notifikasiSelesaiProses": {
+            "type": "serviceTask",
+            "name": "notifikasiSelesaiProses",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.notifikasiSelesaiProses"
+        },
+        "penghapusanJournal": {
+            "type": "serviceTask",
+            "name": "penghapusanJournal",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.penghapusanJournal"
+        },
+        "pengeditanJournal": {
+            "type": "serviceTask",
+            "name": "pengeditanJournal",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.pengeditanJournal"
+        },
+        "pembuatanKas": {
+            "type": "serviceTask",
+            "name": "pembuatanKas",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.pembuatanKas"
+        },
+        "pembuatanJournal": {
+            "type": "serviceTask",
+            "name": "pembuatanJournal",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.pembuatanJournal"
+        },
+        "perubahanKas": {
+            "type": "serviceTask",
+            "name": "perubahanKas",
+            "action_type": "external",
+            "topic": "PengajuanJournalDanKas.perubahanKas"
+        },
+        "revisiPengajuan": {
+            "type": "userTask",
+            "name": "revisiPengajuan"
+        }
+    }
+}

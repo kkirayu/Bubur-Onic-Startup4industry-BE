@@ -33,7 +33,7 @@ Route::prefix('/auth/password')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Discover::controllers()->in(app_path('Http/Controllers/Api/Crud'));
-    // Discover::controllers()->in(app_path('Http/Controllers/Api/Bpmn'));
+    Discover::controllers()->in(app_path('Http/Controllers/Api/Bpmn'));
 });
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0couzrr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.14.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:collaboration id="Collaboration_10dax9y">
+    <bpmn:participant id="Participant_1az6v9m" name="Pengajuan Potongan" processRef="PotonganKaryawan" />
+  </bpmn:collaboration>
+  <bpmn:process id="PotonganKaryawan" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:laneSet id="LaneSet_1wsk884">
+      <bpmn:lane id="Lane_0w2lbna" name="Kepala Cabang">
+        <bpmn:flowNodeRef>notifikasiRejectPengajuan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1abauw0" name="HRD">
+        <bpmn:flowNodeRef>Gateway_03mg97n</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>approvalHrd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>notifikasiPengajuan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>inputPeriodeGaji</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>potongPeriodeGaji</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0u7rz2c</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1levhcm</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:exclusiveGateway id="Gateway_03mg97n">
+      <bpmn:incoming>Flow_0t5mxmd</bpmn:incoming>
+      <bpmn:outgoing>Flow_00z8zzy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0yq73t3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="notifikasiRejectPengajuan" name="Notifikasi Pengajuan">
+      <bpmn:incoming>Flow_0yq73t3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pxspqu</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="approvalHrd" name="Approval HRD">
+      <bpmn:incoming>Flow_1qha2nu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0t5mxmd</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="notifikasiPengajuan" name="Notifikasi Pengajuan">
+      <bpmn:incoming>Flow_1erafqa</bpmn:incoming>
+      <bpmn:incoming>Flow_18hjdd6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qha2nu</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="inputPeriodeGaji" name="Input Periode Gaji">
+      <bpmn:incoming>Flow_00z8zzy</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lu17fq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="Event_0u7rz2c" attachedToRef="approvalHrd">
+      <bpmn:outgoing>Flow_18hjdd6</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_03x28vw" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1erafqa" sourceRef="StartEvent_1" targetRef="notifikasiPengajuan" />
+    <bpmn:sequenceFlow id="Flow_0t5mxmd" sourceRef="approvalHrd" targetRef="Gateway_03mg97n" />
+    <bpmn:sequenceFlow id="Flow_00z8zzy" sourceRef="Gateway_03mg97n" targetRef="inputPeriodeGaji" />
+    <bpmn:sequenceFlow id="Flow_0yq73t3" sourceRef="Gateway_03mg97n" targetRef="notifikasiRejectPengajuan" />
+    <bpmn:sequenceFlow id="Flow_1lu17fq" sourceRef="inputPeriodeGaji" targetRef="potongPeriodeGaji" />
+    <bpmn:sequenceFlow id="Flow_0pxspqu" sourceRef="notifikasiRejectPengajuan" targetRef="Event_1levhcm" />
+    <bpmn:sequenceFlow id="Flow_1qha2nu" sourceRef="notifikasiPengajuan" targetRef="approvalHrd" />
+    <bpmn:sequenceFlow id="Flow_18hjdd6" sourceRef="Event_0u7rz2c" targetRef="notifikasiPengajuan" />
+    <bpmn:serviceTask id="potongPeriodeGaji" name="Potong Periode Gaji">
+      <bpmn:incoming>Flow_1lu17fq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1867ljx</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1867ljx" sourceRef="potongPeriodeGaji" targetRef="Event_1levhcm" />
+    <bpmn:endEvent id="Event_1levhcm">
+      <bpmn:incoming>Flow_0pxspqu</bpmn:incoming>
+      <bpmn:incoming>Flow_1867ljx</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1erafqa</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_10dax9y">
+      <bpmndi:BPMNShape id="Participant_1az6v9m_di" bpmnElement="Participant_1az6v9m" isHorizontal="true">
+        <dc:Bounds x="160" y="122" width="1048" height="288" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0w2lbna_di" bpmnElement="Lane_0w2lbna" isHorizontal="true">
+        <dc:Bounds x="190" y="122" width="1018" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1abauw0_di" bpmnElement="Lane_1abauw0" isHorizontal="true">
+        <dc:Bounds x="190" y="247" width="1018" height="163" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_03mg97n_di" bpmnElement="Gateway_03mg97n" isMarkerVisible="true">
+        <dc:Bounds x="655" y="285" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ob6xei_di" bpmnElement="notifikasiRejectPengajuan">
+        <dc:Bounds x="630" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06cog7p_di" bpmnElement="approvalHrd">
+        <dc:Bounds x="500" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ujk8h9_di" bpmnElement="notifikasiPengajuan">
+        <dc:Bounds x="330" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h9fso6_di" bpmnElement="inputPeriodeGaji">
+        <dc:Bounds x="760" y="270" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1msxjtc" bpmnElement="potongPeriodeGaji">
+        <dc:Bounds x="940" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1levhcm_di" bpmnElement="Event_1levhcm">
+        <dc:Bounds x="1122" y="292" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="222" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0d619c3_di" bpmnElement="Event_0u7rz2c">
+        <dc:Bounds x="582" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1erafqa_di" bpmnElement="Flow_1erafqa">
+        <di:waypoint x="240" y="198" />
+        <di:waypoint x="240" y="310" />
+        <di:waypoint x="330" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t5mxmd_di" bpmnElement="Flow_0t5mxmd">
+        <di:waypoint x="600" y="310" />
+        <di:waypoint x="655" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00z8zzy_di" bpmnElement="Flow_00z8zzy">
+        <di:waypoint x="705" y="310" />
+        <di:waypoint x="760" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yq73t3_di" bpmnElement="Flow_0yq73t3">
+        <di:waypoint x="680" y="285" />
+        <di:waypoint x="680" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lu17fq_di" bpmnElement="Flow_1lu17fq">
+        <di:waypoint x="860" y="310" />
+        <di:waypoint x="940" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pxspqu_di" bpmnElement="Flow_0pxspqu">
+        <di:waypoint x="730" y="180" />
+        <di:waypoint x="1140" y="180" />
+        <di:waypoint x="1140" y="292" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qha2nu_di" bpmnElement="Flow_1qha2nu">
+        <di:waypoint x="430" y="310" />
+        <di:waypoint x="500" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18hjdd6_di" bpmnElement="Flow_18hjdd6">
+        <di:waypoint x="600" y="368" />
+        <di:waypoint x="600" y="388" />
+        <di:waypoint x="380" y="388" />
+        <di:waypoint x="380" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1867ljx_di" bpmnElement="Flow_1867ljx">
+        <di:waypoint x="1040" y="310" />
+        <di:waypoint x="1122" y="310" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
