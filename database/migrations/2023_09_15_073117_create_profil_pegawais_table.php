@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('tanggal_lahir');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar')->nullable();
-            $table->boolean('tanggal_kawin');
+            $table->boolean('status_kawin');
             $table->string('nomor_ktp')->nullable();
             $table->string('npwp')->nullable();
 
