@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api\Crud\Keuangan;
+namespace App\Http\Controllers\Api\Crud\HumanResource;
 
-use App\Models\JenisBonusKaryawan;
+use App\Models\JenisDendaKaryawan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Laravolt\Crud\ApiCrudController;
 use Laravolt\Crud\CrudModel;
-use App\Services\Keuangan\JenisBonusKaryawanService;
+use App\Services\HumanResource\JenisDendaKaryawanService;
 use Laravolt\Crud\CrudService;
 
 
-class JenisBonusKaryawanController extends ApiCrudController
+class JenisDendaKaryawanController extends ApiCrudController
 {
     public function model(): CrudModel
     {
-        return new JenisBonusKaryawan();
+        return new JenisDendaKaryawan();
     }
 
     /**
@@ -23,7 +23,7 @@ class JenisBonusKaryawanController extends ApiCrudController
      */
     public function service(): CrudService
     {
-        return new JenisBonusKaryawanService($this->model(), $this->user);
+        return new JenisDendaKaryawanService($this->model(), $this->user);
     }
 
 

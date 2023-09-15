@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Keuangan;
+namespace App\Services\HumanResource;
 
-use App\Models\Keuangan\JenisBonusKaryawan;
+use App\Models\HumanResource\JenisBonusKaryawan;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Laravolt\Crud\CrudService;
