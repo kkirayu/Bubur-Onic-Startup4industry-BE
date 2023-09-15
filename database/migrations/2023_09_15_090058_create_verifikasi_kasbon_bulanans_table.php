@@ -22,7 +22,8 @@ return new class extends Migration
             $table->timestamps();
             $table->userstamps();
 
-            $table->foreign('kasbon_bulanan_id')->references('id')->on('kasbon_bulanan');
+            $table->foreign('profile_pegawai_id')->references('id')->on('profile_pegawais');
+            $table->foreign('kasbon_bulanan_id')->references('id')->on('kasbon_bulanans');
             $table->foreign('perusahaan_id')->references('id')->on('perusahaans');
             $table->foreign('cabang_id')->references('id')->on('cabangs');
         });
