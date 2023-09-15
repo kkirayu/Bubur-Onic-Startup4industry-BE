@@ -23,6 +23,7 @@ class CreatePerusahaanTest extends TestCase
     
     public function testCreatePerusahaanWithValidData(): void
     {
+        $this->artisan("db:seed");
         // create payload from  CreatePeruysahaanRequest
         $payload = [
             "nama" => $this->faker->name,
@@ -180,7 +181,7 @@ class CreatePerusahaanTest extends TestCase
         $user_role_cabang->save();
 
         $response = $this->getJson('api/saas/perusahaan/' . $companyId);
-
-        dd($response->json());
+        $this->assertEquals($response->json("data.id"), $companyId);
+        $this->assertEquals($response->json("data.owner.name"), $payload['owner']['nama']);
     }
 }
