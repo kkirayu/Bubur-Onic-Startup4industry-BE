@@ -8,6 +8,6 @@ class JenisBonusKaryawan extends CrudModel
 {
     protected $table = 'jenis_bonus_karyawans';
 
-    protected string $path = "/api/keuangan/jenis-bonus-karyawan";
+    protected string $path = "/api/human-resource/jenis-bonus-karyawan";
 
 }
