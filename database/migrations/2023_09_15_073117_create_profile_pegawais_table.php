@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profil_pegawais', function (Blueprint $table) {
+        Schema::create('profile_pegawais', function (Blueprint $table) {
             $table->id();
             $table->integer('perusahaan_id')->default(0);
             $table->integer('cabang_id')->default(0);
