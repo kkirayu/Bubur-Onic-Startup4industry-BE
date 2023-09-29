@@ -102,4 +102,27 @@ class UserService extends CrudService
 
         return $this->afterUpdateHook($id, $model);
     }
+
+    public function delete(mixed $model): ?bool
+    {
+        if(request("user_deleted_reason", null) !=null) {
+            $model->user_deleted_reason = request("user_deleted_reason");
+            $model->save();
+        }
+
+        if ($model instanceof CrudModel) {
+            return $model->delete();
+        }
+        AkActivityLog::createCrudlog(
+            $model,
+            "DELETE_DATA"
+        );
+
+        return $this->model
+            ->newQuery()
+            ->findOrFail($model)
+            ->delete();
+    }
+
+
 }

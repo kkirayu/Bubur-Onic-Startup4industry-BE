@@ -13,11 +13,12 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravolt\Crud\CrudModel;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Crud\Contracts\CrudUser;
 
 class User extends CrudModel implements Authenticatable, CrudUser, CanResetPassword
 {
-    use HasApiTokens, HasFactory, Notifiable, AuthenticableTrait, CanResetPasswordTrait;
+    use HasApiTokens, HasFactory, Notifiable, AuthenticableTrait, CanResetPasswordTrait,  SoftDeletes; 
 
 
     /**
