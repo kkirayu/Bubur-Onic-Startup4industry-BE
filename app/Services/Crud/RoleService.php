@@ -124,6 +124,8 @@ class RoleService extends CrudService
 
     function addPermission(AddPermissionToRoleRequest $addPermissionToRoleRequest) : CrudModel {
         $role =  $this->model->newQuery()->findOrFail($addPermissionToRoleRequest->role_id);
+
+        PermissionRole::where('role_id', $role->id)->delete();
         foreach ($addPermissionToRoleRequest->permissions as $key => $value) {
             # code...
             $permission = Permission::find($value);
