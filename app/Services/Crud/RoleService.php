@@ -2,10 +2,12 @@
 
 namespace App\Services\crud;
 
+use App\Http\Requests\AddPermissionToRoleRequest;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\RoleModules;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Laravolt\Crud\Contracts\StoreRequestContract;
 use Laravolt\Crud\Contracts\UpdateRequestContract;
@@ -117,5 +119,22 @@ class RoleService extends CrudService
         );
 
         return $this->afterUpdateHook($id, $model);
+    }
+
+
+    function addPermission(AddPermissionToRoleRequest $addPermissionToRoleRequest) : CrudModel {
+        $role =  $this->model->newQuery()->findOrFail($addPermissionToRoleRequest->role_id);
+        foreach ($addPermissionToRoleRequest->permissions as $key => $value) {
+            # code...
+            $permission = Permission::find($value);
+            if($permission){
+                $role->permissions()->attach($permission->id, ['id' => Uuid::uuid4(), 'access_level' => $value]);
+            }
+            
+        }
+
+        $role ->load('permissions');
+        return  $role;
+        
     }
 }
