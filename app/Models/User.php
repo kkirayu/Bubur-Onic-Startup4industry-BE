@@ -35,6 +35,11 @@ class User extends CrudModel implements Authenticatable, CrudUser, CanResetPassw
         'email_verified_at'
     ];
 
+
+
+    protected array $filterableColumns = ["deleted_at", "email", "name", "email_verified_at"];
+    protected array $searchableColumns = [ "email", "name"];
+
     /**
      * The attributes that should be hidden for serialization.
      *
