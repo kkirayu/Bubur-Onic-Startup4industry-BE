@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HideCompanyTrait;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
 
 class Akun extends CrudModel
 {
+
+    use HideCompanyTrait;
     protected $table = 'akuns';
 
     protected string $path = "/api/akun/akun";

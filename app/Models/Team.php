@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HideCompanyTrait;
 use Laravolt\Crud\CrudModel;
 
 class Team extends CrudModel
 {
-    protected $table = 'teams';
+
+
+    use HideCompanyTrait;
+        protected $table = 'teams';
 
     protected string $path = "/api/team/team";
 
