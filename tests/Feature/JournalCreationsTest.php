@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Journal;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -98,7 +99,25 @@ class JournalCreationsTest extends TestCase
         $response = $this->postJson('/api/journal/journal/create-journal', $payload);
 
 
-        $response->assertJsonValidationErrors(  ["judul", "tanggal_transaksi"]);
+        $response->assertJsonValidationErrors(["judul", "tanggal_transaksi"]);
         $response->assertStatus(422);
+    }
+
+    public  function testPostJournal(): void
+    {
+
+        $this->testCreateJournal();
+        $journal = Journal::orderBy("id",  "desc")->first();
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+        $response = $this->postJson('/api/journal/journal/' . $journal->id . '/post');
+
+
+        $this->assertDatabaseHas("journals", [
+            "id" => $journal->id,
+            "posted_at" => date("Y-m-d H:i:s"),
+            "posted_by" => $user->id,
+        ]);
+        $response->assertStatus(200);
     }
 }

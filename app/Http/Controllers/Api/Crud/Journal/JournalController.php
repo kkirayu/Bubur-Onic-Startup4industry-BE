@@ -40,4 +40,16 @@ class JournalController extends ApiCrudController
 
         return $this->single($model);
     }
+
+
+    #[Route(method: ['POST'],  uri: '{journalId}/post')]
+    public function postJournal($journalId): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->postJournal($journalId);
+        $model->refresh();
+
+        return $this->single($model);
+    }
 }

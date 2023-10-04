@@ -55,4 +55,15 @@ class JournalService extends CrudService
         $journal->load("journalAkuns");
         return $journal;
     }
+    public function postJournal($journalId)
+    {
+        $journal = Journal::find($journalId);
+
+        $journal->posted_at = date("Y-m-d H:i:s");
+        $journal->posted_by = $this->user->id;
+        $journal->save();
+
+        $journal->load("journalAkuns");
+        return $journal;
+    }
 }
