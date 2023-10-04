@@ -9,12 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 class ModifyHeadersMiddleware
 {
 
-    public function handle( $request, Closure $next )
-{
-    $response = $next( $request );
-    $response->header( 'Access-Control-Allow-Origin', '*' );
-    $response->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
-
-    return $response;
-}
+    public function handle(Request $request, Closure $next): Response
+    {
+        $request->merge(['perusahaan_id' => 1, 'cabang_id' => 1]);
+ 
+        return $next($request);
+    }
 }
