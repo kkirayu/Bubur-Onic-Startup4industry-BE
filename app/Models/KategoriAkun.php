@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravolt\Crud\CrudModel;
+use Laravolt\Crud\Input\Selection\UrlForeignSelection;
 
 class KategoriAkun extends CrudModel
 {
@@ -10,4 +11,8 @@ class KategoriAkun extends CrudModel
 
     protected string $path = "/api/akun/kategori-akun";
 
+    public function getParent_kategori_akunSelection()
+    {
+        return new UrlForeignSelection("/api/akun/kategori-akun", "get", "id", "nama");
+    }
 }
