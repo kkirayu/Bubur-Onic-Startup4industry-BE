@@ -33,9 +33,9 @@ class AddPermissionToRoleTest extends TestCase
         
         $permission = Permission::limit(1)->get()->pluck('id')->toArray();
 
-        dump('/api/crud/role/' . $role->id . '/permissions');
+        dump('URL: /api/crud/role/' . $role->id . '/permissions');
         
-        dump(json_encode([
+        dump("Payload :" . json_encode([
             'permissions' => $permission
         ]));
         
@@ -45,6 +45,7 @@ class AddPermissionToRoleTest extends TestCase
         $response->assertStatus(200);
 
     } 
+    
     public function test_not_send_valid_request(): void
     {
         $user =  User::factory()->create();
