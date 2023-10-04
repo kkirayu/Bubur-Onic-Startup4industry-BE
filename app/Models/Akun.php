@@ -17,7 +17,7 @@ class Akun extends CrudModel
     
 
 
-    public function getKategori_akunSelection()
+    public function getKategori_akun_idSelection()
     {
         return new UrlForeignSelection("/api/akun/kategori-akun", "get", "id", "nama");
     }
