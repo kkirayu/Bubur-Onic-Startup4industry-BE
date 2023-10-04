@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\HideCompanyTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
@@ -23,8 +25,12 @@ class Journal extends CrudModel
     public AutoMode $searchMode = AutoMode::BLACKLIST;
     public AutoMode $sortMode = AutoMode::BLACKLIST;
 
-
-    function postedByData() : BelongsTo {
+    public function journalAkuns(): HasMany
+    {
+        return $this->hasMany(JournalAkun::class, "journal_id");
+    }
+    function postedByData(): BelongsTo
+    {
         return $this->belongsTo(User::class,  "posted_by");
     }
     public function getPosted_bySelection()
@@ -39,7 +45,4 @@ class Journal extends CrudModel
             new BaseTableValue("posted_by", "hasOne", "posted_by_data", "name"),
         ];
     }
-
-    
-
 }
