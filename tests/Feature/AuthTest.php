@@ -239,9 +239,6 @@ class AuthTest extends TestCase
 
     public function test_reset_password_empty_fields()
     {
-        // $this->test_forgot_password_send_email_success();
-        // $user = User::query()->first();
-        // $token = PasswordResetToken::query()->where('email', $user->email)->first('token');
         $response = $this->postJson('/api/auth/password/reset');
 
         $response->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY)
