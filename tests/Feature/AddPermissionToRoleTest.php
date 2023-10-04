@@ -31,16 +31,42 @@ class AddPermissionToRoleTest extends TestCase
             'name' => $this->faker->name,
         ]);
         
-        $permission = Permission::limit(2)->get()->pluck('id')->toArray();
+        $permission = Permission::limit(1)->get()->pluck('id')->toArray();
 
         dump('/api/crud/role/' . $role->id . '/permissions');
         
-        dump(json_encode($permission));
+        dump(json_encode([
+            'permissions' => $permission
+        ]));
         
         $response = $this->postJson('/api/crud/role/' . $role->id . '/permissions', [
             'permissions' => $permission
         ]);
         $response->assertStatus(200);
+
+    } 
+    public function test_not_send_valid_request(): void
+    {
+        $user =  User::factory()->create();
+
+        $this->actingAs($user);
+        $role = Role::create([
+            'name' => $this->faker->name,
+        ]);
+        Permission::create([
+            'name' => $this->faker->name,
+        ]);
+        Permission::create([
+            'name' => $this->faker->name,
+        ]);
+        
+        $permission = Permission::limit(1)->get()->pluck('id')->toArray();
+
+        
+        $response = $this->postJson('/api/crud/role/' . $role->id . '/permissions', [
+            'permission' => $permission
+        ]);
+        $response->assertStatus(422);
 
     }
 }

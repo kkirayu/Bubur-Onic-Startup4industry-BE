@@ -23,13 +23,10 @@ class AddPermissionToRoleRequest extends FormRequest
     {
         return [
             //
-            "permissions.*" => ['required', 'uuid', 'exists:acl_permissions,id'
+            "permissions.*" => ['required', 'uuid', 'exists:acl_permissions,id'],
+            "permissions" => ['required', 'array', 'min:1'],
         
-        
-        
-        
-        
-        ],
+
 
         ];
     }

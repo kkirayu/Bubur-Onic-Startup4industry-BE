@@ -28,7 +28,7 @@ class RoleController extends ApiCrudController
 
     
     #[Route(method: ['POST'],uri : "{role_id}/permissions")]
-    function addApermission($role_id,  AddPermissionToRoleRequest $addPermissionToRoleRequest) : JsonResource {
+    function addApermission( AddPermissionToRoleRequest $addPermissionToRoleRequest) : JsonResource {
         
         $role = $this->service()->addPermission($addPermissionToRoleRequest);
         return $this->single($role);
