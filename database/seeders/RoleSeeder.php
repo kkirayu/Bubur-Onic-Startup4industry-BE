@@ -25,7 +25,6 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $key => $value) {
-            # code...
             if(Role::where('name', $key)->count() == 0){
                 Role::insert([
                     'id' => Uuid::uuid4(),
@@ -33,7 +32,5 @@ class RoleSeeder extends Seeder
                 ]);
             }
         }
-        
-        //
     }
 }
