@@ -33,7 +33,7 @@ abstract class TestCase extends BaseTestCase
     function appendJson($text) : void {
         
         $myfile = fopen($this->docsUrl, "a") or die("Unable to create file!");
-        fwrite($myfile, "```\n" . json_encode($text).  "\n```" .  "\n\n");
+        fwrite($myfile, "```\n" . json_encode($text,  JSON_PRETTY_PRINT).  "\n```" .  "\n\n");
         fclose($myfile);
     }
 }

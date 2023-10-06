@@ -26,6 +26,7 @@ php artisan migrate
 
 php artisan scribe:generate
 
+chown -R www-data:www-data /var/www/project/storage
 
 echo "Watch Laravel Logs "
 echo "" >  /var/www/project/storage/logs/laravel.log

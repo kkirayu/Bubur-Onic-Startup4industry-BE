@@ -48,6 +48,9 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
         $this->appendContent("Payload :");
         $this->appendJson($data);
         $url = $this->baseurl . '/' . $userTask . '/' . $busniessKey . '/task/' . $id . "/submit";
+
+        $this->appendContent("url : ");
+        $this->appendContent($url);
         $response = $this
             ->post($url, $data);
 
@@ -101,6 +104,8 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
         $this->appedHeader($task);
         $this->appendContent("Payload:");
         $this->appendJson($payload);
+        $this->appendContent("url : ");
+        $this->appendContent($url);
         $this->appendContent("Response :");
         $this->appendJson($response);
 
