@@ -200,3 +200,205 @@ Output :
 
 Sista Task :  0
 
+## Testing  Flow  :  PEMBUATAN_JURNAL
+
+Digunakan untuk testing flow PEMBUATAN_JURNAL mengunakan camunda engine
+        transaksi akan di kirim dan mengunggu approval dari admin dan direksi sebelum masuk ke database uatama
+        
+
+## User yang akan di gunakan :  
+
+```json 
+{
+    "name": "Tate Heathcote",
+    "email": "becker.keagan@example.com",
+    "email_verified_at": "2023-10-06T03:58:49.000000Z",
+    "updated_at": "2023-10-06T03:58:49.000000Z",
+    "created_at": "2023-10-06T03:58:49.000000Z",
+    "id": 160
+}
+```
+
+## Menyiapkan Company yang akan di gunakan
+
+Payload:
+
+```json 
+{
+    "nama": "Maxine Klein",
+    "alamat": "Jl. Test",
+    "domain": "test.com",
+    "cabang": {
+        "nama": "Dr. Bethany Haag",
+        "alamat": "Jl. Cabang Test",
+        "kode": "CT"
+    },
+    "owner": {
+        "nama": "Dr. Gussie Heidenreich",
+        "email": "june.larson@hotmail.com",
+        "password": "password"
+    }
+}
+```
+
+url : 
+
+api/saas/perusahaan/register-perusahaan
+
+Response :
+
+```json 
+{
+    "baseResponse": {
+        "headers": {},
+        "original": {
+            "id": 24,
+            "created_at": "2023-10-06T03:58:49.000000Z",
+            "updated_at": "2023-10-06T03:58:49.000000Z",
+            "created_by": null,
+            "updated_by": null,
+            "deleted_by": null,
+            "kode_perusahaan": "PERU20231006035849",
+            "domain_perusahaan": "test.com",
+            "status_perusahaan": "AKTIF",
+            "nama": "Maxine Klein",
+            "alamat": "Jl. Test"
+        },
+        "exception": null
+    },
+    "exceptions": []
+}
+```
+
+## Data Cabang Yang akan di gunakan
+
+cabang : 
+
+```json 
+{
+    "id": 24,
+    "kode_cabang": "CAB20231006035849",
+    "perusahaan_id": 24,
+    "nama": "Dr. Bethany Haag",
+    "alamat": "Jl. Cabang Test",
+    "created_at": "2023-10-06T03:58:49.000000Z",
+    "updated_at": "2023-10-06T03:58:49.000000Z",
+    "created_by": null,
+    "updated_by": null,
+    "deleted_by": null
+}
+```
+
+## Payload Pengajuan 
+
+Payload yang di gunakan :
+
+```json 
+{
+    "perusahaan_id": 24,
+    "cabang_id": 24,
+    "jenis_aksi": "PEMBUATAN_JURNAL",
+    "payload": "{\"nama\":\"Tambah Kas \"}",
+    "nama": "Tambah Kas "
+}
+```
+
+response :
+
+```json 
+{
+    "perusahaan_id": 24,
+    "cabang_id": 24,
+    "jenis_aksi": "PEMBUATAN_JURNAL",
+    "payload": "{\"nama\":\"Tambah Kas \"}",
+    "nama": "Tambah Kas ",
+    "updated_at": "2023-10-06T03:58:49.000000Z",
+    "created_at": "2023-10-06T03:58:49.000000Z",
+    "id": 16
+}
+```
+
+## Start Process Instance 
+
+Start Process instance dengan id  16 dan payload: 
+
+```json 
+[]
+```
+
+response :
+
+```json 
+{
+    "baseResponse": {
+        "headers": {},
+        "original": {
+            "id": 16,
+            "process_instance_id": "a82884f7-63fc-11ee-84de-0242ac110002",
+            "perusahaan_id": 24,
+            "cabang_id": 24,
+            "payload": "{\"nama\":\"Tambah Kas \"}",
+            "nama": "Tambah Kas ",
+            "jenis_aksi": "PEMBUATAN_JURNAL",
+            "created_at": "2023-10-06T03:58:49.000000Z",
+            "updated_at": "2023-10-06T03:58:49.000000Z",
+            "created_by": null,
+            "updated_by": null,
+            "deleted_by": null
+        },
+        "exception": null
+    },
+    "exceptions": []
+}
+```
+
+## Jalankan service task  Notifikasi Direksi
+
+Output : 
+
+## Jalankan usertask review-direksi dengan taskid a847a4c1-63fc-11ee-84de-0242ac110002
+
+Payload :
+
+```json 
+{
+    "review_direksi": "TERIMA",
+    "keterangan_konfirmasi": "ga oke direvisi dulu"
+}
+```
+
+url : 
+
+/api/pengajuan-perubahan-journal-dan-kas/review-direksi/16/task/a847a4c1-63fc-11ee-84de-0242ac110002/submit
+
+response :
+
+```json 
+{
+    "baseResponse": {
+        "headers": {},
+        "original": {
+            "review_direksi": "TERIMA",
+            "business_key": "16",
+            "updated_at": "2023-10-06T03:58:50.000000Z",
+            "created_at": "2023-10-06T03:58:50.000000Z",
+            "id": 14
+        },
+        "exception": null
+    },
+    "exceptions": []
+}
+```
+
+## Jalankan service task  Pengerjaan Task
+
+Output : 
+
+## Jalankan service task  Notifikasi email
+
+Output : 
+
+## Pastikan tidak ada task yang tersisa 
+
+Sista Task :  0
+
