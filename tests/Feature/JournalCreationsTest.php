@@ -36,6 +36,9 @@ class JournalCreationsTest extends TestCase
         ];
 
 
+        
+        dump('/api/journal/journal/create-journal');
+        dump(json_encode($payload));
         $user = \App\Models\User::factory()->create();
         $this->actingAs($user);
         $response = $this->postJson('/api/journal/journal/create-journal', $payload);
@@ -110,6 +113,9 @@ class JournalCreationsTest extends TestCase
         $journal = Journal::orderBy("id",  "desc")->first();
         $user = \App\Models\User::factory()->create();
         $this->actingAs($user);
+
+        
+        dump('/api/journal/journal/' . $journal->id . '/post');
         $response = $this->postJson('/api/journal/journal/' . $journal->id . '/post');
 
 
@@ -117,6 +123,28 @@ class JournalCreationsTest extends TestCase
             "id" => $journal->id,
             "posted_at" => date("Y-m-d H:i:s"),
             "posted_by" => $user->id,
+        ]);
+        $response->assertStatus(200);
+    }    public  function testUnPostJournal(): void
+    {
+
+        $this->testCreateJournal();
+        $journal = Journal::orderBy("id",  "desc")->first();
+        $journal->posted_at =  date("Y-m-d H:i:s");
+        $journal->posted_by = 1;
+        $journal->save();
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+
+        
+        dump('/api/journal/journal/' . $journal->id . '/un-post');
+        $response = $this->postJson('/api/journal/journal/' . $journal->id . '/un-post');
+
+
+        $this->assertDatabaseHas("journals", [
+            "id" => $journal->id,
+            "posted_at" => null,
+            "posted_by" => null,
         ]);
         $response->assertStatus(200);
     }

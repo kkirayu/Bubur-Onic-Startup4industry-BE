@@ -59,6 +59,10 @@ class JournalService extends CrudService
     {
         $journal = Journal::find($journalId);
 
+
+        if($journal->posted_at != null){
+            throw ValidationException::withMessages(['id' => 'Journal sudah diposting']);
+         }
         $journal->posted_at = date("Y-m-d H:i:s");
         $journal->posted_by = $this->user->id;
         $journal->save();
@@ -66,4 +70,21 @@ class JournalService extends CrudService
         $journal->load("journalAkuns");
         return $journal;
     }
+    public function unPostJournal($journalId)
+    {
+        $journal = Journal::find($journalId);
+
+        if($journal->posted_at == null){
+            throw ValidationException::withMessages(['id' => 'Journal belum diposting']);
+        }
+
+        $journal->posted_at = null;
+        $journal->posted_by = null;
+        $journal->save();
+
+        $journal->load("journalAkuns");
+        return $journal;
+    }
+
+    
 }
