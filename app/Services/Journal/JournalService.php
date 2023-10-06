@@ -47,7 +47,7 @@ class JournalService extends CrudService
                 "journal_id" => $journal->id,
                 "akun" => $value["id"],
                 "posisi_akun" => $value["debit"] > 0 ? "DEBIT" : "CREDIT",
-                "deskripsi" => $value["description"],
+                "deskripsi" => array_key_exists("description", $value) ? $value["description"] : "",
                 "jumlah" => $value["debit"] > 0 ? $value["debit"] : $value["credit"],
             ]);
         }

@@ -30,7 +30,6 @@ class JournalCreationsTest extends TestCase
                     "id" => 2,
                     "debit" => 0,
                     "credit" => 1000,
-                    "description" => "Credit description"
                 ]
             ]
         ];
@@ -43,6 +42,7 @@ class JournalCreationsTest extends TestCase
         $this->actingAs($user);
         $response = $this->postJson('/api/journal/journal/create-journal', $payload);
 
+        dump($response->getContent());
         $response->assertStatus(201);
     }
     public function testCreateInvalidJournal(): void
