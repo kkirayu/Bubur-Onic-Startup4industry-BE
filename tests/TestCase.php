@@ -12,7 +12,7 @@ abstract class TestCase extends BaseTestCase
     protected $docsUrl = "";
 
     function initDocs($testCasename) {
-        $this->docsUrl = $testCasename . '.md';
+        $this->docsUrl = "test-result/" .$testCasename . '.md';
 
     }
 

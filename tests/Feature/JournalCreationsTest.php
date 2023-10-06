@@ -125,7 +125,9 @@ class JournalCreationsTest extends TestCase
             "posted_by" => $user->id,
         ]);
         $response->assertStatus(200);
-    }    public  function testUnPostJournal(): void
+    }   
+    
+    public  function testUnPostJournal(): void
     {
 
         $this->testCreateJournal();
@@ -141,7 +143,7 @@ class JournalCreationsTest extends TestCase
         $response = $this->postJson('/api/journal/journal/' . $journal->id . '/un-post');
 
 
-        $this->assertDatabaseHas("journals", [
+        $this->assertDatabaseHas("journals", [  
             "id" => $journal->id,
             "posted_at" => null,
             "posted_by" => null,

@@ -23,30 +23,36 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
      */
     // Your code here
 
-    public function createData($data)
+    public function createData($request)
     {
 
         $this->appedHeader("Payload Pengajuan ");
 
-        $this->appendContent("Payload yang di gunakan :" );
-        $this->appendJson($data);
+        $this->appendContent("Payload yang di gunakan :");
+        $this->appendJson($request);
 
-        $url = $this->baseurl;
-        $response = $this
-            ->post($url, $data);
-        return $response->json("data.id");
+
+
+        $response = PengajuanPerubahanJournalDanKas::create($request);
+
+        
+        $this->appendContent("response :");
+        $this->appendJson($response);
+        return $response->id;
     }
 
 
     public function submitUserTask($busniessKey, $id, $userTask, $data)
     {
         $this->appedHeader("Jalankan usertask $userTask dengan taskid " . $id);
-        $this->appendContent("Payload yang di gunakan :" );
+        $this->appendContent("Payload :");
         $this->appendJson($data);
         $url = $this->baseurl . '/' . $userTask . '/' . $busniessKey . '/task/' . $id . "/submit";
         $response = $this
             ->post($url, $data);
 
+        $this->appendContent("response :");
+        $this->appendJson($response);
         return $response;
     }
 
@@ -55,27 +61,50 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
 
         $this->appedHeader("Start Process Instance ");
 
-        $this->appendContent("Start Process instance deongan id  $id dan variable: " );
+        $this->appendContent("Start Process instance dengan id  $id dan payload: ");
         $this->appendJson($variables);
 
         $url = $this->baseurl . '/' . $id . "/start";
         $data = $variables;
         //        dd($url);
+
         $response = $this
             ->post($url, $data);
 
+        $this->appendContent("response :");
+        $this->appendJson($response);
 
         return $response->json("data.process_instance_id");
     }
 
-    function runServiceTask($userTaskName) : void {
+    function runServiceTask($userTaskName): void
+    {
 
-        $this->appedHeader("Jalankan service task  ". $userTaskName);
+        $this->appedHeader("Jalankan service task  " . $userTaskName);
         Artisan::call("camunda:consume-external-task --workerId=worker1");
 
         $output = Artisan::output();
         $this->appendContent("Output : " . $output);
-        
+    }
+
+    function executeApi($task, $method, $url, $payload)
+    {
+
+
+        if ($method == "POST") {
+
+            $response = $this->postJson($url, $payload);
+        } else {
+            $response = $this->getJson($url);
+        }
+
+        $this->appedHeader($task);
+        $this->appendContent("Payload:");
+        $this->appendJson($payload);
+        $this->appendContent("Response :");
+        $this->appendJson($response);
+
+        return  $response;
     }
 
     function instanceToFinish($journalOrKasData, $type_transaksi): void
@@ -85,6 +114,7 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
         $this->appendContent("Digunakan untuk testing flow $type_transaksi mengunakan camunda engine
         transaksi akan di kirim dan mengunggu approval dari admin dan direksi sebelum masuk ke database uatama
         ");
+
 
         $this->artisan("db:seed");
 
@@ -105,21 +135,17 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
         ];
 
 
-        
+
         $user = \App\Models\User::factory()->create();
         // $this->actingAs($user);
-        $this->appedHeader("User yang akan di gunakan :  " .  $user->name);
+        $this->appedHeader("User yang akan di gunakan :  ");
+        $this->appendJson($user->toArray());
 
 
 
         $this->actingAs($user);
 
-        $response = $this->postJson('api/saas/perusahaan/register-perusahaan', $payload);
-
-
-        $this->appedHeader("Menyiapkan Company yang akan di gunakan");
-        $this->appendContent("Payload yang di gunakan :" );
-        $this->appendJson($payload);
+        $response = $this->executeApi("Menyiapkan Company yang akan di gunakan", "POST", 'api/saas/perusahaan/register-perusahaan', $payload);
 
         $companyId = $response->json("data.id");
         $cabang = Cabang::where("perusahaan_id", $companyId)->first();
@@ -127,9 +153,10 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
 
         $this->appedHeader("Data Cabang Yang akan di gunakan");
 
-        $this->appendContent("cabang : " .$cabang->nama );
+        $this->appendContent("cabang : ");
 
-        
+        $this->appendJson($cabang->toArray());
+
         $request = [
 
             "perusahaan_id" => $companyId,
@@ -141,21 +168,20 @@ class PengajuanPerubahanJournalDanKasTest extends TestCase
         ];
 
 
-
-        $id = PengajuanPerubahanJournalDanKas::create($request)->id;
+        $id = $this->createData($request);
         $prc = $this->createProcessInstance($id, []);
         $this->runServiceTask("Notifikasi Direksi");
         $tasks = TaskClient::getByProcessInstanceId($prc);
 
 
         $taskid = $tasks[0]->id;
-        
+
         // dd($tasks);
         $response = $this->submitUserTask($id, $taskid, "review-direksi", [
             'review_direksi' => 'TERIMA',
             'keterangan_konfirmasi' => 'ga oke direvisi dulu',
         ]);
-        
+
 
         $this->runServiceTask("Pengerjaan Task");
         $this->runServiceTask("Notifikasi email");
