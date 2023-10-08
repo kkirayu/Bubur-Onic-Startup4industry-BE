@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HideCompanyTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
@@ -12,7 +13,7 @@ use Laravolt\Crud\Spec\BaseTableValue;
 class Akun extends CrudModel
 {
 
-    use HideCompanyTrait;
+    use HideCompanyTrait, SoftDeletes;
     protected $table = 'akuns';
 
     protected string $path = "/api/akun/akun";
