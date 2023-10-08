@@ -6,6 +6,7 @@ use App\Traits\HideCompanyTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
@@ -14,7 +15,7 @@ use Laravolt\Crud\Spec\BaseTableValue;
 class Journal extends CrudModel
 {
 
-    use HideCompanyTrait;
+    use HideCompanyTrait, SoftDeletes;
     protected $table = 'journals';
 
     protected string $path = "/api/journal/journal";
