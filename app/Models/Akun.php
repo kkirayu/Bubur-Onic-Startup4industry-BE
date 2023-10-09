@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
+use Laravolt\Crud\Input\Selection\StaticSelection;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
 use Laravolt\Crud\Spec\BaseTableValue;
 
@@ -45,8 +46,26 @@ class Akun extends CrudModel
     {
         return [
             new BaseTableValue("kategori_akun_id", "hasOne", "kategori_akun", "nama"),
-            new BaseTableValue("parent_akun", "hasOne", "parent", "nama")
+            new BaseTableValue("parent_akun", "hasOne", "parent", "nama"), 
+            new BaseTableValue("is_kas", "hasOne", "is_kas_selection", "label")
         ];
+    }
+
+
+
+    public function getIs_kasSelection()
+    {
+
+        return new StaticSelection([
+            [
+                "key" => "1",
+                "label" => "Ya",
+            ],
+            [
+                "key" => "0",
+                "label" => "Bukan",
+            ]
+        ], "key", "label");
     }
     
 }

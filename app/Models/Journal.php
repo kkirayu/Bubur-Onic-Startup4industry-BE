@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
+use Laravolt\Crud\Input\BaseCustomFieldAtribute;
+use Laravolt\Crud\Input\BaseUploadFileFieldAtribute;
+use Laravolt\Crud\Input\Selection\StaticSelection;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
 use Laravolt\Crud\Spec\BaseTableValue;
 
@@ -45,5 +48,22 @@ class Journal extends CrudModel
         return [
             new BaseTableValue("posted_by", "hasOne", "posted_by_data", "name"),
         ];
+    }
+
+
+
+    public function getIs_kasSelection()
+    {
+
+        return new StaticSelection([
+            [
+                "key" => "1",
+                "label" => "Ya",
+            ],
+            [
+                "key" => "0",
+                "label" => "Bukan",
+            ]
+        ], "key", "label");
     }
 }
