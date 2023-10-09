@@ -51,19 +51,4 @@ class Journal extends CrudModel
     }
 
 
-
-    public function getIs_kasSelection()
-    {
-
-        return new StaticSelection([
-            [
-                "key" => "1",
-                "label" => "Ya",
-            ],
-            [
-                "key" => "0",
-                "label" => "Bukan",
-            ]
-        ], "key", "label");
-    }
 }

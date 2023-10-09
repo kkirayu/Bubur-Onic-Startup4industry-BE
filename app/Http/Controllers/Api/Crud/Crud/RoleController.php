@@ -9,10 +9,13 @@ use Laravolt\Crud\CrudModel;
 use App\Services\Crud\RoleService;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laravolt\Crud\CrudService;
+use Laravolt\Crud\PrimaryKeyFormat;
 use Spatie\RouteDiscovery\Attributes\Route;
 
 class RoleController extends ApiCrudController
 {
+
+
     public function model(): CrudModel
     {
         return new Role();

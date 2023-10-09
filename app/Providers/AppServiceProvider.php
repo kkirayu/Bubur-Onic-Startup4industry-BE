@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravolt\Camunda\Http\ExternalTaskClient;
+use Laravolt\Crud\CrudManager;
+use Laravolt\Crud\PrimaryKeyFormat;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-
+        // CrudManager::setPrimaryKeyFormat(PrimaryKeyFormat::UUID);
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.notifikasiReject', \App\Jobs\PengajuanPerubahanJournalDanKas\NotifikasiRejectJob::class);
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.notifikasiDireksi', \App\Jobs\PengajuanPerubahanJournalDanKas\NotifikasiDireksiJob::class);
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.notifikasiSelesaiProses', \App\Jobs\PengajuanPerubahanJournalDanKas\NotifikasiSelesaiProsesJob::class);

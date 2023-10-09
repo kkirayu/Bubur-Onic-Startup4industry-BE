@@ -14,6 +14,7 @@ class Role extends CrudModel
     use HasUuids;
     use SoftDeletes;
 
+
     protected $table = 'acl_roles';
 
     protected string $path = '/api/crud/role';
