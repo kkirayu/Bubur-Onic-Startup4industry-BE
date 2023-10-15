@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Akun;
 use App\Models\Journal;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,13 +22,46 @@ class JournalCreationsTest extends TestCase
             "judul" => "Journal title",
             "akuns" => [
                 [
-                    "id" => 1,
+                    "id" => Akun::where("is_kas", false)->first()->id,
                     "debit" => 1000,
                     "credit" => 0,
                     "description" => "Debit description"
                 ],
                 [
-                    "id" => 2,
+                    "id" => Akun::where("is_kas", true)->first()->id,
+                    "debit" => 0,
+                    "credit" => 1000,
+                ]
+            ]
+        ];
+
+
+        
+        dump('/api/journal/journal/create-journal');
+        dump(json_encode($payload));
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+        $response = $this->postJson('/api/journal/journal/create-journal', $payload);
+
+        dump($response->getContent());
+        $response->assertStatus(201);
+    }
+    public function testCreateNonKasTransaction(): void
+    {
+
+        $payload =  [
+            "deskripsi" => "Journal description",
+            "tanggal_transaksi" => "2021-10-01",
+            "judul" => "Journal title",
+            "akuns" => [
+                [
+                    "id" => Akun::where("is_kas", false)->first()->id,
+                    "debit" => 1000,
+                    "credit" => 0,
+                    "description" => "Debit description"
+                ],
+                [
+                    "id" => Akun::where("is_kas", false)->first()->id,
                     "debit" => 0,
                     "credit" => 1000,
                 ]
@@ -82,13 +116,13 @@ class JournalCreationsTest extends TestCase
         $payload =  [
             "akuns" => [
                 [
-                    "id" => 1,
+                    "id" => Akun::where("is_kas", false)->first()->id,
                     "debit" => 10020,
                     "credit" => 0,
                     "description" => "Debit description"
                 ],
                 [
-                    "id" => 2,
+                    "id" => Akun::where("is_kas", true)->first()->id,
                     "debit" => 0,
                     "credit" => 1000,
                     "description" => "Credit description"

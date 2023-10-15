@@ -3,6 +3,7 @@
 namespace App\Services\Journal;
 
 use App\Http\Requests\CreateJournalRequest;
+use App\Models\Akun;
 use App\Models\Journal;
 use App\Models\JournalAkun;
 use Illuminate\Http\Request;
@@ -27,10 +28,16 @@ class JournalService extends CrudService
 
             throw ValidationException::withMessages(['akuns' => 'Total debit dan kredit tidak sama']);
         }
+        $transaction_type = "non-kas";
+        // Check if akun is kas
+        if(Akun::whereIn("id", collect($akun)->pluck("id")->toArray())->where("is_kas", "1")->count() > 0){
+            $transaction_type = "kas";
+        }
 
         $journal = Journal::create([
             "perusahaan_id" => $createJournalRequest->perusahaan_id,
             "cabang_id" => $createJournalRequest->cabang_id,
+            "transaction_type" => $transaction_type, 
             "kode_jurnal" => "JOURNAL-" . date("YmdHis") . "-" . rand(100, 999),
             "deskripsi" => $createJournalRequest->input("deskripsi"),
             "tanggal_transaksi" => $createJournalRequest->input("tanggal_transaksi"),
@@ -39,6 +46,8 @@ class JournalService extends CrudService
             "total_kredit" => $totalCredit,
         ]);
 
+
+        
 
         foreach ($akun as $key => $value) {
             JournalAkun::create([
