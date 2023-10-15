@@ -12,7 +12,6 @@ class LaporanJournalService
     public function  index(HttpRequest $request): Collection
     {
         $journal = Journal::query();
-        dump($request->all());
 
         $perusahaan_id = $request->company;
         $type = $request->type;
