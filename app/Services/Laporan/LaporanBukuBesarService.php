@@ -17,9 +17,7 @@ class LaporanBukuBesarService
         $perusahaan_id = $request->perusahaan_id;
         $group = $request->group;
         $start = Carbon::createFromFormat('d/m/Y', $request->start)->format('Y-m-d');
-        $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
-
-
+        $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');   
 
         $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, $group);
         $groupData =  $data['groups'];
@@ -28,13 +26,15 @@ class LaporanBukuBesarService
             unset($item['__domain']);
             return $item;
         });
-        $moveNameData = collect($groupData)->pluck("move_name");
-        $groupDetail = $odooApiService->getJournalItemByGroupNames($moveNameData->toArray(), $perusahaan_id , $start,  $end);
-        // dd($groupDetail);
+        dd($groupData);
+        $moveNameData = collect($groupData)->pluck("account_id.0");
+        
+        $groupDetail = $odooApiService->getBukuBesarDetail($moveNameData->toArray(), $perusahaan_id , $start,  $end);
         $groupDetail = collect($groupDetail['records']);
+        // dd($groupDetail[0]);
         // Search groupDetail By move_name
         $data = collect($groupData)->map(function ($item) use ($groupDetail) {
-            $item['items'] =  array_values($groupDetail->where('move_name', $item['move_name'])->toArray());
+            $item['items'] =  array_values($groupDetail->where('.0', $item['account_id'][0])->toArray());
             return $item;
         });
 
