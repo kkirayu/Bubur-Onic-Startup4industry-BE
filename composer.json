@@ -11,6 +11,7 @@
         "alurkerja-laravolt/qa": "dev-master",
         "alurkerja-laravolt/uitemplate": "dev-master",
         "brunocfalcao/blade-feather-icons": "^3.0",
+        "darkaonline/ripcord": "^0.2.0",
         "garygreen/pretty-routes": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "knuckleswtf/scribe": "^4.23",

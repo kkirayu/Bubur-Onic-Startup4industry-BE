@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "031a2fd4a13602a293519d9ef9908379",
+    "content-hash": "9c81b622ebe9ef91db7416445868897a",
     "packages": [
         {
             "name": "akaunting/laravel-setting",
@@ -1258,6 +1258,60 @@
                 }
             ],
             "time": "2022-02-25T21:32:43+00:00"
+        },
+        {
+            "name": "darkaonline/ripcord",
+            "version": "v0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DarkaOnLine/Ripcord.git",
+                "reference": "67e79523541bd6d9509c7762b94146a64d4434df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DarkaOnLine/Ripcord/zipball/67e79523541bd6d9509c7762b94146a64d4434df",
+                "reference": "67e79523541bd6d9509c7762b94146a64d4434df",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ripcord\\": "src/Ripcord"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Darius Matulionis",
+                    "email": "darius@matulionis.lt"
+                }
+            ],
+            "description": "RPC client and server around PHP's xmlrpc library",
+            "keywords": [
+                "rpc",
+                "xml",
+                "xmlrpc"
+            ],
+            "support": {
+                "issues": "https://github.com/DarkaOnLine/Ripcord/issues",
+                "source": "https://github.com/DarkaOnLine/Ripcord/tree/v0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/DarkaOnLine",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-10-25T05:10:55+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
