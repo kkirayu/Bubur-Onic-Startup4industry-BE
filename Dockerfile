@@ -9,7 +9,8 @@ RUN apt-get install -y \
 			php8.1-bcmath \
             php8.1-mbstring \
             php8.1-gd \
-            php8.1-ldap
+            php8.1-ldap \ 
+            php8.1-xmlrpc
 
 COPY ./nginx/website.conf /etc/nginx/sites-enabled/website.conf
 
