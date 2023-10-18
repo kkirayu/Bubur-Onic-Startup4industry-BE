@@ -183,80 +183,81 @@ class OdooApiService
     return $data;
   }
 
-  public function getBukuBesarReport($start, $end,  $company_id,  $group)
+  public function getBukuBesarReport($start, $end,  $company_id,  $group ,  $groupBy = "account_id")
   {
 
 
     $models =  $this->createRpcModel();
     $kwarg = [
-        "orderby" => "",
-        "lazy" => true,
-        "expand" => null,
-        "expand_orderby" => null,
-        "expand_limit" => null,
-        "offset" => 0,
-        "limit" => 1000,
-        "context" => [
-            "lang" => "id_ID",
-            "tz" => "Asia/Jakarta",
-            "uid" => $this->uid,
-            "allowed_company_ids" => [$company_id],
-            "params" => [
-                "action" => 275,
-                "model" => "account.move.line",
-                "view_type" => "list",
-                "cids" => 1,
-                "menu_id" => 115,
-            ],
-            "journal_type" => "general",
+      "orderby" => "",
+      "lazy" => true,
+      "expand" => null,
+      "expand_orderby" => null,
+      "expand_limit" => null,
+      "offset" => 0,
+      "limit" => 1000,
+      "context" => [
+        "lang" => "id_ID",
+        "tz" => "Asia/Jakarta",
+        "uid" => $this->uid,
+        "allowed_company_ids" => [$company_id],
+        "params" => [
+          "action" => 275,
+          "model" => "account.move.line",
+          "view_type" => "list",
+          "cids" => 1,
+          "menu_id" => 115,
         ],
-        "groupby" => ["account_id"],
-        "domain" => [
-            "&",
-            ["display_type", "not in", ["line_section", "line_note"]],
-            ["parent_state", "=", "posted"],
-            ["date", ">=", $start],
-            ["date", "<=", $end],
-            ["account_id.internal_group", "=", $group]
-        ],
-        "fields" => [
-            "analytic_precision",
-            "move_id",
-            "date",
-            "company_id",
-            "journal_id",
-            "move_name",
-            "account_id",
-            "partner_id",
-            "ref",
-            "product_id",
-            "name",
-            "tax_ids",
-            "amount_currency",
-            "currency_id",
-            "debit",
-            "credit",
-            "tax_tag_ids",
-            "discount_date",
-            "discount_amount_currency",
-            "tax_line_id",
-            "date_maturity",
-            "balance",
-            "matching_number",
-            "amount_residual",
-            "amount_residual_currency",
-            "analytic_distribution",
-            "move_type",
-            "parent_state",
-            "account_type",
-            "statement_line_id",
-            "company_currency_id",
-            "is_same_currency",
-            "is_account_reconcile",
-            "sequence",
-        ],
+        "journal_type" => "general",
+      ],
+      "groupby" => [$groupBy],
+      "domain" => [
+        "&",
+        ["display_type", "not in", ["line_section", "line_note"]],
+        ["parent_state", "=", "posted"],
+        ["date", ">=", $start],
+        ["date", "<=", $end],
+        ["account_id.internal_group", "in", $group]
+      ],
+      "fields" => [
+        "analytic_precision",
+        "move_id",
+        "date",
+        "company_id",
+        "journal_id",
+        "move_name",
+        "account_id",
+        "partner_id",
+        "ref",
+        "product_id",
+        "account_root_id",
+        "name",
+        "tax_ids",
+        "amount_currency",
+        "currency_id",
+        "debit",
+        "credit",
+        "tax_tag_ids",
+        "discount_date",
+        "discount_amount_currency",
+        "tax_line_id",
+        "date_maturity",
+        "balance",
+        "matching_number",
+        "amount_residual",
+        "amount_residual_currency",
+        "analytic_distribution",
+        "move_type",
+        "parent_state",
+        "account_type",
+        "statement_line_id",
+        "company_currency_id",
+        "is_same_currency",
+        "is_account_reconcile",
+        "sequence",
+      ],
     ];
-    
+
 
 
     $payload = [];
@@ -360,6 +361,96 @@ class OdooApiService
     return $data;
   }
 
+public function getBukuBesarWithRootKey($start, $end,  $company_id,  $group ,  $root_keys)
+{
+
+
+  $models =  $this->createRpcModel();
+  $kwarg = [
+    "orderby" => "",
+    "lazy" => true,
+    "expand" => null,
+    "expand_orderby" => null,
+    "expand_limit" => null,
+    "offset" => 0,
+    "limit" => 1000,
+    "context" => [
+      "lang" => "id_ID",
+      "tz" => "Asia/Jakarta",
+      "uid" => $this->uid,
+      "allowed_company_ids" => [$company_id],
+      "params" => [
+        "action" => 275,
+        "model" => "account.move.line",
+        "view_type" => "list",
+        "cids" => 1,
+        "menu_id" => 115,
+      ],
+      "journal_type" => "general",
+    ],
+    "groupby" => ["account_id"],
+    "domain" => [
+      "&",
+      ["display_type", "not in", ["line_section", "line_note"]],
+      ["parent_state", "=", "posted"],
+      ["date", ">=", $start],
+      ["date", "<=", $end],
+      ["account_id.internal_group", "in", $group],
+      ["account_root_id" , "in",   $root_keys]
+    ],
+    "fields" => [
+      "analytic_precision",
+      "move_id",
+      "date",
+      "company_id",
+      "journal_id",
+      "move_name",
+      "account_id",
+      "partner_id",
+      "ref",
+      "product_id",
+      "account_root_id",
+      "name",
+      "tax_ids",
+      "amount_currency",
+      "currency_id",
+      "debit",
+      "credit",
+      "tax_tag_ids",
+      "discount_date",
+      "discount_amount_currency",
+      "tax_line_id",
+      "date_maturity",
+      "balance",
+      "matching_number",
+      "amount_residual",
+      "amount_residual_currency",
+      "analytic_distribution",
+      "move_type",
+      "parent_state",
+      "account_type",
+      "statement_line_id",
+      "company_currency_id",
+      "is_same_currency",
+      "is_account_reconcile",
+      "sequence",
+    ],
+  ];
+
+
+
+  $payload = [];
+  $data = $models->execute_kw(
+    $this->db,
+    $this->uid,
+    $this->password,
+    'account.move.line',
+    'web_read_group',
+    $payload,
+    $kwarg
+  );
+  return $data;
+}
 
 
   public function getBukuBesarDetail($akun_id, $company_id,  $start,  $end)
@@ -443,6 +534,66 @@ class OdooApiService
       $this->password,
       'account.move.line',
       'web_search_read',
+      $payload,
+      $kwarg
+    );
+    return $data;
+  }
+
+
+  function getAkun()
+  {
+
+    $models =  $this->createRpcModel();
+
+    $kwarg  = [
+      "category_domain" => [],
+      "context" => [
+        "lang" => "id_ID",
+        "tz" => "Asia/Jakarta",
+        "uid" => 2,
+        "allowed_company_ids" => [
+          1
+        ],
+        "params" => [
+          "action" => 240,
+          "model" => "account.account",
+          "view_type" => "list",
+          "cids" => 1,
+          "menu_id" => 115
+        ]
+      ],
+
+      "enable_counters" => false,
+      "expand" => false,
+      "filter_domain" => [],
+      "hierarchize" => true,
+      "limit" => 0,
+      "fields" => [
+        "name"
+      ],
+      "search_domain" => [
+        [
+          "deprecated",
+          "=",
+          false
+        ],
+
+      ]
+    ];
+
+
+
+    $payload = [
+        "root_id"
+      
+    ];
+    $data = $models->execute_kw(
+      $this->db,
+      $this->uid,
+      $this->password,
+      'account.account',
+      'search_panel_select_range',
       $payload,
       $kwarg
     );

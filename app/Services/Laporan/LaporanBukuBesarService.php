@@ -19,7 +19,7 @@ class LaporanBukuBesarService
         $start = Carbon::createFromFormat('d/m/Y', $request->start)->format('Y-m-d');
         $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');   
 
-        $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, $group);
+        $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, [$group]);
         $groupData =  $data['groups'];
         // remove __domain from  groupData
         $groupData = collect($groupData)->map(function ($item) {
