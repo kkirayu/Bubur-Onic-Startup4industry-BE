@@ -17,11 +17,13 @@ class LaporanBukuBesarControllerTest extends TestCase
      {
          $user = UserFactory::new()->create();
          $this->actingAs($user);
-         dump("/api/laporan/laporan-buku-besar?company=1&group=asset_receivable&start=01/10/2023&end=18/10/2023");
-         $response = $this->getJson("/api/laporan/laporan-buku-besar?company=1&group=asset_receivable&start=01/10/2023&end=18/10/2023");
+         dump("/api/laporan/laporan-buku-besar?company=1&group=asset&start=01/10/2023&end=30/10/2023");
+         $response = $this->getJson("/api/laporan/laporan-buku-besar?company=1&group=asset&start=01/10/2023&end=18/10/2023");
  
          dump(json_encode($response->json()));
          $response->assertStatus(200);
+
+         
      }
      
 }

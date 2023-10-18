@@ -215,6 +215,9 @@ class OdooApiService
             "&",
             ["display_type", "not in", ["line_section", "line_note"]],
             ["parent_state", "=", "posted"],
+            ["date", ">=", $start],
+            ["date", "<=", $end],
+            ["account_id.internal_group", "=", $group]
         ],
         "fields" => [
             "analytic_precision",

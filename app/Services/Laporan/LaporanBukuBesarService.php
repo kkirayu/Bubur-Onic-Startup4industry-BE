@@ -26,7 +26,6 @@ class LaporanBukuBesarService
             unset($item['__domain']);
             return $item;
         });
-        dd($groupData);
         $moveNameData = collect($groupData)->pluck("account_id.0");
         
         $groupDetail = $odooApiService->getBukuBesarDetail($moveNameData->toArray(), $perusahaan_id , $start,  $end);
@@ -34,7 +33,7 @@ class LaporanBukuBesarService
         // dd($groupDetail[0]);
         // Search groupDetail By move_name
         $data = collect($groupData)->map(function ($item) use ($groupDetail) {
-            $item['items'] =  array_values($groupDetail->where('.0', $item['account_id'][0])->toArray());
+            $item['items'] =  array_values($groupDetail->where('account_id.0', $item['account_id'][0])->toArray());
             return $item;
         });
 
