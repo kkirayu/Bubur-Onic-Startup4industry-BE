@@ -87,6 +87,11 @@ class LaporanNeracaService
 
                 $item["total_akhir"] =$totalAkhir;
 
+                $item["tanggal_awal"] = $start;
+
+
+                $item["tanggal_akhir"] =$end;
+
                 $item["items"] = $data;
                 return $item;
             });
