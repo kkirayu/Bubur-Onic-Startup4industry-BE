@@ -13,14 +13,25 @@ class LaporanLabaRugiControllerTest extends TestCase
      * A basic feature test example.
      */
 
-    public function test_example(): void
-    {
-        $user = UserFactory::new()->create();
-        $this->actingAs($user);
-        $response = $this->getJson("/api/laporan/laporan-laba-rugi?company=1&date=18/10/2023");
-        dump("/api/laporan/laporan-laba-rugi?company=1&date=18/10/2023");
+     public function test_example(): void
+     {
+         $user = UserFactory::new()->create();
+         $this->actingAs($user);
+         $response = $this->getJson("/api/laporan/laporan-laba-rugi?company=1&date=18/10/2023");
+         dump("/api/laporan/laporan-laba-rugi?company=1&date=18/10/2023");
+ 
+         dump(json_encode($response->json()));
+         $response->assertStatus(200);
+     }
+     public function testDownloadPdf(): void
+     {
+         $user = UserFactory::new()->create();
+         $this->actingAs($user);
+         $response = $this->getJson("/api/laporan/laporan-laba-rugi/export?company=1&date=18/10/2023");
+         dump("/api/laporan/laporan-laba-rugi/export?company=1&date=18/10/2023");
+ 
+        //  dump(json_encode($response->json()));
 
-        dump(json_encode($response->json()));
-        $response->assertStatus(200);
-    }
+         $response->assertStatus(200);
+     }
 }

@@ -10,6 +10,7 @@
         "alurkerja-laravolt/crud": "dev-master",
         "alurkerja-laravolt/qa": "dev-master",
         "alurkerja-laravolt/uitemplate": "dev-master",
+        "barryvdh/laravel-dompdf": "^2.0",
         "brunocfalcao/blade-feather-icons": "^3.0",
         "darkaonline/ripcord": "^0.2.0",
         "garygreen/pretty-routes": "^1.0",
