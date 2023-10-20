@@ -13,11 +13,11 @@ class LaporanNeracaService
     {
         $section = [
             [
-                "key" =>  ["equity",  'liability'],
+                "key" => ["asset"],
                 "value" => "Kekayaan"
             ],
             [
-                "key" => ["asset"],
+                "key" =>  ["equity",  'liability'],
                 "value" => "Kewajiban"
             ],
         ];
@@ -60,7 +60,6 @@ class LaporanNeracaService
                     unset($item['__domain']);
                     return $item;
                 });
-
                 $data = collect($dataAkhir)->map(function ($item) use ($dataAwal, $start,  $end) {
                     $dataAkhir = $item['balance'];
                     $dataAwal =  $dataAwal->where("account_id", $item['account_id'])->first();
@@ -78,6 +77,16 @@ class LaporanNeracaService
                     ];
                     return $item;
                 });
+
+                $totalAwal = $dataAwal->sum('balance');
+                $totalAkhir = $dataAkhir->sum('balance');
+
+
+                $item["total_awal"] = $totalAwal;
+
+
+                $item["total_akhir"] =$totalAkhir;
+
                 $item["items"] = $data;
                 return $item;
             });
