@@ -489,7 +489,7 @@ class OdooApiService
         ["account_id", "=", $akun_id],
         ["company_id", "=", $company_id],
         ["display_type", "not in", ["line_section", "line_note"]],
-        ["parent_state", "=", "posted"],
+        ["parent_state", "=", "posted"],["date", ">=", $start],  ["date", "<=", $end]
       ],
       "fields" => [
         "analytic_precision",
