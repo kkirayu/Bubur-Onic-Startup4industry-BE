@@ -9,7 +9,9 @@ use App\Models\JournalAkun;
 use App\Services\Odoo\OdooApiService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
+use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\CrudService;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
@@ -54,31 +56,30 @@ class JournalService extends CrudService
         foreach ($akun as $key => $value) {
             $value = (object) $value;
             $line_ids[] =
+                [
+                    0,
+                    "virtual_" . $key + 1,
                     [
-                        0,
-                        "virtual_" . $key + 1,
-                        [
-                            "analytic_precision" => 2,
-                            "asset_category_id" => false,
-                            "account_id" => $value->id,
-                            "partner_id" => false,
-                            "name" => false,
-                            "analytic_distribution" => false,
-                            "date_maturity" => false,
-                            "amount_currency" => $value->credit >  0 ? -  $value->credit :  $value->debit,
-                            "currency_id" => 12,
-                            "tax_ids" => [[6, null, []]],
-                            "debit" => $value->debit?: 0,
-                            "credit" => $value->credit ?: 0,
-                            "balance" => $value->credit >  0 ?   - $value->credit :  $value->debit,
-                            "discount_date" => false,
-                            "discount_amount_currency" => 0,
-                            "tax_tag_ids" => [[6, null, []]],
-                            "display_type" => "product",
-                            "sequence" => 100,
-                        ],
-                    ]
-                    ;
+                        "analytic_precision" => 2,
+                        "asset_category_id" => false,
+                        "account_id" => $value->id,
+                        "partner_id" => false,
+                        "name" => false,
+                        "analytic_distribution" => false,
+                        "date_maturity" => false,
+                        "amount_currency" => $value->credit >  0 ? -$value->credit :  $value->debit,
+                        "currency_id" => 12,
+                        "tax_ids" => [[6, null, []]],
+                        "debit" => $value->debit ?: 0,
+                        "credit" => $value->credit ?: 0,
+                        "balance" => $value->credit >  0 ?   -$value->credit :  $value->debit,
+                        "discount_date" => false,
+                        "discount_amount_currency" => 0,
+                        "tax_tag_ids" => [[6, null, []]],
+                        "display_type" => "product",
+                        "sequence" => 100,
+                    ],
+                ];
             // JournalAkun::create([
             //     "perusahaan_id" => $createJournalRequest->perusahaan_id,
             //     "cabang_id" => $createJournalRequest->cabang_id,
@@ -142,32 +143,129 @@ class JournalService extends CrudService
     }
     public function postJournal($journalId)
     {
-        $journal = Journal::find($journalId);
+        // $journal = Journal::find($journalId);
 
 
-        if ($journal->posted_at != null) {
-            throw ValidationException::withMessages(['id' => 'Journal sudah diposting']);
-        }
-        $journal->posted_at = date("Y-m-d H:i:s");
-        $journal->posted_by = $this->user->id;
-        $journal->save();
+        // if ($journal->posted_at != null) {
+        //     throw ValidationException::withMessages(['id' => 'Journal sudah diposting']);
+        // }
+        // $journal->posted_at = date("Y-m-d H:i:s");
+        // $journal->posted_by = $this->user->id;
+        // $journal->save();
 
-        $journal->load("journalAkuns");
-        return $journal;
+        // $journal->load("journalAkuns");
+        // return $journal;
+
+        $service = new OdooApiService();
+        $response = $service->postJournal((int)$journalId);
+        return collect($response);
+
     }
     public function unPostJournal($journalId)
     {
-        $journal = Journal::find($journalId);
+        
+        $service = new OdooApiService();
+        $response = $service->unPostJournal((int)$journalId);
+        return collect($response);
+    }
 
-        if ($journal->posted_at == null) {
-            throw ValidationException::withMessages(['id' => 'Journal belum diposting']);
-        }
 
-        $journal->posted_at = null;
-        $journal->posted_by = null;
-        $journal->save();
+    public function get(Request $request): LengthAwarePaginator
+    {
 
-        $journal->load("journalAkuns");
-        return $journal;
+        $data = new OdooApiService();
+
+        $akunData = $data->getJournalList();
+
+        $data = collect($akunData['records'])->map(function ($item,  $key) {
+
+
+            // $tagData =  $tagData->whereIn('id', $data['tag_ids'])->pluck("name")->map(function ($item) {
+            //     return strtolower($item);
+            // });
+            // dd($item);
+            // $isAkunKas =  in_array("bank", $tagData->toArray()) ?  1 :  0;
+            // $kategoriAkun = $kategori_akun->where('code', $data['account_type'])->first();
+            $data = (object) $item;
+            $formatted = [
+                "id" => $data->id,
+                "kode_jurnal" => $data->name,
+                "perusahaan_id" => 1,
+                "cabang_id" => 1,
+                "total_debit" => $data->amount_total > 0 ? $data->amount_total : 0,
+                "total_kredit" => $data->amount_total < 0 ? $data->amount_total : 0,
+                "deskripsi" =>  $data->ref,
+                "posted_at" => $data->state == 'posted' ? $data->__last_update : null,
+                "created_at" => "2023-10-06T06:08:34.000000Z",
+                "updated_at" => "2023-10-06T06:36:51.000000Z",
+                "created_by" => null,
+                "updated_by" => null,
+                "deleted_by" => null,
+                "judul" => $data->ref,
+                "tanggal_transaksi" => $data->date,
+                "deleted_at" => null,
+
+            ];
+
+
+            return $formatted;
+        });
+
+        return  collect($data)->paginate(10,  $akunData['length'], 1);
+    }
+
+    public function find(mixed  $id): CrudModel | Collection
+    {
+
+        $data = new OdooApiService();
+
+        $akunData = $data->getJournalDetail($id);
+        // dd($akunData);
+        $akunData = (object) $akunData[0];
+
+        $journalData = $data->getJournalItemWithIds($akunData->invoice_line_ids);
+
+        $journalData = collect($journalData)->map(function ($item,  $key) {
+            $item = (object) $item;
+            return [
+                "id" => $item->id,
+                "perusahaan_id" => 1,
+                "cabang_id" => 1,
+                "akun" => $item->account_id[0],
+                "posisi_akun" => $item->credit > 0 ? "CREDIT" : "DEBIT",
+                "deskripsi" => "asdf",
+                "jumlah" => $item->balance,
+                "created_at" => $item->date,
+                "updated_at" => "2023-10-06T06:08:34.000000Z",
+                "created_by" => null,
+                "updated_by" => null,
+                "deleted_by" => null,
+            ];
+        });
+
+        $formatted = [
+            "id" => $akunData->id,
+            "kode_jurnal" => $akunData->name,
+            "perusahaan_id" => 1,
+            "cabang_id" => 1,
+            "total_debit" => $akunData->amount_total > 0 ? $akunData->amount_total : 0,
+            "total_kredit" => $akunData->amount_total < 0 ? $akunData->amount_total : 0,
+            "deskripsi" =>  $akunData->ref,
+            "posted_at" => $akunData->state == 'posted' ? $akunData->__last_update : null,
+            "created_at" => "2023-10-06T06:08:34.000000Z",
+            "updated_at" => "2023-10-06T06:36:51.000000Z",
+            "created_by" => null,
+            "updated_by" => null,
+            "deleted_by" => null,
+            "judul" => $akunData->ref,
+            "tanggal_transaksi" => $akunData->date,
+            "deleted_at" => null,
+            "journal_akuns" => $journalData,
+
+        ];
+
+
+
+        return  collect($formatted);
     }
 }

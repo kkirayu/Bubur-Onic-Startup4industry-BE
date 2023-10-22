@@ -18,4 +18,20 @@ class JournalListTest extends TestCase
 
         $response->assertStatus(200);
     }
+    public function testListAllJournal(): void
+    {
+        $this->actingAs(\App\Models\User::factory()->create());
+        $response = $this->getJson('/api/journal/journal?search=2013');
+
+        dd($response->getContent());
+        $response->assertStatus(200);
+    }
+    public function testListDetailJournal(): void
+    {
+        $this->actingAs(\App\Models\User::factory()->create());
+        $response = $this->getJson('/api/journal/journal/105');
+
+        dd($response->getContent());
+        $response->assertStatus(200);
+    }
 }

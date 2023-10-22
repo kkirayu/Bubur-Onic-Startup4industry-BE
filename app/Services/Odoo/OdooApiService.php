@@ -37,21 +37,7 @@ class OdooApiService
 
     $models =  $this->createRpcModel();
 
-    $kwarg = json_decode('{
-      "context": {
-        "lang": "en_US",
-        "tz": "Asia/Jakarta",
-        "uid": 2,
-        "allowed_company_ids": [
-          1
-        ],
-        "default_move_type": "entry",
-        "search_default_posted": 1,
-        "view_no_maturity": true
-      }
-  }');
-
-    // $payload =  json_decode($payload);
+    $kwarg = [];    // $payload =  json_decode($payload);
     $data = $models->execute_kw(
       $this->db,
       $this->uid,
@@ -77,20 +63,6 @@ class OdooApiService
       "expand_limit" => null,
       "offset" => 0,
       "limit" => 1000,
-      "context" => [
-        "lang" => "id_ID",
-        "tz" => "Asia/Jakarta",
-        "uid" => $this->uid,
-        "allowed_company_ids" => [$company_id],
-        "params" => [
-          "action" => 275,
-          "model" => "account.move.line",
-          "view_type" => "list",
-          "cids" => 1,
-          "menu_id" => 115,
-        ],
-        "journal_type" => "general",
-      ],
       "groupby" => [$groupBy],
       "domain" => [
         "&",
@@ -155,87 +127,68 @@ class OdooApiService
   }
 
 
-  public function getJournalItemByGroupNames($moveNames, $company_id,  $start,  $end)
+  public function getJournalItemWithIds($ids)
   {
 
 
     $models =  $this->createRpcModel();
 
-    $kwarg  = [
-      "limit" => 1000,
-      "offset" => 0,
-      "order" => "",
-      "context" => [
-        "lang" => "id_ID",
-        "tz" => "Asia/Jakarta",
-        "uid" => 2,
-        "allowed_company_ids" => [1],
-        "bin_size" => true,
-        "params" => [
-          "action" => 275,
-          "model" => "account.move.line",
-          "view_type" => "list",
-          "cids" => 1,
-          "menu_id" => 115,
-        ],
-        "journal_type" => "general",
-      ],
-      "count_limit" => 81,
-      "domain" => [
-        "&",
-        ["move_name", "in", $moveNames],
-        ["company_id", "=", $company_id],
-        ["display_type", "not in", ["line_section", "line_note"]],
-        ["parent_state", "=", "posted"],
-        ["date", ">=", $start],
-        ["date", "<=", $end],
-      ],
-      "fields" => [
-        "analytic_precision",
-        "move_id",
-        "date",
-        "company_id",
-        "journal_id",
-        "move_name",
-        "account_id",
-        "partner_id",
-        "ref",
-        "product_id",
-        "name",
-        "tax_ids",
-        "amount_currency",
-        "currency_id",
-        "debit",
-        "credit",
-        "tax_tag_ids",
-        "discount_date",
-        "discount_amount_currency",
-        "tax_line_id",
-        "date_maturity",
-        "balance",
-        "matching_number",
-        "amount_residual",
-        "amount_residual_currency",
-        "analytic_distribution",
-        "move_type",
-        "parent_state",
-        "account_type",
-        "statement_line_id",
-        "company_currency_id",
-        "is_same_currency",
-        "is_account_reconcile",
-        "sequence",
-      ],
-    ];;
+    $kwarg  = [];
 
 
-    $payload = [];
+    $payload = [$ids];
     $data = $models->execute_kw(
       $this->db,
       $this->uid,
       $this->password,
       'account.move.line',
-      'web_search_read',
+      'read',
+      $payload,
+      $kwarg
+    );
+    return $data;
+  }
+
+
+
+  public function postJournal($ids)
+  {
+
+
+    $models =  $this->createRpcModel();
+
+    $kwarg  = [];
+
+
+    $payload = [$ids];
+    $data = $models->execute_kw(
+      $this->db,
+      $this->uid,
+      $this->password,
+      'account.move',
+      'action_post',
+      $payload,
+      $kwarg
+    );
+    return $data;
+  }
+
+  public function unPostJournal($ids)
+  {
+
+
+    $models =  $this->createRpcModel();
+
+    $kwarg  = [];
+
+
+    $payload = [$ids];
+    $data = $models->execute_kw(
+      $this->db,
+      $this->uid,
+      $this->password,
+      'account.move',
+      'button_draft',
       $payload,
       $kwarg
     );
@@ -267,20 +220,6 @@ class OdooApiService
       "expand_limit" => null,
       "offset" => 0,
       "limit" => 1000,
-      "context" => [
-        "lang" => "id_ID",
-        "tz" => "Asia/Jakarta",
-        "uid" => $this->uid,
-        "allowed_company_ids" => [$company_id],
-        "params" => [
-          "action" => 275,
-          "model" => "account.move.line",
-          "view_type" => "list",
-          "cids" => 1,
-          "menu_id" => 115,
-        ],
-        "journal_type" => "general",
-      ],
       "groupby" => ["account_id"],
       "domain" => $domain,
       "fields" => [
@@ -348,22 +287,6 @@ class OdooApiService
       "limit" => 80,
       "offset" => 0,
       "order" => "",
-      "context" => [
-        "lang" => "id_ID",
-        "tz" => "Asia/Jakarta",
-        "uid" => $this->uid,
-        "allowed_company_ids" => [$company_id],
-        "bin_size" => true,
-        "default_account_id" => 2,
-        "params" => [
-          "action" => 275,
-          "model" => "account.move.line",
-          "view_type" => "list",
-          "cids" => 1,
-          "menu_id" => 115,
-        ],
-        "journal_type" => "general",
-      ],
       "count_limit" => 81,
       "domain" => [
         "&",
@@ -433,22 +356,6 @@ class OdooApiService
 
     $kwarg  = [
       "category_domain" => [],
-      "context" => [
-        "lang" => "id_ID",
-        "tz" => "Asia/Jakarta",
-        "uid" => 2,
-        "allowed_company_ids" => [
-          1
-        ],
-        "params" => [
-          "action" => 240,
-          "model" => "account.account",
-          "view_type" => "list",
-          "cids" => 1,
-          "menu_id" => 115
-        ]
-      ],
-
       "enable_counters" => false,
       "expand" => false,
       "filter_domain" => [],
@@ -519,6 +426,22 @@ class OdooApiService
     $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account.tag', 'search_read',  [], [
 
       "domain" => [],
+    ]);
+
+    return  $data;
+  }
+  function getJournalList () {
+    $model = $this->createRpcModel();
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'web_search_read',  [], [
+
+      "domain" => [],
+    ]);
+
+    return  $data;
+  }
+  function getJournalDetail ($id) {
+    $model = $this->createRpcModel();
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'read',  [[(int) $id]  ], [
     ]);
 
     return  $data;
