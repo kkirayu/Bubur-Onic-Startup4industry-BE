@@ -29,7 +29,7 @@ class CreateJournalRequest extends FormRequest
             "tanggal_transaksi" => "required|date",
             "judul" => "required|string",
             "akuns" => "required|array",
-            "akuns.*.id" => "required|integer|exists:akuns,id",
+            "akuns.*.id" => "required|integer",
             "akuns.*.debit" => "required|integer",
             "akuns.*.credit" => "required|integer",
             "akuns.*.description" => "nullable|string",

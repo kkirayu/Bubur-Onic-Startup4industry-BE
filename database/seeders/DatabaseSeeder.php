@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Cabang;
+use App\Models\Perusahaan;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,9 +21,12 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
         ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        if (!User::where("email", "admin@larvolt.dev")->first()) {
+
+            \App\Models\User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'admin@laravolt.dev',
+            ]);
+        }
     }
 }

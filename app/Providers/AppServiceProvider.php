@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Laravolt\Camunda\Http\ExternalTaskClient;
 use Laravolt\Crud\CrudManager;
@@ -21,7 +23,23 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
+
+
     {
+        Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
+            $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+
+            return new LengthAwarePaginator(
+                $total ? $this : $this->forPage($page, $perPage)->values(),
+                $total ?: $this->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => $pageName,
+                ]
+            );
+        });
         //
         // CrudManager::setPrimaryKeyFormat(PrimaryKeyFormat::UUID);
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.notifikasiReject', \App\Jobs\PengajuanPerubahanJournalDanKas\NotifikasiRejectJob::class);
@@ -32,6 +50,5 @@ class AppServiceProvider extends ServiceProvider
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.pembuatanKas', \App\Jobs\PengajuanPerubahanJournalDanKas\PembuatanKasJob::class);
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.pembuatanJournal', \App\Jobs\PengajuanPerubahanJournalDanKas\PembuatanJournalJob::class);
         ExternalTaskClient::subscribe('PengajuanJournalDanKas.perubahanKas', \App\Jobs\PengajuanPerubahanJournalDanKas\PerubahanKasJob::class);
-    
     }
 }

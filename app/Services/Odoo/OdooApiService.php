@@ -31,12 +31,9 @@ class OdooApiService
     return  $models;
   }
 
-  function createJournal($date,  $ref, $journal_item = [])
+  function createJournal($payload ,)
   {
 
-    if ($date == null || $ref == null) {
-      return "Data tidak boleh kosong";
-    }
 
     $models =  $this->createRpcModel();
 
@@ -54,123 +51,7 @@ class OdooApiService
       }
   }');
 
-    $payload =  json_decode('[
-    {
-      "date": "' . $date . '",
-      "auto_post": "no",
-      "auto_post_until": false,
-      "company_id": 1,
-      "journal_id": 3,
-      "show_name_warning": false,
-      "posted_before": false,
-      "payment_state": "not_paid",
-      "currency_id": 12,
-      "statement_line_id": false,
-      "payment_id": false,
-      "tax_cash_basis_created_move_ids": [],
-      "name": "/",
-      "partner_id": false,
-      "l10n_id_kode_transaksi": false,
-      "l10n_id_replace_invoice_id": false,
-      "quick_edit_total_amount": 0,
-      "ref": "' . $ref . '",
-      "invoice_vendor_bill_id": false,
-      "invoice_date": false,
-      "payment_reference": false,
-      "partner_bank_id": false,
-      "invoice_date_due": "2023-10-15",
-      "invoice_payment_term_id": false,
-      "invoice_line_ids": [],
-      "narration": false,
-      "line_ids": [
-        [
-          0,
-          "virtual_3",
-          {
-            "analytic_precision": 2,
-            "asset_category_id": false,
-            "account_id": 3,
-            "partner_id": false,
-            "name": false,
-            "analytic_distribution": false,
-            "date_maturity": false,
-            "amount_currency": 100000,
-            "currency_id": 12,
-            "tax_ids": [
-              [
-                6,
-                false,
-                []
-              ]
-            ],
-            "debit": 100000,
-            "credit": 0,
-            "balance": 100000,
-            "discount_date": false,
-            "discount_amount_currency": 0,
-            "tax_tag_ids": [
-              [
-                6,
-                false,
-                []
-              ]
-            ],
-            "display_type": "product",
-            "sequence": 100
-          }
-        ],
-        [
-          0,
-          "virtual_4",
-          {
-            "analytic_precision": 2,
-            "asset_category_id": false,
-            "account_id": 6,
-            "partner_id": false,
-            "name": false,
-            "analytic_distribution": false,
-            "date_maturity": false,
-            "amount_currency": -100000,
-            "currency_id": 12,
-            "tax_ids": [
-              [
-                6,
-                false,
-                []
-              ]
-            ],
-            "debit": 0,
-            "credit": 100000,
-            "balance": -100000,
-            "discount_date": false,
-            "discount_amount_currency": 0,
-            "tax_tag_ids": [
-              [
-                6,
-                false,
-                []
-              ]
-            ],
-            "display_type": "product",
-            "sequence": 100
-          }
-        ]
-      ],
-      "user_id": ' . $this->uid . ',
-      "invoice_user_id": ' . $this->uid . ',
-      "team_id": 1,
-      "invoice_origin": false,
-      "qr_code_method": false,
-      "invoice_incoterm_id": false,
-      "fiscal_position_id": false,
-      "invoice_source_email": false,
-      "to_check": false,
-      "l10n_id_tax_number": false,
-      "campaign_id": false,
-      "medium_id": false,
-      "source_id": false,
-      "edi_document_ids": []
-    }]');
+    // $payload =  json_decode($payload);
     $data = $models->execute_kw(
       $this->db,
       $this->uid,
@@ -489,7 +370,7 @@ class OdooApiService
         ["account_id", "=", $akun_id],
         ["company_id", "=", $company_id],
         ["display_type", "not in", ["line_section", "line_note"]],
-        ["parent_state", "=", "posted"],["date", ">=", $start],  ["date", "<=", $end]
+        ["parent_state", "=", "posted"], ["date", ">=", $start],  ["date", "<=", $end]
       ],
       "fields" => [
         "analytic_precision",
@@ -604,27 +485,42 @@ class OdooApiService
     return $data;
   }
 
-  function  getAccountRoot () {
+  function  getAkunType()
+  {
     $model = $this->createRpcModel();
-    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.root', 'search_read',  [] , [
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account.type', 'search_read',  [], [
 
-      "domain" => [
-      ],
-    ] );
+      "domain" => [],
+    ]);
     return $data;
   }
-  function  getAkunList () {
-    $model = $this->createRpcModel();
-    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account.type', 'search_read',  [] , [
+  function  getAkunList($filterDomain = [])
+  {
 
-      "domain" => [
-      ],
-    ] );
-    return collect($data)->map(function ($item) {
-      return [
-        'display_name'=> $item['display_name'],
-        'type'=> $item['type'],
-      ];
-    });
+    $domain = [];
+    if (request()->has("filter")) {
+
+      if (request()->filter['is_kas'] == "1") {
+        $domain[] = ["tag_ids", "ilike", "bank"];
+      }
+    }
+    $domain = array_merge($domain,  $filterDomain);
+    $model = $this->createRpcModel();
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account', 'search_read',  [], [
+
+      "domain" => $domain,
+    ]);
+
+    return  $data;
+  }
+  function  getTagsList()
+  {
+    $model = $this->createRpcModel();
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account.tag', 'search_read',  [], [
+
+      "domain" => [],
+    ]);
+
+    return  $data;
   }
 }

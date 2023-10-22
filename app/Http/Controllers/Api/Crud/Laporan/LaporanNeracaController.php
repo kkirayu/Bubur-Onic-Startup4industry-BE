@@ -23,7 +23,7 @@ class LaporanNeracaController
     {
 
         $data = [];
-        // share data to view
+    // share data to view
         view()->share('employee', $data);
         $pdf = Pdf::loadView('laporan.template', $data);
 

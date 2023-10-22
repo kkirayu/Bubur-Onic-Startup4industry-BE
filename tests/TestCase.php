@@ -9,6 +9,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
 
+    
     protected $docsUrl = "";
 
     function initDocs($testCasename) {

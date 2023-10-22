@@ -36,7 +36,6 @@ class JournalController extends ApiCrudController
 
         $this->guard("CREATE");
         $model = $this->service->createJournal($createJournalRequest);
-        $model->refresh();
 
         return $this->single($model);
     }

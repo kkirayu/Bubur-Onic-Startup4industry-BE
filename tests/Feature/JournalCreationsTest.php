@@ -22,13 +22,13 @@ class JournalCreationsTest extends TestCase
             "judul" => "Journal title",
             "akuns" => [
                 [
-                    "id" => Akun::where("is_kas", false)->first()->id,
+                    "id" => 8,
                     "debit" => 1000,
                     "credit" => 0,
                     "description" => "Debit description"
                 ],
                 [
-                    "id" => Akun::where("is_kas", true)->first()->id,
+                    "id" => 5,
                     "debit" => 0,
                     "credit" => 1000,
                 ]
