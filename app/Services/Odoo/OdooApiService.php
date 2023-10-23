@@ -173,6 +173,29 @@ class OdooApiService
     return $data;
   }
 
+
+  public function unlinkJournal($ids)
+  {
+
+
+    $models =  $this->createRpcModel();
+
+    $kwarg  = [];
+
+
+    $payload = [$ids];
+    $data = $models->execute_kw(
+      $this->db,
+      $this->uid,
+      $this->password,
+      'account.move',
+      'unlink',
+      $payload,
+      $kwarg
+    );
+    return $data;
+  }
+
   public function unPostJournal($ids)
   {
 
@@ -431,10 +454,21 @@ class OdooApiService
     return  $data;
   }
   function getJournalList () {
+
+    $domain = [];
+    $search = request()->search;
+    if($search ) {
+
+      $domain[] = "|";
+      $domain[] = "|";
+      $domain[] = ["name", "ilike", $search];
+      $domain[] = ["ref", "ilike", $search];
+      $domain[] = ["partner_id", "ilike",$search];
+    }
     $model = $this->createRpcModel();
     $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'web_search_read',  [], [
 
-      "domain" => [],
+      "domain" => $domain,
     ]);
 
     return  $data;

@@ -34,4 +34,12 @@ class JournalListTest extends TestCase
         dd($response->getContent());
         $response->assertStatus(200);
     }
+    public function testDeleteJournal(): void
+    {
+        $this->actingAs(\App\Models\User::factory()->create());
+        $response = $this->deleteJson('/api/journal/journal/34');
+
+        dd($response->getContent());
+        $response->assertStatus(200);
+    }
 }

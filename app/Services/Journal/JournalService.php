@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\CrudService;
+use Laravolt\Crud\Sys\ActivityLog\AkActivityLog;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class JournalService extends CrudService
@@ -267,5 +268,18 @@ class JournalService extends CrudService
 
 
         return  collect($formatted);
+    }
+
+
+    public function delete(mixed $model): ?bool
+    {
+        
+        $data = new OdooApiService();
+        $response = $data->unlinkJournal((int)$model);
+        // check response is array 
+        if($response !== true){
+            throw new BadRequestException($response['faultString']);
+        }
+        return $response;
     }
 }

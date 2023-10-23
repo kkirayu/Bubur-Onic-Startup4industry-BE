@@ -9,8 +9,12 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Laravolt\Crud\ApiCrudController;
 use Laravolt\Crud\CrudModel;
 use App\Services\Journal\JournalService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laravolt\Crud\CrudService;
+use Laravolt\Crud\Response\DeleteFail;
+use Laravolt\Crud\Response\DeleteSuccess;
+use Laravolt\Crud\Response\NotFound;
 use Spatie\RouteDiscovery\Attributes\Route;
 
 class JournalController extends ApiCrudController
@@ -59,5 +63,20 @@ class JournalController extends ApiCrudController
         $model = $this->service->unPostJournal($journalId);
 
         return $this->single($model);
+    }
+
+
+    /**
+     * DELETE. Data
+     */
+    public function destroy(mixed $id): JsonResource
+    
+    {
+        try {
+            $deleted = $this->service->delete($id);
+            return $deleted ? new DeleteSuccess(null) : new DeleteFail(null);
+        } catch (ModelNotFoundException $e) {
+            return new NotFound($e);
+        }
     }
 }
