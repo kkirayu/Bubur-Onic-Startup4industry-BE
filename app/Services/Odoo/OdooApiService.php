@@ -31,7 +31,7 @@ class OdooApiService
     return  $models;
   }
 
-  function createJournal($payload ,)
+  function createJournal($payload,)
   {
 
 
@@ -146,7 +146,12 @@ class OdooApiService
       $payload,
       $kwarg
     );
-    return $data;
+
+    $journalData = collect($data)->map(function ($item,  $key) {
+      return  $this->mapResponseDetailData($item);
+    });
+
+    return $journalData;
   }
 
 
@@ -453,16 +458,17 @@ class OdooApiService
 
     return  $data;
   }
-  function getJournalList ($domain = []) {
+  function getJournalList($domain = [],  $withJournalDetail =  false)
+  {
 
     $search = request()->search;
-    if($search ) {
+    if ($search) {
 
       $domain[] = "|";
       $domain[] = "|";
       $domain[] = ["name", "ilike", $search];
       $domain[] = ["ref", "ilike", $search];
-      $domain[] = ["partner_id", "ilike",$search];
+      $domain[] = ["partner_id", "ilike", $search];
     }
     $model = $this->createRpcModel();
     $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'web_search_read',  [], [
@@ -470,13 +476,90 @@ class OdooApiService
       "domain" => $domain,
     ]);
 
-    return  $data;
-  }
-  function getJournalDetail ($id) {
-    $model = $this->createRpcModel();
-    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'read',  [[(int) $id]  ], [
-    ]);
+
+    //   $akunDataRaw = $data->getJournalList();
+
+
+    $akunData =  collect($data['records']);
+    $invoice_line_ids = (array_merge(...$akunData->pluck("invoice_line_ids")->toArray()));
+
+    $journalData = [];
+    if ($withJournalDetail) {
+      $journalData = $this->getJournalItemWithIds($invoice_line_ids);
+
+      $journalData = collect($journalData);
+    }
+
+
+    $data = $akunData->map(function ($item,  $key) use ($journalData) {
+      return  $this->mapResponseData($item, collect($journalData));
+    });
 
     return  $data;
+  }
+  function getJournalDetail($id)
+  {
+    $model = $this->createRpcModel();
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'read',  [[(int) $id]], []);
+
+
+  
+    // dd($akunData);
+    $akunData = (object) $data[0];
+
+    $journalData = $this->getJournalItemWithIds($akunData->invoice_line_ids);
+
+
+    $data = $this->mapResponseData($akunData, collect($journalData));
+
+    return  $data;
+  }
+
+  function mapResponseData($item,  $journalData)
+  {
+
+    $data = (object) $item;
+
+    $refData =  explode(";" , $data->ref);
+    $formatted = [
+      "id" => $data->id,
+      "kode_jurnal" => $data->name,
+      "perusahaan_id" => 1,
+      "cabang_id" => 1,
+      "total_debit" => $data->amount_total,
+      "total_kredit" => $data->amount_total,
+      "deskripsi" =>  sizeOf($refData) >  1 ?  $refData[1] : "",
+      "posted_at" => $data->state == 'posted' ? $data->__last_update : null,
+      "created_at" => $data->date,
+      "updated_at" => "2023-10-06T06:36:51.000000Z",
+      "created_by" => null,
+      "updated_by" => null,
+      "deleted_by" => null,
+      "judul" =>   sizeOf($refData) >  0 ?  $refData[0] : "",
+      "tanggal_transaksi" => $data->date,
+      "deleted_at" => null,
+      "journal_akuns" => $journalData->whereIn("id", $data->invoice_line_ids)->toArray(),
+    ];
+    return $formatted;
+  }
+
+  function mapResponseDetailData($item)
+  {
+    $item = (object) $item;
+    return [
+      "id" => $item->id,
+      "perusahaan_id" => 1,
+      "cabang_id" => 1,
+      "akun" => $item->account_id[0],
+      "akun_label" => $item->account_id[1],
+      "posisi_akun" => $item->credit > 0 ? "CREDIT" : "DEBIT",
+      "deskripsi" => "asdf",
+      "jumlah" => $item->credit ? $item->balance * -1 : $item->balance,
+      "created_at" => $item->date,
+      "updated_at" => "2023-10-06T06:08:34.000000Z",
+      "created_by" => null,
+      "updated_by" => null,
+      "deleted_by" => null,
+    ];
   }
 }

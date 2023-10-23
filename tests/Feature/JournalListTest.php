@@ -21,7 +21,7 @@ class JournalListTest extends TestCase
     public function testListAllJournal(): void
     {
         $this->actingAs(\App\Models\User::factory()->create());
-        $response = $this->getJson('/api/journal/journal?search=2013');
+        $response = $this->getJson('/api/journal/journal');
 
         dd($response->getContent());
         $response->assertStatus(200);
@@ -29,7 +29,7 @@ class JournalListTest extends TestCase
     public function testListDetailJournal(): void
     {
         $this->actingAs(\App\Models\User::factory()->create());
-        $response = $this->getJson('/api/journal/journal/105');
+        $response = $this->getJson('/api/journal/journal/34');
 
         dd($response->getContent());
         $response->assertStatus(200);

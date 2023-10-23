@@ -111,7 +111,7 @@ class JournalService extends CrudService
                 "l10n_id_kode_transaksi" => false,
                 "l10n_id_replace_invoice_id" => false,
                 "quick_edit_total_amount" => 0,
-                "ref" =>  $createJournalRequest->judul,
+                "ref" =>  $createJournalRequest->judul . ";" .   $createJournalRequest->description,
                 "invoice_vendor_bill_id" => false,
                 "invoice_date" => false,
                 "payment_reference" => false,
@@ -178,41 +178,8 @@ class JournalService extends CrudService
 
         $akunData = $data->getJournalList();
 
-        $data = collect($akunData['records'])->map(function ($item,  $key) {
 
-
-            // $tagData =  $tagData->whereIn('id', $data['tag_ids'])->pluck("name")->map(function ($item) {
-            //     return strtolower($item);
-            // });
-            // dd($item);
-            // $isAkunKas =  in_array("bank", $tagData->toArray()) ?  1 :  0;
-            // $kategoriAkun = $kategori_akun->where('code', $data['account_type'])->first();
-            $data = (object) $item;
-            $formatted = [
-                "id" => $data->id,
-                "kode_jurnal" => $data->name,
-                "perusahaan_id" => 1,
-                "cabang_id" => 1,
-                "total_debit" => $data->amount_total ,
-                "total_kredit" => $data->amount_total,
-                "deskripsi" =>  $data->ref,
-                "posted_at" => $data->state == 'posted' ? $data->__last_update : null,
-                "created_at" => "2023-10-06T06:08:34.000000Z",
-                "updated_at" => "2023-10-06T06:36:51.000000Z",
-                "created_by" => null,
-                "updated_by" => null,
-                "deleted_by" => null,
-                "judul" => $data->ref,
-                "tanggal_transaksi" => $data->date,
-                "deleted_at" => null,
-
-            ];
-
-
-            return $formatted;
-        });
-
-        return  collect($data)->paginate(10,  $akunData['length'], 1);
+        return  collect($akunData)->paginate(10,  100, 1);
     }
 
     public function find(mixed  $id): CrudModel | Collection
@@ -220,52 +187,9 @@ class JournalService extends CrudService
 
         $data = new OdooApiService();
 
-        $akunData = $data->getJournalDetail($id);
-        // dd($akunData);
-        $akunData = (object) $akunData[0];
-
-        $journalData = $data->getJournalItemWithIds($akunData->invoice_line_ids);
-
-        $journalData = collect($journalData)->map(function ($item,  $key) {
-            $item = (object) $item;
-            return [
-                "id" => $item->id,
-                "perusahaan_id" => 1,
-                "cabang_id" => 1,
-                "akun" => $item->account_id[0],
-                "posisi_akun" => $item->credit > 0 ? "CREDIT" : "DEBIT",
-                "deskripsi" => "asdf",
-                "jumlah" => $item->credit ? $item->balance * -1 : $item->balance, 
-                "created_at" => $item->date,
-                "updated_at" => "2023-10-06T06:08:34.000000Z",
-                "created_by" => null,
-                "updated_by" => null,
-                "deleted_by" => null,
-            ];
-        });
-
-        $formatted = [
-            "id" => $akunData->id,
-            "kode_jurnal" => $akunData->name,
-            "perusahaan_id" => 1,
-            "cabang_id" => 1,
-            "total_debit" => $akunData->amount_total ,
-            "total_kredit" => $akunData->amount_total,
-            "deskripsi" =>  $akunData->ref,
-            "posted_at" => $akunData->state == 'posted' ? $akunData->__last_update : null,
-            "created_at" => "2023-10-06T06:08:34.000000Z",
-            "updated_at" => "2023-10-06T06:36:51.000000Z",
-            "created_by" => null,
-            "updated_by" => null,
-            "deleted_by" => null,
-            "judul" => $akunData->ref,
-            "tanggal_transaksi" => $akunData->date,
-            "deleted_at" => null,
-            "journal_akuns" => $journalData,
-
-        ];
-
-
+        
+        $formatted = $data->getJournalDetail($id);
+        
 
         return  collect($formatted);
     }
