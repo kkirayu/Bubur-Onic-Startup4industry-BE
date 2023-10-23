@@ -453,9 +453,8 @@ class OdooApiService
 
     return  $data;
   }
-  function getJournalList () {
+  function getJournalList ($domain = []) {
 
-    $domain = [];
     $search = request()->search;
     if($search ) {
 
