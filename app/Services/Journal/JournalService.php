@@ -111,7 +111,7 @@ class JournalService extends CrudService
                 "l10n_id_kode_transaksi" => false,
                 "l10n_id_replace_invoice_id" => false,
                 "quick_edit_total_amount" => 0,
-                "ref" =>  $createJournalRequest->judul . ";" .   $createJournalRequest->description,
+                "ref" =>  $createJournalRequest->judul . ";" .   $createJournalRequest->deskripsi,
                 "invoice_vendor_bill_id" => false,
                 "invoice_date" => false,
                 "payment_reference" => false,
