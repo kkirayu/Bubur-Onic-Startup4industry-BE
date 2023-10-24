@@ -12,7 +12,9 @@ class KategoriAkunService extends CrudService
 
     function allowedKategoriAkun()
     {
-        $data = $this->model->newQuery()->where("parent_kategori_akun",  "!=",  null)->get();
+        $perusahaan = request()->perusahaan_id;
+        $cabang = request()->cabang_id;
+        $data = $this->model->newQuery()->where("parent_kategori_akun",  "!=",  null)->where("perusahaan_id", $perusahaan)->where("cabang_id", $cabang)->get();
         return $data;
     }
 }
