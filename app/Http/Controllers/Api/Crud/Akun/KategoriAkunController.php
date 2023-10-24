@@ -26,5 +26,11 @@ class KategoriAkunController extends ApiCrudController
         return new KategoriAkunService($this->model(), $this->user);
     }
 
+    public function allowedKategoriAkun(Request $request)
+    {
+        $data = $this->service()->allowedKategoriAkun($request);
+        return $this->collection($data);
+    }
+
 
 }

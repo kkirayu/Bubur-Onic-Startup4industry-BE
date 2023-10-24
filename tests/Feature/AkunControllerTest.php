@@ -23,4 +23,24 @@ class AkunControllerTest extends TestCase
 
         $response->assertStatus(200);
     }
+    public function test_create_akun(): void
+    {
+
+        $payload = [
+            "kategori_akun" => 12,
+            "is_akun_bank" => true,
+            "kode_akun" => "103123122",
+            "nama_akun" => "12321321",
+            "account_type" => "asset_cash",
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ];
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $response = $this->postJson("/api/akun/akun/create-akun", $payload);
+
+        dump($response->json());
+
+        $response->assertStatus(200);
+    }
 }

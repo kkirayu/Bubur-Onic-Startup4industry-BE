@@ -23,7 +23,9 @@ class OdooAccountTest extends TestCase
     public function testOdooCreateAccount(): void
     {
         $odoo =  new OdooAccountService();
-        $data = $odoo->getAkunList();
+        $data = $odoo->getTagsList([["name", "=", "used"]]);
+
+        dump($data);
 
         $this->assertIsArray($data);
     }

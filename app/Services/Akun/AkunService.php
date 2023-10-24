@@ -2,6 +2,7 @@
 
 namespace App\Services\Akun;
 
+use App\Http\Requests\CreateAkunRequest;
 use App\Models\Akun\Akun;
 use App\Models\KategoriAkun;
 use App\Services\Odoo\OdooAccountService;
@@ -41,7 +42,7 @@ class AkunService extends CrudService
                 return strtolower($item);
             });
             $isAkunKas =  in_array("bank", $tagData->toArray()) ?  1 :  0;
-            $kategoriAkun = $kategori_akun->where("prefix_akun", substr($data['code'], 0,3))->first();
+            $kategoriAkun = $kategori_akun->where("prefix_akun", substr($data['code'], 0, 3))->first();
             $formatted = [
                 "id" => $data['id'],
                 "kode_akun" => $data['code'],
@@ -68,5 +69,18 @@ class AkunService extends CrudService
         });
 
         return  collect($data)->paginate(10,  100, 1);
+    }
+
+    function createAkun(CreateAkunRequest $createAkunRequest)
+    {
+
+        $odoo = new OdooAccountService();
+
+        $data = $odoo->createAkun($createAkunRequest->name, $createAkunRequest->kode_akun, $createAkunRequest->account_type, $createAkunRequest->is_akun_bank);
+
+        if ($data) {
+            return collect($createAkunRequest);
+        }
+        throw new \Exception("Gagal membuat akun");
     }
 }
