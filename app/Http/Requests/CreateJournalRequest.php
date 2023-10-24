@@ -32,7 +32,6 @@ class CreateJournalRequest extends FormRequest
             "akuns.*.id" => "required|integer",
             "akuns.*.debit" => "required|integer",
             "akuns.*.credit" => "required|integer",
-            "akuns.*.description" => "nullable|string",
 
             //
         ];

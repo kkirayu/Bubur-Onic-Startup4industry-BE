@@ -123,7 +123,6 @@ class JournalService extends CrudService
                 "line_ids" => $line_ids,
                 "user_id" => "",
                 "invoice_user_id" => "",
-                "team_id" => 1,
                 "invoice_origin" => false,
                 "qr_code_method" => false,
                 "invoice_incoterm_id" => false,
@@ -131,9 +130,6 @@ class JournalService extends CrudService
                 "invoice_source_email" => false,
                 "to_check" => false,
                 "l10n_id_tax_number" => false,
-                "campaign_id" => false,
-                "medium_id" => false,
-                "source_id" => false,
                 "edi_document_ids" => [],
             ],
         ];

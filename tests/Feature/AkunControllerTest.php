@@ -28,7 +28,7 @@ class AkunControllerTest extends TestCase
 
         $payload = [
             "kategori_akun" => 12,
-            "is_akun_bank" => true,
+            "is_akun_bank" => false,
             "kode_akun" => "103123122",
             "nama_akun" => "12321321",
             "account_type" => "asset_cash",

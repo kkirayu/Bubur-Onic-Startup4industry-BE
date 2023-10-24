@@ -25,7 +25,6 @@ class JournalCreationsTest extends TestCase
                     "id" => 8,
                     "debit" => 1000,
                     "credit" => 0,
-                    "description" => "Debit description"
                 ],
                 [
                     "id" => 5,
