@@ -11,12 +11,19 @@ class OdooApiService
 {
 
 
-  // Access ke odoo 
-  protected   $url = "https://odoo-16.merapi.javan.id";
-  protected $db = "onic_dev";
-  protected $username = "onicdev@javan.co.id";
-  protected $password = "0952496e09485008be0cc83e996a485b2a558963";
+  // // Access ke odoo 
+  // protected   $url = "https://odoo-16.merapi.javan.id";
+  // protected $db = "onic_dev";
+  // protected $username = "onicdev@javan.co.id";
+  // protected $password = "0952496e09485008be0cc83e996a485b2a558963";
 
+  
+  protected   $url = "https://odoo-16.merapi.javan.id";
+  protected $db = "onic_stag";
+  protected $username = "onicstag@javan.co.id";
+  protected $password = "4fb8523186a5843edc734f34cc4216f16a2ce013";
+
+  
   protected  $uid = 2;
   function createRpcModel()
   {

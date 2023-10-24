@@ -76,7 +76,7 @@ class AkunService extends CrudService
 
         $odoo = new OdooAccountService();
 
-        $data = $odoo->createAkun($createAkunRequest->name, $createAkunRequest->kode_akun, $createAkunRequest->account_type, $createAkunRequest->is_akun_bank);
+        $data = $odoo->createAkun($createAkunRequest->nama_akun, $createAkunRequest->kode_akun, $createAkunRequest->account_type, $createAkunRequest->is_akun_bank);
 
         if ($data) {
             return collect($createAkunRequest);
