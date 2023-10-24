@@ -4,7 +4,7 @@ namespace App\Services\Akun;
 
 use App\Models\Akun\Akun;
 use App\Models\KategoriAkun;
-use App\Services\Odoo\OdooApiService;
+use App\Services\Odoo\OdooAccountService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,9 +23,9 @@ class AkunService extends CrudService
     public function get(Request $request): LengthAwarePaginator
     {
 
-        $data = new OdooApiService();
+        $data = new OdooAccountService();
 
-        $akunData = $data->getAkunList();
+        $akunData = $data->getAkunList()['records'];
         $tagData = collect($data->getTagsList());
         $kategori_akun = KategoriAkun::where("perusahaan_id", $request->perusahaan_id)->where("cabang_id", $request->cabang_id)->get();
 
@@ -41,7 +41,7 @@ class AkunService extends CrudService
                 return strtolower($item);
             });
             $isAkunKas =  in_array("bank", $tagData->toArray()) ?  1 :  0;
-            $kategoriAkun = $kategori_akun->where('code', $data['account_type'])->first();
+            $kategoriAkun = $kategori_akun->where("prefix_akun", substr($data['code'], 0,3))->first();
             $formatted = [
                 "id" => $data['id'],
                 "kode_akun" => $data['code'],

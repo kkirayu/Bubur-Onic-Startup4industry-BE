@@ -14,12 +14,11 @@ use Tests\TestCase;
 
 class CreatePerusahaanTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan("db:seed");
     }
 
 

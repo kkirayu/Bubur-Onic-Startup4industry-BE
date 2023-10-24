@@ -2,6 +2,7 @@
 
 namespace App\Services\Laporan;
 
+use App\Services\Odoo\OdooAccountService;
 use App\Services\Odoo\OdooApiService;
 use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
@@ -28,7 +29,7 @@ class LaporanNeracaService
                 "value" => "coba"
             ]
         ]);
-        $odooApiService = new OdooApiService();
+        $odooApiService = new OdooAccountService();
         $code = $odooApiService->getAkunList();
 
 

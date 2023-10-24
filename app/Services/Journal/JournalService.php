@@ -144,18 +144,6 @@ class JournalService extends CrudService
     }
     public function postJournal($journalId)
     {
-        // $journal = Journal::find($journalId);
-
-
-        // if ($journal->posted_at != null) {
-        //     throw ValidationException::withMessages(['id' => 'Journal sudah diposting']);
-        // }
-        // $journal->posted_at = date("Y-m-d H:i:s");
-        // $journal->posted_by = $this->user->id;
-        // $journal->save();
-
-        // $journal->load("journalAkuns");
-        // return $journal;
 
         $service = new OdooApiService();
         $response = $service->postJournal((int)$journalId);

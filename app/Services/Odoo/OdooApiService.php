@@ -4,6 +4,7 @@
 namespace App\Services\Odoo;
 
 use App\Services\Odoo\Const\AccountType;
+use Illuminate\Support\Facades\Cache;
 use Ripcord\Ripcord;
 
 class OdooApiService
@@ -12,10 +13,9 @@ class OdooApiService
 
   // Access ke odoo 
   protected   $url = "https://odoo-16.merapi.javan.id";
-
-  protected $db = "odoo_16";
-  protected $username = "admin@merapi.javan.id";
-  protected $password = "a1def3761a961aaa03b2da0c9160b8c3b5803603";
+  protected $db = "onic_dev";
+  protected $username = "onicdev@javan.co.id";
+  protected $password = "0952496e09485008be0cc83e996a485b2a558963";
 
   protected  $uid = 2;
   function createRpcModel()
@@ -24,8 +24,9 @@ class OdooApiService
     // require_once('ripcord.php');
     $common = Ripcord::client("$this->url/xmlrpc/2/common");
     $common->version();
-    // $uid = $common->authenticate($db, $username, $password, array());
-
+    $this->uid = Cache::rememberForever("odoo_uid", function () use ($common) {
+      return $common->authenticate($this->db, $this->username, $this->password, array());
+    });
     $models = Ripcord::client("$this->url/xmlrpc/2/object");
 
     return  $models;
@@ -376,78 +377,6 @@ class OdooApiService
     return $data;
   }
 
-
-  function getAkun()
-  {
-
-    $models =  $this->createRpcModel();
-
-    $kwarg  = [
-      "category_domain" => [],
-      "enable_counters" => false,
-      "expand" => false,
-      "filter_domain" => [],
-      "hierarchize" => true,
-      "limit" => 0,
-      "fields" => [
-        "name"
-      ],
-      "search_domain" => [
-        [
-          "deprecated",
-          "=",
-          false
-        ],
-
-      ]
-    ];
-
-
-
-    $payload = [
-      "root_id"
-
-    ];
-    $data = $models->execute_kw(
-      $this->db,
-      $this->uid,
-      $this->password,
-      'account.account',
-      'search_panel_select_range',
-      $payload,
-      $kwarg
-    );
-    return $data;
-  }
-
-  function  getAkunType()
-  {
-    $model = $this->createRpcModel();
-    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account.type', 'search_read',  [], [
-
-      "domain" => [],
-    ]);
-    return $data;
-  }
-  function  getAkunList($filterDomain = [])
-  {
-
-    $domain = [];
-    if (request()->has("filter")) {
-
-      if (request()->filter['is_kas'] == "1") {
-        $domain[] = ["tag_ids", "ilike", "bank"];
-      }
-    }
-    $domain = array_merge($domain,  $filterDomain);
-    $model = $this->createRpcModel();
-    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account', 'search_read',  [], [
-
-      "domain" => $domain,
-    ]);
-
-    return  $data;
-  }
   function  getTagsList()
   {
     $model = $this->createRpcModel();
@@ -503,7 +432,7 @@ class OdooApiService
     $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'read',  [[(int) $id]], []);
 
 
-  
+
     // dd($akunData);
     $akunData = (object) $data[0];
 
@@ -520,7 +449,7 @@ class OdooApiService
 
     $data = (object) $item;
 
-    $refData =  explode(";" , $data->ref);
+    $refData =  explode(";", $data->ref);
     $formatted = [
       "id" => $data->id,
       "kode_jurnal" => $data->name,

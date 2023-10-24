@@ -42,7 +42,7 @@ class PerusahaanService extends CrudService
             ]);
 
             $roleOwner = Role::where('name', 'OWNER_CABANG')->first();
-            $this->registerAccountList($perusahaan->id,$cabang->id);
+            $this->registerAccountList($perusahaan->id, $cabang->id);
             $user_role_cabang = new  UserRoleCabang();
             $user_role_cabang->cabang_id = $cabang->id;
             $user_role_cabang->user_id = $owner->id;
@@ -62,121 +62,130 @@ class PerusahaanService extends CrudService
 
     function registerAccountList($perusahaan, $cabang)
     {
-        $accountType = [
+        $parentAccountType = [
             [
-                "nama" => "Receivable",
-                "deskripsi" => "Receivable",
-                "code" => "asset_receivable",
+                "nama" => "AKTIVA",
+                "deskripsi" => "AKTIVA",
+                "code" => "asset",
                 "prefix_akun" => "1",
             ],
             [
-                "nama" => "Payable",
-                "deskripsi" => "Payable",
-                "code" => "liability_payable",
-                "prefix_akun" => "1",
+                "nama" => "PASIVA",
+                "deskripsi" => "PASIVA",
+                "code" => "liability",
+                "prefix_akun" => "2",
             ],
             [
-                "nama" => "Bank and Cash",
-                "deskripsi" => "Bank and Cash",
-                "code" => "asset_cash",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Credit Card",
-                "deskripsi" => "Credit Card",
-                "code" => "liability_credit_card",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Current Assets",
-                "deskripsi" => "Current Assets",
-                "code" => "asset_current",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Non-current Assets",
-                "deskripsi" => "Non-current Assets",
-                "code" => "asset_non_current",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Prepayments",
-                "deskripsi" => "Prepayments",
-                "code" => "asset_prepayments",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Fixed Assets",
-                "deskripsi" => "Fixed Assets",
-                "code" => "asset_fixed",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Current Liabilities",
-                "deskripsi" => "Current Liabilities",
-                "code" => "liability_current",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Non-current Liabilities",
-                "deskripsi" => "Non-current Liabilities",
-                "code" => "liability_non_current",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Equity",
-                "deskripsi" => "Equity",
+                "nama" => "MODAL",
+                "deskripsi" => "MODAL",
                 "code" => "equity",
-                "prefix_akun" => "1",
+                "prefix_akun" => "3",
             ],
             [
-                "nama" => "Current Year Earnings",
-                "deskripsi" => "Current Year Earnings",
-                "code" => "equity_unaffected",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Income",
-                "deskripsi" => "Income",
+                "nama" => "PENDAPATAN",
+                "deskripsi" => "PENDAPATAN",
                 "code" => "income",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Other Income",
-                "deskripsi" => "Other Income",
-                "code" => "income_other",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Expenses",
-                "deskripsi" => "Expenses",
-                "code" => "expense",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Depreciation",
-                "deskripsi" => "Depreciation",
-                "code" => "expense_depreciation",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Cost of Revenue",
-                "deskripsi" => "Cost of Revenue",
-                "code" => "expense_direct_cost",
-                "prefix_akun" => "1",
-            ],
-            [
-                "nama" => "Off-Balance Sheet",
-                "deskripsi" => "Off-Balance Sheet",
-                "code" => "off_balance",
-                "prefix_akun" => "1",
+                "prefix_akun" => "4",
             ],
 
-
-
+            [
+                "nama" => "HPP",
+                "deskripsi" => "HPP",
+                "code" => "hpp",
+                "prefix_akun" => "5",
+            ],
+            [
+                "nama" => "BIAYA OPERASIONAL",
+                "deskripsi" => "BIAYA OPERASIONAL",
+                "code" => "operating_expense",
+                "prefix_akun" => "6",
+            ],
+            [
+                "nama" => "ZISWAF",
+                "deskripsi" => "ZISWAF",
+                "code" => "ziswaf",
+                "prefix_akun" => "6",
+            ],
+            [
+                "nama" => "PAJAK",
+                "deskripsi" => "PAJAK",
+                "code" => "tax",
+                "prefix_akun" => "7",
+            ],
         ];
 
+
+        foreach ($parentAccountType as $key => $value) {
+            # code...
+            $value['perusahaan_id'] = $perusahaan;
+            $value['cabang_id'] = $cabang;
+            $data = KategoriAkun::insert($value);
+        }
+
+
+        $accountType = [
+            "100;AKTIVA;KAS;asset_cash",
+            "101;AKTIVA;GIRO;asset_cash",
+            "102;AKTIVA;TABUNGAN;asset_cash",
+            "103;AKTIVA;DEPOSITO;asset_cash",
+            "110;AKTIVA;PIUTANG;asset_receivable",
+            "111;AKTIVA;PIUTANG USAHA;asset_receivable",
+            "112;AKTIVA;PIUTANG KARYAWAN;asset_receivable",
+            "113;AKTIVA;PIUTANG LAINNYA;asset_receivable",
+            "114;AKTIVA;UANG MUKA;asset_prepayments",
+            "120;AKTIVA;PERSEDIAAN BAHAN BAKU;asset_current",
+            "130;AKTIVA;PERSEDIAAN DALAM PROSES;asset_current",
+            "140;AKTIVA;PERSEDIAAN PRODUK JADI;asset_current",
+            "150;AKTIVA;AKTIVA TETAP;asset_fixed",
+            "151;AKTIVA;AKUM.PENYUSUTAN AKTIVA TETAP;asset_fixed",
+            "160;AKTIVA;BIAYA DIBAYAR DIMUKA;asset_fixed",
+            "170;AKTIVA;PIUTANG ANTAR CABANG;asset_fixed",
+            "180;AKTIVA;AKTIVA LAINNYA;asset_fixed",
+            "200;PASIVA;HUTANG;liability_current",
+            "201;PASIVA;HUTANG JANGKA PENDEK;liability_current",
+            "202;PASIVA;HUTANG JANGKA PANJANG;liability_current",
+            "210;PASIVA;HUTANG PAJAK;liability_current",
+            "220;PASIVA;PENDAPATAN DITERIMA DIMUKA;liability_current",
+            "230;PASIVA;HUTANG LAINNYA;liability_current",
+            "240;PASIVA;HUTANG ANTAR CABANG;liability_current",
+            "300;MODAL;MODAL PENDIRI;equity",
+            "310;MODAL;MODAL INVESTOR;equity",
+            "320;MODAL;PRIVE;equity",
+            "330;MODAL;PERMODALAN LAINNYA;equity",
+            "340;MODAL;R/L DITAHAN;equity",
+            "350;MODAL;R/L DIBAGIKAN U/ PENDIRI;equity",
+            "360;MODAL;R/L DIBAGIKAN U/ INVESTOR;equity",
+            "400;PENDAPATAN;PENDAPATAN OPERASIONAL;income",
+            "401;PENDAPATAN;PENDAPATAN UTAMA;income",
+            "402;PENDAPATAN;POTONGAN PENJUALAN;income",
+            "410;PENDAPATAN;PENDAPATAN LAINNYA;income",
+            "500;HPP;HARGA POKOK PRODUKSI;expense",
+            "510;HPP;BIAYA BAHAN BAKU;expense",
+            "520;HPP;BIAYA TENAGA KERJA LANGSUNG;expense",
+            "530;HPP;BIAYA OVERHEAD PRODUKSI;expense",
+            "600;BIAYA OPERASIONAL;BIAYA MARKETING;expense",
+            "610;BIAYA OPERASIONAL;BIAYA TENAGA KERJA;expense",
+            "620;BIAYA OPERASIONAL;BIAYA ADMININISTRASI & UMUM;expense",
+            "630;BIAYA OPERASIONAL;BIAYA PEMELIHARAAN & PERBAIKAN;expense",
+            "640;BIAYA OPERASIONAL;BIAYA PENYUSUTAN AKTIVA TETAP;expense",
+            "650;BIAYA OPERASIONAL;BIAYA OPERASIONAL LAINNYA;expense",
+            "690;ZISWAF;INFAQ & SEDEKAH;expense",
+            "700;PAJAK;BIAYA PAJAK-PAJAK;expense",
+        ];
+
+        $kategoriAkunParent = KategoriAkun::where("perusahaan_id", $perusahaan)->where("cabang_id", $cabang)->where("parent_kategori_akun" ,  null)->get();
         foreach ($accountType as $key => $value) {
+
+            $data = explode(";", $value);
+            $parentAkun= $kategoriAkunParent->firstWhere("nama", $data[1]);
+            $value = [
+
+                "nama" => $data[2],
+                "parent_kategori_akun" => $parentAkun?->id,
+                "deskripsi" => $data[2] . "Perusahaan",
+                "code" => $data[3],
+                "prefix_akun" => $data[0],
+            ];
             # code...
             $value['perusahaan_id'] = $perusahaan;
             $value['cabang_id'] = $cabang;

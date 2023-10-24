@@ -19,7 +19,7 @@ class AkunControllerTest extends TestCase
         $this->actingAs($user);
         $response = $this->getJson("/api/akun/akun?company=1&date=18/10/2023");
 
-        dump(json_encode($response->json()));
+        dump($response->json());
 
         $response->assertStatus(200);
     }
