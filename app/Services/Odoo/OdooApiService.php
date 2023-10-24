@@ -6,24 +6,19 @@ namespace App\Services\Odoo;
 use App\Services\Odoo\Const\AccountType;
 use Illuminate\Support\Facades\Cache;
 use Ripcord\Ripcord;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class OdooApiService
 {
 
 
-  // // Access ke odoo 
-  // protected   $url = "https://odoo-16.merapi.javan.id";
-  // protected $db = "onic_dev";
-  // protected $username = "onicdev@javan.co.id";
-  // protected $password = "0952496e09485008be0cc83e996a485b2a558963";
-
-  
+  // Access ke odoo 
   protected   $url = "https://odoo-16.merapi.javan.id";
-  protected $db = "onic_stag";
-  protected $username = "onicstag@javan.co.id";
-  protected $password = "4fb8523186a5843edc734f34cc4216f16a2ce013";
 
-  
+  protected $db = "onic_dev";
+  protected $username = "onicdev@javan.co.id";
+  protected $password = "0952496e09485008be0cc83e996a485b2a558963";
+
   protected  $uid = 2;
   function createRpcModel()
   {
@@ -37,6 +32,30 @@ class OdooApiService
     $models = Ripcord::client("$this->url/xmlrpc/2/object");
 
     return  $models;
+  }
+
+  public function executeKw($model ,  $function ,  $payload ,  $kwarg)
+
+  {
+
+
+    $models =  $this->createRpcModel();
+
+    $data = $models->execute_kw(
+      $this->db,
+      $this->uid,
+      $this->password,
+      $model,
+      $function,
+      $payload,
+      $kwarg
+    );
+
+    if(is_array($data) &&  array_key_exists("faultCode", $data)){
+      throw new BadRequestException($data["faultString"]);
+    }
+
+    return collect($data);
   }
 
   function createJournal($payload,)
