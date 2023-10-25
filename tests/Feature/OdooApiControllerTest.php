@@ -20,15 +20,17 @@ class OdooApiControllerTest extends TestCase
         $payload = [
             "model" => "res.partner",
             "method" => "name_create",
-            "params" => [
+            "args" => [
 
                 "Javan 100"
 
             ],
-            "kwarg" => []
+            "kwargs" => []
         ];
         $response = $this->postJson('/api/odoo/odoo-api', $payload);
+        dump(json_encode($payload));
         dd($response->json());
+        
 
         $response->assertStatus(200);
     }

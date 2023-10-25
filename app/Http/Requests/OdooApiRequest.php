@@ -25,7 +25,7 @@ class OdooApiRequest extends FormRequest
             //
             "model" => "required|string",
             "method" => "required|string",
-            "params" => "array|nullable",
+            "args" => "array|nullable",
             "kwargs" => "array|nullable",
         ];
     }

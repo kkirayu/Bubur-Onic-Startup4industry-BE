@@ -22,8 +22,8 @@ class OdooApiController
     {
         $method = $request->get('method');
         $model = $request->get('model');
-        $params = $request->get('params')?? [];
-        $kwarg = $request->get('kwarg') ?? [];
+        $params = $request->get('args')?? [];
+        $kwarg = $request->get('kwargs') ?? [];
 
         return $this->single((new OdooApiService())->executeKw($model, $method, $params, $kwarg));
     }
