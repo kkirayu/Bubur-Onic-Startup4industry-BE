@@ -64,10 +64,22 @@ class OdooApiService
       return collect($data);
     }else if($responseType == "PAGINATEDLIST"){
 
+      $dataSize = 100;
+
+      if(array_key_exists("length" , $data)) {
+        $dataSize = $data['length'];
+      }
+      if(array_key_exists("records" , $data)) {
+        $data = collect($data['records']);
+      }else {
+
+        $data = collect($data);
+      }
+
       $page = request()->page ? : 1; 
       $limit = request()->limit ? : 10;
       $offset = ($page - 1) * $limit;
-      return collect($data)->paginate($limit,  100, $page );
+      return $data->paginate($limit,  $dataSize, $page );
     }
 
     return collect($data);

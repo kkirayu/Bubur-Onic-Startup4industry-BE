@@ -42,9 +42,9 @@ class OdooApiControllerTest extends TestCase
         $user = \App\Models\User::factory()->create();
         $this->actingAs($user);
         $payload = [
-            "model" => "res.partner",
-            "method" => "search_read",
-            "args" => [[['is_company', '=', True]]],
+            "model" => "account.asset.asset",
+            "method" => "web_search_read",
+            "args" => [],
             "kwargs" => [], 
             "res_type" => "PAGINATEDLIST",
         ];
