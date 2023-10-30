@@ -27,7 +27,6 @@ class OdooApiController
         $res_type = $request->get('res_type') ?? "RAWLIST";
 
         $response = (new OdooApiService())->executeKw($model, $method, $params, $kwarg);
-        dd($response);
         if ($res_type == "PAGINATEDLIST") {
             return $this->collection($response);
         }
