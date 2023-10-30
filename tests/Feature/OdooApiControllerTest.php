@@ -25,7 +25,48 @@ class OdooApiControllerTest extends TestCase
                 "Javan 100"
 
             ],
-            "kwargs" => []
+            "kwargs" => [], 
+            "res_type" => "STATEMENT",
+        ];
+        $response = $this->postJson('/api/odoo/odoo-api', $payload);
+        dump(json_encode($payload));
+        dd($response->json());
+        
+
+        $response->assertStatus(200);
+    }
+    public function testPginated(): void
+    {
+
+        // 
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+        $payload = [
+            "model" => "res.partner",
+            "method" => "search_read",
+            "args" => [[['is_company', '=', True]]],
+            "kwargs" => [], 
+            "res_type" => "PAGINATEDLIST",
+        ];
+        $response = $this->postJson('/api/odoo/odoo-api', $payload);
+        dump(json_encode($payload));
+        dd($response->json());
+        
+
+        $response->assertStatus(200);
+    }
+    public function testGetRaw(): void
+    {
+
+        // 
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+        $payload = [
+            "model" => "res.partner",
+            "method" => "search",
+            "args" => [[['is_company', '=', True]]],
+            "kwargs" => [], 
+            "res_type" => "RAWLIST",
         ];
         $response = $this->postJson('/api/odoo/odoo-api', $payload);
         dump(json_encode($payload));

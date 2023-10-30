@@ -37,6 +37,7 @@ class OdooApiService
   public function executeKw($model ,  $function ,  $payload ,  $kwarg)
 
   {
+    $responseType = request()->res_type;
 
 
     $models =  $this->createRpcModel();
@@ -53,6 +54,20 @@ class OdooApiService
 
     if(is_array($data) &&  array_key_exists("faultCode", $data)){
       throw new BadRequestException($data["faultString"]);
+    }
+
+    if($responseType == "STATEMENT"){
+      return collect($data);
+    }else if($responseType == "RECORD"){
+      return collect($data[0]);
+    }else if($responseType == "RAWLIST"){
+      return collect($data);
+    }else if($responseType == "PAGINATEDLIST"){
+
+      $page = request()->page ? : 1; 
+      $limit = request()->limit ? : 10;
+      $offset = ($page - 1) * $limit;
+      return collect($data)->paginate($limit,  100, $page );
     }
 
     return collect($data);
