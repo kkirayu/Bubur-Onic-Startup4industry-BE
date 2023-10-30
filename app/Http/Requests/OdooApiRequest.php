@@ -27,6 +27,7 @@ class OdooApiRequest extends FormRequest
             "method" => "required|string",
             "args" => "array|nullable",
             "kwargs" => "array|nullable",
+            "res_type" => "string|nullable|in:PAGINATEDLIST,RAWLIST,RECORD,STATEMENT",
         ];
     }
 }
