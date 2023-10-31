@@ -2,6 +2,7 @@
 
 namespace App\Services\Laporan;
 
+use App\Models\KategoriAkun;
 use App\Services\Odoo\OdooAccountService;
 use App\Services\Odoo\OdooApiService;
 use Carbon\Carbon;
@@ -22,33 +23,31 @@ class LaporanNeracaService
                 "value" => "Kewajiban"
             ],
         ];
+        $perusahaan_id = $request->company;
 
-        $rootAccountMapping = collect([
-            [
-                "key" => 11,
-                "value" => "coba"
-            ]
-        ]);
+        $kategori_akun = KategoriAkun::where("perusahaan_id", $perusahaan_id)->get();
+
+
         $odooApiService = new OdooAccountService();
         $code = $odooApiService->getAkunList();
 
 
-        $perusahaan_id = 1;
-        $date = Carbon::createFromFormat('d/m/Y', $request->date);
-        $start = $date->startOfMonth()->format('Y-m-d');
-        $end = $date->endOfMonth()->format('Y-m-d');
 
-        $data = collect($section)->map(function ($akunGroup) use ($start, $end, $perusahaan_id,  $odooApiService,  $rootAccountMapping) {
+        $start = Carbon::createFromFormat('d/m/Y', $request->start)->format('Y-m-d');
+        $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
+
+        $data = collect($section)->map(function ($akunGroup) use ($start, $end, $perusahaan_id,  $odooApiService,  $kategori_akun) {
 
             $groupKey = $akunGroup['key'];
 
             $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, $groupKey,  'account_root_id');
+
             $groupRootData =  $data['groups'];
             // remove __domain from  groupData
-            $groupRootData = collect($groupRootData)->map(function ($item) use ($odooApiService, $start, $end, $perusahaan_id, $groupKey, $rootAccountMapping) {
+            $groupRootData = collect($groupRootData)->map(function ($item) use ($odooApiService, $start, $end, $perusahaan_id, $groupKey, $kategori_akun) {
                 unset($item['__domain']);
-                $mapping = $rootAccountMapping->where("key",  $item['account_root_id'][1])->first();
-                $item["account_root_id"][1] = $mapping  ?  $mapping['value'] : $item['account_root_id'][1];
+                $mapping = $kategori_akun->where("prefix_akun",  substr($item['account_root_id'][1], 0, 1))->first();
+                $item["account_root_id"][1] = $mapping  ?  $mapping->nama : $item['account_root_id'][1];
 
                 $data = $odooApiService->getBukuBesarWithRootKey(null, $start, $perusahaan_id, $groupKey, [$item['account_root_id'][0]]);
                 $dataAwal = collect($data['groups'])->map(function ($item) {
@@ -86,12 +85,12 @@ class LaporanNeracaService
                 $item["total_awal"] = $totalAwal;
 
 
-                $item["total_akhir"] =$totalAkhir;
+                $item["total_akhir"] = $totalAkhir;
 
                 $item["tanggal_awal"] = $start;
 
 
-                $item["tanggal_akhir"] =$end;
+                $item["tanggal_akhir"] = $end;
 
                 $item["items"] = $data;
                 return $item;
