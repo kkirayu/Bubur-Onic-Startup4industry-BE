@@ -28,6 +28,13 @@ return [
         'tenant_id' => env('CAMUNDA_TENANT_ID', ''),
     ],
 
+    'odoo' => [
+        'url' => env('ODOO_API_URL', 'localhost:8000'),
+        'user' => env('ODOO_USERNAME', 'demo'),
+        'password' => env('ODOO_PASSWORD', 'demo'),
+        'database' => env('ODOO_DATABASE', 'demo'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

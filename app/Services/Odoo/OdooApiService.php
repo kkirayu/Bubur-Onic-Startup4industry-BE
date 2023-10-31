@@ -13,13 +13,21 @@ class OdooApiService
 
 
   // Access ke odoo 
-  protected   $url = "https://odoo-16.merapi.javan.id";
-
-  protected $db = "onic_dev";
-  protected $username = "onicdev@javan.co.id";
-  protected $password = "0952496e09485008be0cc83e996a485b2a558963";
+  protected   $url =  "";
+  protected $db = "";
+  protected $username = "";
+  protected $password =  "";
 
   protected  $uid = 2;
+
+  function __construct()
+  {
+
+    $this->url =  config("services.odoo.url");
+    $this->db = config("services.odoo.database");
+    $this->username = config("services.odoo.user");
+    $this->password =  config("services.odoo.password");
+  }
   function createRpcModel()
   {
 
@@ -34,7 +42,7 @@ class OdooApiService
     return  $models;
   }
 
-  public function executeKw($model ,  $function ,  $payload ,  $kwarg)
+  public function executeKw($model,  $function,  $payload,  $kwarg)
 
   {
     $responseType = request()->res_type;
@@ -52,34 +60,34 @@ class OdooApiService
       $kwarg
     );
 
-    if(is_array($data) &&  array_key_exists("faultCode", $data)){
+    if (is_array($data) &&  array_key_exists("faultCode", $data)) {
       throw new BadRequestException($data["faultString"]);
     }
 
-    if($responseType == "STATEMENT"){
+    if ($responseType == "STATEMENT") {
       return collect($data);
-    }else if($responseType == "RECORD"){
+    } else if ($responseType == "RECORD") {
       return collect($data[0]);
-    }else if($responseType == "RAWLIST"){
+    } else if ($responseType == "RAWLIST") {
       return collect($data);
-    }else if($responseType == "PAGINATEDLIST"){
+    } else if ($responseType == "PAGINATEDLIST") {
 
       $dataSize = 100;
 
-      if(array_key_exists("length" , $data)) {
+      if (array_key_exists("length", $data)) {
         $dataSize = $data['length'];
       }
-      if(array_key_exists("records" , $data)) {
+      if (array_key_exists("records", $data)) {
         $data = collect($data['records']);
-      }else {
+      } else {
 
         $data = collect($data);
       }
 
-      $page = request()->page ? : 1; 
-      $limit = request()->limit ? : 10;
+      $page = request()->page ?: 1;
+      $limit = request()->limit ?: 10;
       $offset = ($page - 1) * $limit;
-      return $data->paginate($limit,  $dataSize, $page );
+      return $data->paginate($limit,  $dataSize, $page);
     }
 
     return collect($data);
