@@ -14,7 +14,16 @@ class KategoriAkunService extends CrudService
     {
         $perusahaan = request()->perusahaan_id;
         $cabang = request()->cabang_id;
-        $data = $this->model->newQuery()->where("parent_kategori_akun",  "!=",  null)->where("perusahaan_id", $perusahaan)->where("cabang_id", $cabang)->get();
+        $parent_id = request()->parent_id;
+        $data = $this->model->newQuery()->where("parent_kategori_akun",  "!=",  $parent_id)->where("perusahaan_id", $perusahaan)->where("cabang_id", $cabang)->get();
+        return $data;
+    }
+    function allowedParentAkun()
+    {
+        $perusahaan = request()->perusahaan_id;
+        $cabang = request()->cabang_id;
+        $parent_id = request()->parent_id;
+        $data = $this->model->newQuery()->where("parent_kategori_akun",  null)->where("perusahaan_id", $perusahaan)->where("cabang_id", $cabang)->get();
         return $data;
     }
 }

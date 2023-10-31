@@ -31,6 +31,11 @@ class KategoriAkunController extends ApiCrudController
         $data = $this->service()->allowedKategoriAkun($request);
         return $this->collection($data);
     }
+    public function allowedParentAkun(Request $request)
+    {
+        $data = $this->service()->allowedParentAkun($request);
+        return $this->collection($data);
+    }
 
 
 }
