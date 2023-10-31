@@ -1,12 +1,13 @@
 stages:
-  - staging
+  - dev
+  - stag
 
-deploy_staging:
+deploy_dev:
   only:
     - develop
   tags:
     - merapi
-  stage: staging
+  stage: dev
   image: javanlabs/ssh-client:latest
   environment:
     name: internalsopbe
@@ -14,3 +15,18 @@ deploy_staging:
   script:
     - echo "Deploy ke server merapi"
     - ssh root@192.168.88.210 "cd /opt/alurkerja/onic/onic-be && bash k8s_update.sh onic-be --force"
+
+deploy_stag:
+  only:
+    - develop
+  tags:
+    - merapi
+  stage: stag
+  image: javanlabs/ssh-client:latest
+  environment:
+    name: onic-be
+    url: https://onic-be-stag.merapi.javan.id
+  script:
+    - echo "Deploy ke server merapi"
+    - ssh root@192.168.88.210 "cd /opt/alurkerja/onic/onic-be-stag && bash k8s_update.sh onic-be-stag --force"
+  when: manual
