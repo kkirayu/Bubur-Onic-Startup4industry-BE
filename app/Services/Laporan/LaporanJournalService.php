@@ -23,7 +23,7 @@ class LaporanJournalService
             ['date', '>=', "$start",],
             ['date', '<=', "$end",],
             ['state', '=', 'posted'],
-        ]);
+        ] ,  true);
         return  collect($data);
     }
 }

@@ -16,8 +16,7 @@ class LaporanJournalControllerTest extends TestCase
     {
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $response = $this->getJson("/api/laporan/laporan-journal?company=1&type=all&start=01/10/2023&end=15/10/2023");
-
+        $response = $this->getJson("/api/laporan/laporan-journal?company=1&type=all&start=01/10/2023&end=30/10/2023");
         dd($response->json());
         $response->assertStatus(200);
     }
@@ -26,7 +25,6 @@ class LaporanJournalControllerTest extends TestCase
         $user = UserFactory::new()->create();
         $this->actingAs($user);
         $response = $this->getJson("/api/laporan/laporan-journal?company=1&type=kas&start=01/10/2023&end=15/10/2023");
-
         dd($response->json());
         $response->assertStatus(200);
     }

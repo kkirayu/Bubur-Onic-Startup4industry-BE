@@ -480,7 +480,6 @@ class OdooApiService
       $journalData = collect($journalData);
     }
 
-
     $data = $akunData->map(function ($item,  $key) use ($journalData) {
       return  $this->mapResponseData($item, collect($journalData));
     });
@@ -494,11 +493,9 @@ class OdooApiService
 
 
 
-    // dd($akunData);
     $akunData = (object) $data[0];
 
     $journalData = $this->getJournalItemWithIds($akunData->invoice_line_ids);
-
 
     $data = $this->mapResponseData($akunData, collect($journalData));
 
