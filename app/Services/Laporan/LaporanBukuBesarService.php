@@ -25,6 +25,7 @@ class LaporanBukuBesarService
         $groupData = collect($groupData)->map(function ($item) use ($odooApiService, $start, $end, $perusahaan_id,) {
             unset($item['__domain']);
             $moveNameData = $item['account_id'][0];
+            // dd( $item['account_id']);
 
             $groupDetail = $odooApiService->getBukuBesarDetail([$moveNameData], $perusahaan_id, $start,  $end);
             $groupDetail = collect($groupDetail['records']);

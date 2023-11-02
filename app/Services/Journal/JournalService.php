@@ -160,10 +160,22 @@ class JournalService extends CrudService
 
         $data = new OdooApiService();
 
-        $akunData = $data->getJournalList();
+        
+        $filterDomain = [];
+        if ($request->has("search")) {
+            $filterDomain = [
+                ["ref", "ilike", $request->search]
+            ];
+        }
+        $akunData = $data->getJournalList($filterDomain);
 
 
-        return  collect($akunData)->paginate(10,  100, 1);
+        // return  collect($akunData)->paginate(10,  100, 1);
+
+        $currentPage = (($request->page  ?? 0) +  1) ;
+        $dataCount = ($akunData->count());
+        $paginatedData = $akunData->splice($currentPage * 10 - 10, 10);
+        return  collect($paginatedData)->paginate(10, $dataCount, $currentPage);
     }
 
     public function find(mixed  $id): CrudModel | Collection

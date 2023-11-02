@@ -27,6 +27,11 @@ class AkunController extends ApiCrudController
         return new AkunService($this->model(), $this->user);
     }
 
+    public function avaiableAccount(Request $request): ResourceCollection {
+        $data = $this->service()->avaiableAccount($request);
+        return $this->collection($data);
+    }
+
     #[Route(method: ['POST'])]
     function createAkun(CreateAkunRequest $createAkunRequest)
     {

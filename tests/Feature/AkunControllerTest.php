@@ -23,6 +23,17 @@ class AkunControllerTest extends TestCase
 
         $response->assertStatus(200);
     }
+    public function testAkunListSearch(): void
+    {
+
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $response = $this->getJson("/api/akun/akun?search=Biaya BBM");
+
+        dump($response->json());
+
+        $response->assertStatus(200);
+    }
     public function test_create_akun(): void
     {
 

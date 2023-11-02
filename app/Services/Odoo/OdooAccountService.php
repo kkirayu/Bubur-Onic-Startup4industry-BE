@@ -84,6 +84,7 @@ class OdooAccountService extends OdooApiService
         $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.account', 'web_search_read',  [], [
 
             "domain" => $domain,
+            "order" => "code ASC"
         ]);
 
         return  $data;
