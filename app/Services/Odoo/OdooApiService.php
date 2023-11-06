@@ -377,6 +377,86 @@ class OdooApiService
     return $data;
   }
 
+    public function getBukuBesarAkun($start, $end,  $company_id,  $coa)
+    {
+  
+      $domain = [
+        "&",
+        ["display_type", "not in", ["line_section", "line_note"]],
+        ["parent_state", "=", "posted"],
+        ["date", "<=", $end],
+        ["account_id", "=", $coa],
+      ];
+  
+      if ($start != null) {
+        $domain[] = ["date", ">=", $start];
+      }
+  
+      $models =  $this->createRpcModel();
+      $kwarg = [
+        "orderby" => "",
+        "lazy" => true,
+        "expand" => null,
+        "expand_orderby" => null,
+        "expand_limit" => null,
+        "offset" => 0,
+        "limit" => 1000,
+        "groupby" => ["account_id"],
+        "domain" => $domain,
+        "fields" => [
+          "analytic_precision",
+          "move_id",
+          "date",
+          "company_id",
+          "journal_id",
+          "move_name",
+          "account_id",
+          "partner_id",
+          "ref",
+          "product_id",
+          "account_root_id",
+          "name",
+          "tax_ids",
+          "amount_currency",
+          "currency_id",
+          "debit",
+          "credit",
+          "tax_tag_ids",
+          "discount_date",
+          "discount_amount_currency",
+          "tax_line_id",
+          "date_maturity",
+          "balance",
+          "matching_number",
+          "amount_residual",
+          "amount_residual_currency",
+          "analytic_distribution",
+          "move_type",
+          "parent_state",
+          "account_type",
+          "statement_line_id",
+          "company_currency_id",
+          "is_same_currency",
+          "is_account_reconcile",
+          "sequence",
+        ],
+      ];
+  
+  
+  
+      $payload = [];
+      $data = $models->execute_kw(
+        $this->db,
+        $this->uid,
+        $this->password,
+        'account.move.line',
+        'web_read_group',
+        $payload,
+        $kwarg
+      );
+      return $data;
+  }
+
 
   public function getBukuBesarDetail($akun_id, $company_id,  $start,  $end)
   {
