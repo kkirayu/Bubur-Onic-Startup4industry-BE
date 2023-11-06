@@ -118,21 +118,33 @@ class OdooApiService
 
     $models =  $this->createRpcModel();
     $kwarg = [
-      "orderby" => "",
-      "lazy" => true,
-      "expand" => null,
-      "expand_orderby" => null,
-      "expand_limit" => null,
-      "offset" => 0,
-      "limit" => 1000,
-      "groupby" => [$groupBy],
       "domain" => [
         "&",
-        ["display_type", "not in", ["line_section", "line_note"]],
-        ["parent_state", "=", "posted"],
-        ["date", ">=", $start],
-        ["date", "<=", $end],
-        ["account_id.internal_group", "in", $group]
+        "&",
+        [
+          "display_type",
+          "not in",
+          [
+            "line_section",
+            "line_note"
+          ]
+        ],
+        [
+          "parent_state",
+          "!=",
+          "cancel"
+        ],
+        "&",
+        [
+          "parent_state",
+          "=",
+          "posted"
+        ],
+        [
+          "account_id",
+          "ilike",
+          $group
+        ],
       ],
       "fields" => [
         "analytic_precision",
@@ -145,7 +157,6 @@ class OdooApiService
         "partner_id",
         "ref",
         "product_id",
-        "account_root_id",
         "name",
         "tax_ids",
         "amount_currency",
@@ -169,7 +180,7 @@ class OdooApiService
         "company_currency_id",
         "is_same_currency",
         "is_account_reconcile",
-        "sequence",
+        "sequence"
       ],
     ];
 
@@ -181,7 +192,7 @@ class OdooApiService
       $this->uid,
       $this->password,
       'account.move.line',
-      'web_read_group',
+      'web_search_read',
       $payload,
       $kwarg
     );
@@ -494,6 +505,22 @@ class OdooApiService
 
 
     $akunData = (object) $data[0];
+
+    $journalData = $this->getJournalItemWithIds($akunData->invoice_line_ids);
+
+    $data = $this->mapResponseData($akunData, collect($journalData));
+
+    return  $data;
+  }
+
+  function getJournalDetails($id)
+  {
+    $model = $this->createRpcModel();
+    $data = $model->execute_kw($this->db, $this->uid, $this->password, 'account.move', 'read',  $id, []);
+
+
+
+    $akunData = (object) $data;
 
     $journalData = $this->getJournalItemWithIds($akunData->invoice_line_ids);
 
