@@ -3,6 +3,7 @@
 namespace App\Services\Laporan;
 
 use App\Services\Odoo\Const\AccountType;
+use App\Services\Odoo\OdooAccountService;
 use App\Services\Odoo\OdooApiService;
 use App\Services\Odoo\OdooJournalService;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ class LaporanBukuBesarService
     {
         $odooApiService = new OdooApiService();
         $odooJournalService = new OdooJournalService();
+        $odooAccountService = new OdooAccountService();
 
 
         $perusahaan_id = $request->perusahaan_id;
@@ -22,6 +24,10 @@ class LaporanBukuBesarService
         $group = $request->group;
         $start = Carbon::createFromFormat('d/m/Y', $request->start)->addDays(-1)->format('Y-m-d');
         $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
+
+        $akun = $odooAccountService->getAkunList([
+            ["code" , "="  , $coa]
+        ])["records"][0];
         $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, $coa, "move_name");
 
 
@@ -29,28 +35,35 @@ class LaporanBukuBesarService
         $moveNames = collect($groupData)->pluck('move_name')->toArray();
 
 
-        $journal = $odooJournalService->getJournalWithMoveName($moveNames)["records"];
-        $data =  collect($journal)->pluck("invoice_line_ids");
+        $journal = $odooJournalService->getJournalWithMoveName($moveNames ,  $start ,$end)["records"];
+        if($journal) {
 
-        $data =  array_merge(...$data);
-        $journalDetail = $odooApiService->getJournalItemWithIds($data);
+            $data =  collect($journal)->pluck("invoice_line_ids");
 
-        // remove __domain from  groupData
-        $groupData = collect($groupData)->map(function ($item) use ($journal, $journalDetail,  $coa) {
-            $selectedItem =  collect($journal)->where('name', $item['move_name'])->first();
-            // dd($selectedItem);
-            $journalItem = collect($journalDetail)->whereIn('id', $selectedItem['invoice_line_ids'])->toArray();
-            unset($item['__domain']);
-            $item["journal_lawan"] = collect($journalItem)->filter(function ($value, $key) use ($coa) {
-                return !str_contains($value['akun_label'], $coa);
-            })->toArray();
-            return $item;
-        });
-
+            $data =  array_merge(...$data);
+            $journalDetail = $odooApiService->getJournalItemWithIds($data);
+    
+            // remove __domain from  groupData
+            $groupData = collect($groupData)->map(function ($item) use ($journal, $journalDetail,  $coa) {
+                $selectedItem =  collect($journal)->where('name', $item['move_name'])->first();
+                // dd($selectedItem);
+                $journalItem = collect($journalDetail)->whereIn('id', $selectedItem['invoice_line_ids'])->toArray();
+                unset($item['__domain']);
+                $item["journal_lawan"] = collect($journalItem)->filter(function ($value, $key) use ($coa) {
+                    return !str_contains($value['akun_label'], $coa);
+                })->toArray();
+                return $item;
+            });
+    
+    
+        }else {
+            $groupData = [];
+        }
 
 
 
         return collect([
+            "akun" => $akun,
             "report" =>  $groupData,
             "saldoAwal" =>  $this->getBalanceAt($start, $perusahaan_id, $coa),
             "saldoAkhir" =>  $this->getBalanceAt($end, $perusahaan_id, $coa),

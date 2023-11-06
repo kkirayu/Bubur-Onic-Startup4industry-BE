@@ -12,7 +12,7 @@ class OdooJournalService extends OdooApiService
 
 
 
-    function getJournalWithMoveName($moveName)
+    function getJournalWithMoveName($moveName , $start , $end)
     {
 
         $models =  $this->createRpcModel();
@@ -20,6 +20,8 @@ class OdooJournalService extends OdooApiService
         $kwarg  = [
             "domain" => [
                 "&",
+                ["date", ">=", $start],  
+                ["date", "<=", $end],
                 ["state", "=", "posted"],
                 ["name", "in", $moveName],
             ]
