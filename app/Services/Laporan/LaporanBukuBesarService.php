@@ -25,6 +25,7 @@ class LaporanBukuBesarService
         $start = Carbon::createFromFormat('d/m/Y', $request->start)->addDays(-1)->format('Y-m-d');
         $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
 
+        
         $akun = $odooAccountService->getAkunList([
             ["code" , "="  , $coa]
         ])["records"][0];
@@ -36,6 +37,7 @@ class LaporanBukuBesarService
             ]
         ]);
 
+        $saldoAwal = $this->getBalanceAt($start, $perusahaan_id, $coa);
 
         $groupData =  $data['records'];
         $moveNames = collect($groupData)->pluck('move_name')->toArray();
@@ -50,7 +52,7 @@ class LaporanBukuBesarService
             $journalDetail = $odooApiService->getJournalItemWithIds($data);
     
             // remove __domain from  groupData
-            $groupData = collect($groupData)->map(function ($item) use ($journal, $journalDetail,  $coa) {
+            $groupData = collect($groupData)->map(function ($item) use ($journal, $journalDetail,  $coa ,  $saldoAwal) {
                 $selectedItem =  collect($journal)->where('name', $item['move_name'])->first();
                 // dd($selectedItem);
                 $journalItem = collect($journalDetail)->whereIn('id', $selectedItem['invoice_line_ids'])->toArray();
@@ -71,7 +73,7 @@ class LaporanBukuBesarService
         return collect([
             "akun" => $akun,
             "report" =>  $groupData,
-            "saldoAwal" =>  $this->getBalanceAt($start, $perusahaan_id, $coa),
+            "saldoAwal" =>  $saldoAwal,
             "saldoAkhir" =>  $this->getBalanceAt($end, $perusahaan_id, $coa),
         ]);
     }

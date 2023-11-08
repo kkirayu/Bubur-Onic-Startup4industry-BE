@@ -26,9 +26,15 @@ class LaporanNeracaService
             ],
             [
                 "key" => $kategori_akun->filter(function ($item) {
-                    return str_starts_with($item->prefix_akun, "2") ||  str_starts_with($item->prefix_akun, "3");
+                    return str_starts_with($item->prefix_akun, "2") ;
                 })->pluck("nama", "prefix_akun")->toArray(),
                 "value" => "Kewajiban"
+            ],
+            [
+                "key" => $kategori_akun->filter(function ($item) {
+                    return   str_starts_with($item->prefix_akun, "3");
+                })->pluck("nama", "prefix_akun")->toArray(),
+                "value" => "Ekuitas"
             ],
         ];
 
