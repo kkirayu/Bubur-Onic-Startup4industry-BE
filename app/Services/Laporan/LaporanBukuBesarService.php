@@ -28,7 +28,13 @@ class LaporanBukuBesarService
         $akun = $odooAccountService->getAkunList([
             ["code" , "="  , $coa]
         ])["records"][0];
-        $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, $coa, "move_name");
+        $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, [
+            [
+                "account_id",
+                "in",
+                $coa,
+            ]
+        ]);
 
 
         $groupData =  $data['records'];

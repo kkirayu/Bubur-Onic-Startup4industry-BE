@@ -112,40 +112,38 @@ class OdooApiService
     return $data;
   }
 
-  public function getBukuBesarReport($start, $end,  $company_id,  $group,  $groupBy = "account_id")
+  public function getBukuBesarReport($start, $end,  $company_id,  $addtionalDomain = [],  $groupBy = null)
   {
+
+    $domain  = [
+      "&",
+      "&",
+      [
+        "display_type",
+        "not in",
+        [
+          "line_section",
+          "line_note"
+        ]
+      ],
+      [
+        "parent_state",
+        "!=",
+        "cancel"
+      ],
+      [
+        "parent_state",
+        "=",
+        "posted"
+      ],
+    ];
+
+    $domain = array_merge($domain, $addtionalDomain);
 
 
     $models =  $this->createRpcModel();
     $kwarg = [
-      "domain" => [
-        "&",
-        "&",
-        [
-          "display_type",
-          "not in",
-          [
-            "line_section",
-            "line_note"
-          ]
-        ],
-        [
-          "parent_state",
-          "!=",
-          "cancel"
-        ],
-        "&",
-        [
-          "parent_state",
-          "=",
-          "posted"
-        ],
-        [
-          "account_id",
-          "ilike",
-          $group
-        ],
-      ],
+      "domain" => $domain,
       "fields" => [
         "analytic_precision",
         "move_id",
@@ -199,6 +197,94 @@ class OdooApiService
     return $data;
   }
 
+
+  public function getBukuBesarReportWihtGroup($start, $end,  $company_id,  $addtionalDomain = [],  $groupBy = null)
+  {
+
+    $domain  = [
+      "&",
+      "&",
+      [
+        "display_type",
+        "not in",
+        [
+          "line_section",
+          "line_note"
+        ]
+      ],
+      [
+        "parent_state",
+        "!=",
+        "cancel"
+      ],
+      [
+        "parent_state",
+        "=",
+        "posted"
+      ],
+    ];
+
+    $domain = array_merge($domain, $addtionalDomain);
+
+
+    $models =  $this->createRpcModel();
+    $kwarg = [
+      "domain" => $domain,
+      "groupby"=> $groupBy,
+      "fields" => [
+        "analytic_precision",
+        "move_id",
+        "date",
+        "company_id",
+        "journal_id",
+        "move_name",
+        "account_id",
+        "partner_id",
+        "ref",
+        "product_id",
+        "name",
+        "tax_ids",
+        "amount_currency",
+        "currency_id",
+        "debit",
+        "credit",
+        "tax_tag_ids",
+        "discount_date",
+        "discount_amount_currency",
+        "tax_line_id",
+        "date_maturity",
+        "balance",
+        "matching_number",
+        "amount_residual",
+        "amount_residual_currency",
+        "analytic_distribution",
+        "move_type",
+        "parent_state",
+        "account_type",
+        "statement_line_id",
+        "company_currency_id",
+        "is_same_currency",
+        "is_account_reconcile",
+        "sequence"
+      ],
+    ];
+
+
+
+    $payload = [];
+    $data = $models->execute_kw(
+      $this->db,
+      $this->uid,
+      $this->password,
+      'account.move.line',
+      'web_read_group',
+      $payload,
+      $kwarg
+    );
+    return $data;
+  }
+
+  
 
   public function getJournalItemWithIds($ids)
   {
