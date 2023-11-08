@@ -25,9 +25,9 @@ class LaporanBukuBesarService
         $start = Carbon::createFromFormat('d/m/Y', $request->start)->addDays(-1)->format('Y-m-d');
         $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
 
-        
+
         $akun = $odooAccountService->getAkunList([
-            ["code" , "="  , $coa]
+            ["code", "=", $coa]
         ])["records"][0];
         $data = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, [
             [
@@ -43,16 +43,16 @@ class LaporanBukuBesarService
         $moveNames = collect($groupData)->pluck('move_name')->toArray();
 
 
-        $journal = $odooJournalService->getJournalWithMoveName($moveNames ,  $start ,$end)["records"];
-        if($journal) {
+        $journal = $odooJournalService->getJournalWithMoveName($moveNames,  $start, $end)["records"];
+        if ($journal) {
 
             $data =  collect($journal)->pluck("invoice_line_ids");
 
             $data =  array_merge(...$data);
             $journalDetail = $odooApiService->getJournalItemWithIds($data);
-    
+
             // remove __domain from  groupData
-            $groupData = collect($groupData)->map(function ($item) use ($journal, $journalDetail,  $coa ,  $saldoAwal) {
+            $groupData = collect($groupData)->map(function ($item) use ($journal, $journalDetail,  $coa,  $saldoAwal) {
                 $selectedItem =  collect($journal)->where('name', $item['move_name'])->first();
                 // dd($selectedItem);
                 $journalItem = collect($journalDetail)->whereIn('id', $selectedItem['invoice_line_ids'])->toArray();
@@ -61,20 +61,30 @@ class LaporanBukuBesarService
                     return !str_contains($value['akun_label'], $coa);
                 })->toArray();
                 return $item;
-            });
-    
-    
-        }else {
+            })->toArray();
+        } else {
             $groupData = [];
         }
 
+        $saldoAkhir = $saldoAwal;
+
+        foreach ($groupData as $key => $value) {
+            foreach ($value["journal_lawan"] as $keyJournal => $valueJournal) {
+                # code...
+                $jorunalData = $value["journal_lawan"][$keyJournal];
+
+                $editor = $jorunalData['posisi_akun']== "DEBIT" ? $valueJournal['jumlah'] : - $valueJournal['jumlah'];
+                $saldoAkhir = $saldoAkhir +  $editor;
+                $groupData[$key]["journal_lawan"][$keyJournal]["saldo_di_line"] = $saldoAkhir;
+            }
+        }
 
 
         return collect([
             "akun" => $akun,
             "report" =>  $groupData,
             "saldoAwal" =>  $saldoAwal,
-            "saldoAkhir" =>  $this->getBalanceAt($end, $perusahaan_id, $coa),
+            "saldoAkhir" =>  $saldoAkhir,
         ]);
     }
 
