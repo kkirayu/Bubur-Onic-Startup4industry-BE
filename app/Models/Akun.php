@@ -29,24 +29,15 @@ class Akun extends CrudModel
         return $this->belongsTo(KategoriAkun::class);
     }
     
-    function parent() : BelongsTo {
-        return $this->belongsTo(Akun::class,  "parent_akun");
-    }
 
     public function getKategori_akun_idSelection()
     {
         return new UrlForeignSelection("/api/akun/kategori-akun", "get", "id", "nama");
     }
-    public function getParent_akunSelection()
-    {
-        return new UrlForeignSelection("/api/akun/akun", "get", "id", "nama");
-    }
-
     public function tableValueMapping(): array
     {
         return [
             new BaseTableValue("kategori_akun_id", "hasOne", "kategori_akun", "nama"),
-            new BaseTableValue("parent_akun", "hasOne", "parent", "nama"), 
             new BaseTableValue("is_kas", "hasOne", "is_kas_selection", "label")
         ];
     }
