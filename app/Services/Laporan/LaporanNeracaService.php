@@ -2,6 +2,9 @@
 
 namespace App\Services\Laporan;
 
+use App\Models\Akun;
+use App\Models\Journal;
+use App\Models\JournalAkun;
 use App\Models\KategoriAkun;
 use App\Services\Odoo\OdooAccountService;
 use App\Services\Odoo\OdooApiService;
@@ -16,24 +19,27 @@ class LaporanNeracaService
         $kategori_akun = KategoriAkun::where("perusahaan_id", $request->perusahaan_id)->where("parent_kategori_akun", "!=", null)->get();
         $kategori_akun = $kategori_akun->filter(function ($item) {
             return str_starts_with($item->prefix_akun, "1") ||  str_starts_with($item->prefix_akun, "2") || str_starts_with($item->prefix_akun, "3") && $item->parent_kategori_akun != null;
+        })->map(function ($item) {
+            $item->nama = $item->nama . " (" . $item->prefix_akun . ")";
+            return $item;
         });
         $section = [
             [
                 "value" => "Activa",
                 "key" => $kategori_akun->filter(function ($item) {
                     return str_starts_with($item->prefix_akun, "1");
-                })->pluck("nama", "prefix_akun")->toArray()
+                })->pluck("nama", "id")->toArray()
             ],
             [
                 "key" => $kategori_akun->filter(function ($item) {
-                    return str_starts_with($item->prefix_akun, "2") ;
-                })->pluck("nama", "prefix_akun")->toArray(),
+                    return str_starts_with($item->prefix_akun, "2");
+                })->pluck("nama", "id")->toArray(),
                 "value" => "Kewajiban"
             ],
             [
                 "key" => $kategori_akun->filter(function ($item) {
                     return   str_starts_with($item->prefix_akun, "3");
-                })->pluck("nama", "prefix_akun")->toArray(),
+                })->pluck("nama", "id")->toArray(),
                 "value" => "Ekuitas"
             ],
         ];
@@ -42,89 +48,50 @@ class LaporanNeracaService
         $perusahaan_id = $request->company;
 
 
-        $odooApiService = new OdooAccountService();
 
 
 
-        $start = Carbon::createFromFormat('d/m/Y', $request->start)->format('Y-m-d');
-        $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
+        $start = Carbon::createFromFormat('d/m/Y', $request->start);
+        $end = Carbon::createFromFormat('d/m/Y', $request->end);
 
 
+        $journal = new Journal();
 
-        // "|"
-        // ["account_id", "ilike", "100"]
-        // ["account_id", "ilike", "101"]
-        $domain = [];
-        foreach (array_values($kategori_akun->toArray()) as $key => $item) {
-            if ($key != count($kategori_akun) - 1) {
+        $akun = Akun::where("perusahaan_id", $perusahaan_id)->get();
+        $kategoriAkun = KategoriAkun::where("perusahaan_id", $perusahaan_id)->get();
+        $accountSaldo = $journal->getSaldo($end, $perusahaan_id);
+        $saldoAwal = $journal->getSaldo($start, $perusahaan_id);
 
-                $domain[] = "|";
+        $akun =  $akun->map(function ($item) use ($accountSaldo, $saldoAwal) {
+            $item->saldo = 0;
+            $item->saldo_awal = 0;
+            if ($accountSaldo->has($item->kode_akun)) {
+                $item->saldo = $accountSaldo[$item->kode_akun];
             }
-            $domain[] = ["account_id", "ilike", $item['prefix_akun']];
-        };
-        $startDomain  = array_merge([
-            "&", [
-                "date", "<=", $start
-            ],
-        ], $domain);
-        $startData = $odooApiService->getBukuBesarReportWihtGroup($start, $end, $perusahaan_id, $startDomain,  'account_id');
-        $startData = $startData['groups'];
-        $startData = collect($startData)->map(function ($dataitem) {
-
-            unset($dataitem['__domain']);
-            return  $dataitem;
-        });
-
-        $endDomain  = array_merge([
-            "&", [
-                "date", "<=", $end
-            ],
-        ], $domain);
-        $data = $odooApiService->getBukuBesarReportWihtGroup($start, $end, $perusahaan_id, $endDomain,  'account_id');
-        $dataJournal = $odooApiService->getBukuBesarReport($start, $end, $perusahaan_id, $endDomain,  'account_id');
-        $data = $data['groups'];
-        $data = collect($data)->map(function ($dataitem) {
-
-            unset($dataitem['__domain']);
-            return  $dataitem;
-        });
-        $dataJournal = $dataJournal['records'];
-        $dataJournal = collect($dataJournal)->map(function ($dataitem) {
-
-            unset($dataitem['__domain']);
-            return  $dataitem;
-        });
-
-        $data = collect($section)->map(function ($akunGroup) use ($data,  $dataJournal ,  $startData) {
-
-
-            $keys = $akunGroup['key'];
-            foreach ($keys as $key => $value) {
-
-                $account = collect($data)->filter(function ($item) use ($key) {
-                    
-                    return str_starts_with($item['account_id'][1], $key);
-                })->map(function ($account)  use ($dataJournal,$startData ) {
-                    $journals = collect($dataJournal)->filter(function ($item) use ($account) {
-                        return str_starts_with($item['account_id'][0], $account['account_id'][0]);
-                    })->toArray();
-                    $startBalance = $startData->where("account_id", $account['account_id'])->first();
-                    $account["balance_start"] = $startBalance  ?  $startBalance['balance'] : 0;
-                    $account['journals'] = $journals;
-                    return $account;
-                })->toArray();
-                $akunGroup['key'][$key] = [
-                    "value" => $value,
-                    "key" => $account,
-                    "total_awal" => collect($account)->sum("balance_start"),
-                    "total_akhir" =>collect($account)->sum("balance"),
-                    
-                ];
+            if ($saldoAwal->has($item->kode_akun)) {
+                $item->saldo_awal = $saldoAwal[$item->kode_akun];
             }
-
-            return $akunGroup;
+            return $item->toArray();
+        });
+        $kategoriAkun = $kategoriAkun->map(function ($item) use ($akun) {
+            $item->akun = $akun->where("kategori_akun_id", $item->id)->toArray();
+            $item->total_awal = collect($item->akun)->sum("saldo_awal");
+            $item->total_akhir = collect($item->akun)->sum("saldo");
+            return $item->toArray();
         });
 
-        return $data;
+        $section = collect($section)->map(function ($item,  $key) use ($kategoriAkun) {
+            $data = collect($item["key"])->map(function ($item, $key) use ($kategoriAkun) {
+                $kategoriAkunItem = $kategoriAkun->where("id", $key)->first();
+                return $kategoriAkunItem;
+            });
+            return [
+                "key" => $item["value"],
+                "value" => $data->toArray(),
+                "total" => $data->sum("total_akhir")
+            ];
+        });
+
+        return $section;
     }
 }

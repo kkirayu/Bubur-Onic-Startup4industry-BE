@@ -14,7 +14,7 @@ class LaporanNeracaControllerTest extends TestCase
     {
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $response = $this->getJson("/api/laporan/laporan-neraca?ompany=1&start=01/11/2023&end=30/11/2023");
+        $response = $this->getJson("/api/laporan/laporan-neraca?company=1&start=01/01/2023&end=30/12/2023");
         dump("/api/laporan/laporan-neraca?ompany=1&start=12/01/2023&end=30/01/2023");
 
         dump(json_encode($response->json()));

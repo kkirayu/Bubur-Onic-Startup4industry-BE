@@ -69,4 +69,24 @@ class Journal extends CrudModel
     {
         return $this->belongsTo(Akun::class,  "akun");
     }
+
+
+    public function getSaldo( $end, $perusahaan_id)
+    {
+
+        $journal = JournalAkun::whereHas("journal", function ($query) use ( $end, $perusahaan_id) {
+            $query->where("posted_at", "!=", null)->where("tanggal_transaksi", "<=" , $end)->where("perusahaan_id", $perusahaan_id);
+        })->with(["akun_instance"])->get();
+
+        $journal = $journal->groupBy("akun_instance.kode_akun");
+
+        $accountSaldo  = $journal->map(function ($item) {
+            $sumofSaldo = collect($item)->sum(function ($item) {
+                return  $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : -$item['jumlah'];
+            });
+            return  $sumofSaldo;
+        });
+        return  $accountSaldo;
+    }
+
 }

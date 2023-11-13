@@ -14,9 +14,15 @@ class JournalAkun extends CrudModel
 
     protected string $path = "/api/journal/journal-akun";
 
+    
 
-    function akun(): BelongsTo
+    function akun_instance(): BelongsTo
     {
         return $this->belongsTo(Akun::class,  "akun");
+    }
+
+    function journal(): BelongsTo
+    {
+        return $this->belongsTo(Journal::class,  "journal_id");
     }
 }

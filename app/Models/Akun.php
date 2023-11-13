@@ -42,6 +42,7 @@ class Akun extends CrudModel
         ];
     }
 
+    
 
     public function getSaldoAt( $start, $end)
     {
