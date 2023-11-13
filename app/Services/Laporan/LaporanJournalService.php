@@ -12,18 +12,38 @@ class LaporanJournalService
 {
     public function  index(HttpRequest $request): Collection
     {
+        $journal = Journal::query();
+
+        $perusahaan_id = $request->company;
+        $type = $request->type;
+        $start = $request->start;
+        $end = $request->end;
 
 
-        $data = new OdooApiService();
+        $journal->select('journals.*');
+        if ($perusahaan_id != null) {
+            $journal = $journal->where('journals.perusahaan_id', $perusahaan_id);
+        }
 
-        $start = Carbon::createFromFormat('d/m/Y', $request->start)->format('Y-m-d');
-        $end = Carbon::createFromFormat('d/m/Y', $request->end)->format('Y-m-d');
+        if ($type != "all") {
+            $journal = $journal->where('journals.transaction_type', $type);
+        }
 
-        $data = $data->getJournalList([
-            ['date', '>=', "$start",],
-            ['date', '<=', "$end",],
-            ['state', '=', 'posted'],
-        ] ,  true);
-        return  collect($data);
+        if ($start != null && $end != null) {
+            $start = date('Y-m-d', strtotime($start));
+            $end = Carbon::createFromFormat('d/m/Y', $end)->format('Y-m-d');
+            $journal = $journal->where('journals.tanggal_transaksi', ">=",  $start)
+                ->where('journals.tanggal_transaksi', "<=",  $end);
+        }
+
+
+        
+
+
+
+        $journal = $journal->with(["journalAkuns.akun",  "postedByData"])->get();
+        
+        return $journal;
     }
+
 }

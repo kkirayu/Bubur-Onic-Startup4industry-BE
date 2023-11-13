@@ -52,6 +52,28 @@ class Akun extends CrudModel
     }
 
 
+    public function getSaldoAt( $start, $end)
+    {
+        $journalAkun = JournalAkun::where("akun", $this->id)->join("journals", "journals.id", "=", "journal_akuns.journal_id");
+        if ($start) {
+            $journalAkun = $journalAkun->whereDate("journals.tanggal_transaksi", ">=", $start);
+        }
+        if ($end) {
+            $journalAkun = $journalAkun->whereDate("journals.tanggal_transaksi", "<=", $end);
+        }
+
+        $journalAkuns = $journalAkun->get();
+
+        $totalDebit = $journalAkuns->filter(function ($item) {
+            return $item->posisi_akun == "DEBIT";
+        })->sum("jumlah");
+        $totalKredit = $journalAkuns->filter(function ($item) {
+            return $item->posisi_akun == "CREDIT";
+        })->sum("jumlah");
+        return $totalDebit - $totalKredit;
+    }
+
+
 
     public function getIs_kasSelection()
     {

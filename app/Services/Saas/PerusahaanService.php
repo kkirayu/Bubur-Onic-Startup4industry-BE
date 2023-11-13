@@ -76,14 +76,26 @@ class PerusahaanService extends CrudService
                 "prefix_akun" => "2",
             ],
             [
-                "nama" => "MODAL",
-                "deskripsi" => "MODAL",
+                "nama" => "INVESTASI",
+                "deskripsi" => "INVESTASI",
+                "code" => "liability",
+                "prefix_akun" => "2",
+            ],
+            [
+                "nama" => "EQUITAS",
+                "deskripsi" => "EQUITAS",
                 "code" => "equity",
                 "prefix_akun" => "3",
             ],
             [
-                "nama" => "PENDAPATAN",
-                "deskripsi" => "PENDAPATAN",
+                "nama" => "PENDAPATAN OPERASIONAL UTAMA",
+                "deskripsi" => "PENDAPATAN_OPERASIONAL_UTAMA",
+                "code" => "income",
+                "prefix_akun" => "4",
+            ],
+            [
+                "nama" => "PENDAPATAN OPERASIONAL LAINNYA",
+                "deskripsi" => "PENDAPATAN_OPERASIONAL_LAINNYA",
                 "code" => "income",
                 "prefix_akun" => "4",
             ],
@@ -182,7 +194,7 @@ class PerusahaanService extends CrudService
 
                 "nama" => $data[2],
                 "parent_kategori_akun" => $parentAkun?->id,
-                "deskripsi" => $data[2] . "Perusahaan",
+                "deskripsi" => $data[2] . " Perusahaan",
                 "code" => $data[3],
                 "prefix_akun" => $data[0],
             ];

@@ -50,5 +50,23 @@ class Journal extends CrudModel
         ];
     }
 
+    public function getJournalWithAkuns(Akun $akun) {
 
+        $journalAkun = Journal::join("journal_akuns", "journal_akuns.journal_id", "=", "journals.id")
+        ->where("journals.posted_at" , "!=", null)
+        ->where("journal_akuns.akun", $akun->id)->with(['akun_instance'])->get();
+        return $journalAkun;
+    }
+    public function getJournalLawan(Akun $akun) {
+        $journalAkun = $this->getJournalWithAkuns($akun);
+        $journalAkun = $journalAkun->where("journal_akuns.akun", "!=", $akun->id);
+        return $journalAkun;
+    }
+
+
+
+    function akun_instance(): BelongsTo
+    {
+        return $this->belongsTo(Akun::class,  "akun");
+    }
 }

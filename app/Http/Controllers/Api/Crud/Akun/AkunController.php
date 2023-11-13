@@ -32,10 +32,10 @@ class AkunController extends ApiCrudController
         return $this->collection($data);
     }
 
-    #[Route(method: ['POST'])]
-    function createAkun(CreateAkunRequest $createAkunRequest)
-    {
-        $data = $this->service()->createAkun($createAkunRequest);
-        return  $this->single($data);
-    }
+    // #[Route(method: ['POST'])]
+    // function createAkun(CreateAkunRequest $createAkunRequest)
+    // {
+    //     $data = $this->service()->createAkun($createAkunRequest);
+    //     return  $this->single($data);
+    // }
 }
