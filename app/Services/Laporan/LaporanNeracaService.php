@@ -26,17 +26,20 @@ class LaporanNeracaService
         $section = [
             [
                 "value" => "Activa",
+                "group" => "Activa",
                 "key" => $kategori_akun->filter(function ($item) {
                     return str_starts_with($item->prefix_akun, "1");
                 })->pluck("nama", "id")->toArray()
             ],
             [
+                "group" => "Passiva",
                 "key" => $kategori_akun->filter(function ($item) {
                     return str_starts_with($item->prefix_akun, "2");
                 })->pluck("nama", "id")->toArray(),
                 "value" => "Kewajiban"
             ],
             [
+                "group" => "Passiva",
                 "key" => $kategori_akun->filter(function ($item) {
                     return   str_starts_with($item->prefix_akun, "3");
                 })->pluck("nama", "id")->toArray(),
@@ -88,10 +91,17 @@ class LaporanNeracaService
             return [
                 "key" => $item["value"],
                 "value" => $data->toArray(),
-                "total" => $data->sum("total_akhir")
+                "total" => $data->sum("total_akhir"),
+                "group" =>  $item["group"],
             ];
-        });
+        })->groupBy("group")->map(function ($item, $key) {
+            return [
+                "group" => $key,
+                "value" => $item->toArray(),
+                "total" => $item->sum("total")
+            ];
+        })->toArray();
 
-        return $section;
+        return collect(array_values($section));
     }
 }
