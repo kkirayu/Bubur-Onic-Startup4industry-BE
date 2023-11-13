@@ -41,7 +41,7 @@ class LaporanJournalService
 
 
 
-        $journal = $journal->with(["journalAkuns.akun",  "postedByData"])->get();
+        $journal = $journal->with(["journalAkuns.akun_instance",  "postedByData"])->get();
         
         return $journal;
     }
