@@ -42,7 +42,6 @@ class PerusahaanService extends CrudService
             ]);
 
             $roleOwner = Role::where('name', 'OWNER_CABANG')->first();
-            $this->registerAccountList($perusahaan->id, $cabang->id);
             $user_role_cabang = new  UserRoleCabang();
             $user_role_cabang->cabang_id = $cabang->id;
             $user_role_cabang->user_id = $owner->id;
