@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('invoice_items', function (Blueprint $table) {
+    Schema::table('invoice_items', function (Blueprint $table) {
             //
             $table->unsignedBigInteger("account_id")->nullable();
             $table->foreign("account_id")->references("id")->on("akuns");

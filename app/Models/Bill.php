@@ -7,25 +7,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
-use Laravolt\Crud\Spec\BaseTableValue;
 
-class Invoice extends CrudModel
+class Bill extends CrudModel
 {
     use HideCompanyTrait;
-    protected $table = 'invoices';
+    protected $table = 'bills';
 
-    protected string $path = "/api/keuangan/invoice";
+    protected string $path = "/api/keuangan/bill";
 
     public AutoMode $filterMode = AutoMode::BLACKLIST;
     public AutoMode $searchMode = AutoMode::BLACKLIST;
     public AutoMode $sortMode = AutoMode::BLACKLIST;
 
-    public function invoiceDetails(): HasMany
+
+    public function billDetails(): HasMany
     {
-        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
+        return $this->hasMany(BillItem::class, 'bill_id', 'id');
     }
-    public function customer(): HasOne
+    public function supplier(): HasOne
     {
-        return $this->hasOne(Customer::class, 'id', 'customer_id');
+        return $this->hasOne(Supplier::class, 'id', 'supplier_id');
     }
 }
