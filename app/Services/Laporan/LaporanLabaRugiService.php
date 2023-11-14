@@ -96,6 +96,7 @@ class LaporanLabaRugiService
                 "key" => $item["value"],
                 "value" => $data->toArray(),
                 "total" => $data->sum("total_akhir"),
+                "total_awal" => $data->sum("total_awal"),
                 "isInverted" => $item["isInverted"]
             ];
         });

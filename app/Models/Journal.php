@@ -78,11 +78,13 @@ class Journal extends CrudModel
             $query->where("posted_at", "!=", null)->where("tanggal_transaksi", "<=" , $end)->where("perusahaan_id", $perusahaan_id);
         })->with(["akun_instance"])->get();
 
+
         $journal = $journal->groupBy("akun_instance.kode_akun");
 
         $accountSaldo  = $journal->map(function ($item) {
             $sumofSaldo = collect($item)->sum(function ($item) {
-                return  $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : -$item['jumlah'];
+                // dd($item->toArray());
+                return  $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : $item['jumlah'] * -1 ;
             });
             return  $sumofSaldo;
         });
