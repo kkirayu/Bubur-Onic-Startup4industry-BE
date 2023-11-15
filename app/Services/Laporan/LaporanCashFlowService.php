@@ -16,6 +16,7 @@ class LaporanCashFlowService
         $start = Carbon::createFromFormat('d/m/Y', $request->start);
         $end = Carbon::createFromFormat('d/m/Y', $request->end);
 
+        $akuns = Akun::get();
         $akunKas = Akun::where("is_kas", true)->get();
         $akunKasIds = $akunKas->pluck("id");
 
@@ -23,11 +24,11 @@ class LaporanCashFlowService
         $journal = $journalInstance->getJournalAkunsTransactionedWith($akunKasIds->toArray(), $start, $end, $perusahaan_id);
         $saldoAkuns =$journalInstance->getSaldoFromAccounts($akunKasIds->toArray(), $start , $perusahaan_id);
         $saldoAwal = collect($saldoAkuns)->sum();
-        $journal = $journal->map(function ($journalItem, $key) use ($akunKas) {
+        $journal = $journal->map(function ($journalItem, $key) use ($akuns) {
             $journalMapped = collect($journalItem)->groupBy("posisi_akun")->toArray();
             $debitItem = array_key_exists("DEBIT", $journalMapped) ? $journalMapped['DEBIT'] : [];
             $kreditItem = array_key_exists("CREDIT", $journalMapped) ? $journalMapped['CREDIT'] : [];
-            return ["akun" => $key,
+            return ["akun" => $akuns->where("kode_akun", $key)->first(),
                 "credit" => [
 //                    "items" => $debitItem,
                     "items_size" => count($debitItem),
