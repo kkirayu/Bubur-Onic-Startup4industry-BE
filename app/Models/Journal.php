@@ -98,7 +98,26 @@ class Journal extends CrudModel
     public function getSaldoFromAccounts(array $accounts, $end, $perusahaan_id)
     {
 
-        $journal = $this->getJournalAkuns($end, $perusahaan_id,  $accounts);
+        $journal = $this->getJournalAkuns($end, $perusahaan_id, $accounts);
+
+
+        $journal = $journal->groupBy("akun_instance.kode_akun");
+
+        $accountSaldo = $journal->map(function ($item) {
+            $sumofSaldo = collect($item)->sum(function ($item) {
+                // dd($item->toArray());
+                return $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : $item['jumlah'] * -1;
+            });
+            return $sumofSaldo;
+        });
+        return $accountSaldo;
+    }
+
+
+    public function getSaldoFromAccountsWithRange(array $accounts, $start, $end, $perusahaan_id)
+    {
+
+        $journal = $this->getJournalAkunsWithRange($start , $end, $perusahaan_id, $accounts);
 
 
         $journal = $journal->groupBy("akun_instance.kode_akun");
@@ -133,6 +152,30 @@ class Journal extends CrudModel
         $journal = JournalAkun::whereHas("journal", function ($query) use ($end, $perusahaan_id) {
             $query->where("posted_at", "!=", null)->where("tanggal_transaksi", "<=", $end)->where("perusahaan_id", $perusahaan_id);
         })->with(["akun_instance"]);
+        if ($akuns) {
+
+            $journal = $journal->whereIn("akun", $akuns);
+        }
+        $journal = $journal->get();
+        return $journal;
+    }
+
+    /**
+     * @param $end
+     * @param $perusahaan_id
+     * @return JournalAkun[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getJournalAkunsWithRange($start, $end, $perusahaan_id, $akuns = []): array|\Illuminate\Database\Eloquent\Collection
+    {
+        $journal = JournalAkun::whereHas("journal", function ($query) use ($end, $perusahaan_id, $start) {
+            $query->where("posted_at", "!=", null)
+                ->where("tanggal_transaksi", "<=", $end)
+                ->where("perusahaan_id", $perusahaan_id);
+            if($start) {
+                $query->where("tanggal_transaksi", ">=", $start);
+            }
+        })->with(["akun_instance"]);
+
         if ($akuns) {
 
             $journal = $journal->whereIn("akun", $akuns);
