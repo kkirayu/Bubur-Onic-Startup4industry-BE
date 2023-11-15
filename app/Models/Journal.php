@@ -14,15 +14,16 @@ use Laravolt\Crud\Input\BaseUploadFileFieldAtribute;
 use Laravolt\Crud\Input\Selection\StaticSelection;
 use Laravolt\Crud\Input\Selection\UrlForeignSelection;
 use Laravolt\Crud\Spec\BaseTableValue;
+use function PHPUnit\Framework\isEmpty;
 
 class Journal extends CrudModel
 {
 
     use HideCompanyTrait, SoftDeletes;
+
     protected $table = 'journals';
 
     protected string $path = "/api/journal/journal";
-
 
 
     public AutoMode $filterMode = AutoMode::BLACKLIST;
@@ -33,10 +34,12 @@ class Journal extends CrudModel
     {
         return $this->hasMany(JournalAkun::class, "journal_id");
     }
+
     function postedByData(): BelongsTo
     {
-        return $this->belongsTo(User::class,  "posted_by");
+        return $this->belongsTo(User::class, "posted_by");
     }
+
     public function getPosted_bySelection()
     {
         return new UrlForeignSelection('/api/crud/user', "get", "id", "name");
@@ -50,45 +53,108 @@ class Journal extends CrudModel
         ];
     }
 
-    public function getJournalWithAkuns(Akun $akun) {
+    public function getJournalWithAkuns(Akun $akun)
+    {
 
         $journalAkun = Journal::join("journal_akuns", "journal_akuns.journal_id", "=", "journals.id")
-        ->where("journals.posted_at" , "!=", null)
-        ->where("journal_akuns.akun", $akun->id)->with(['akun_instance'])->get();
+            ->where("journals.posted_at", "!=", null)
+            ->where("journal_akuns.akun", $akun->id)->with(['akun_instance'])->get();
         return $journalAkun;
     }
-    public function getJournalLawan(Akun $akun) {
+
+    public function getJournalLawan(Akun $akun)
+    {
         $journalAkun = $this->getJournalWithAkuns($akun);
         $journalAkun = $journalAkun->where("journal_akuns.akun", "!=", $akun->id);
         return $journalAkun;
     }
 
 
-
     function akun_instance(): BelongsTo
     {
-        return $this->belongsTo(Akun::class,  "akun");
+        return $this->belongsTo(Akun::class, "akun");
     }
 
 
-    public function getSaldo( $end, $perusahaan_id)
+    public function getSaldo($end, $perusahaan_id)
     {
 
-        $journal = JournalAkun::whereHas("journal", function ($query) use ( $end, $perusahaan_id) {
-            $query->where("posted_at", "!=", null)->where("tanggal_transaksi", "<=" , $end)->where("perusahaan_id", $perusahaan_id);
-        })->with(["akun_instance"])->get();
+        $journal = $this->getJournalAkuns($end, $perusahaan_id);
 
 
         $journal = $journal->groupBy("akun_instance.kode_akun");
 
-        $accountSaldo  = $journal->map(function ($item) {
+        $accountSaldo = $journal->map(function ($item) {
             $sumofSaldo = collect($item)->sum(function ($item) {
                 // dd($item->toArray());
-                return  $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : $item['jumlah'] * -1 ;
+                return $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : $item['jumlah'] * -1;
             });
-            return  $sumofSaldo;
+            return $sumofSaldo;
         });
-        return  $accountSaldo;
+        return $accountSaldo;
+    }
+
+
+    public function getSaldoFromAccounts(array $accounts, $end, $perusahaan_id)
+    {
+
+        $journal = $this->getJournalAkuns($end, $perusahaan_id,  $accounts);
+
+
+        $journal = $journal->groupBy("akun_instance.kode_akun");
+
+        $accountSaldo = $journal->map(function ($item) {
+            $sumofSaldo = collect($item)->sum(function ($item) {
+                // dd($item->toArray());
+                return $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : $item['jumlah'] * -1;
+            });
+            return $sumofSaldo;
+        });
+        return $accountSaldo;
+    }
+
+
+    public function getAkunTransaction($end, $perusahaan_id)
+    {
+
+        $journal = $this->getJournalAkuns($end, $perusahaan_id);
+        $journal = $journal->groupBy("akun_instance.kode_akun");
+
+        return $journal;
+    }
+
+    /**
+     * @param $end
+     * @param $perusahaan_id
+     * @return JournalAkun[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getJournalAkuns($end, $perusahaan_id, $akuns = []): array|\Illuminate\Database\Eloquent\Collection
+    {
+        $journal = JournalAkun::whereHas("journal", function ($query) use ($end, $perusahaan_id) {
+            $query->where("posted_at", "!=", null)->where("tanggal_transaksi", "<=", $end)->where("perusahaan_id", $perusahaan_id);
+        })->with(["akun_instance"]);
+        if ($akuns) {
+
+            $journal = $journal->whereIn("akun", $akuns);
+        }
+        $journal = $journal->get();
+        return $journal;
+    }
+
+    public function getJournalAkunsTransactionedWith(array $akun, $start, $end, $perusahaan_id): array|\Illuminate\Database\Eloquent\Collection
+    {
+        $journal = JournalAkun::whereHas("journal", function ($query) use ($end, $start, $perusahaan_id) {
+            $query->where("posted_at", "!=", null)
+                ->where("tanggal_transaksi", "<=", $end)
+                ->where("tanggal_transaksi", ">=", $start)
+                ->where("perusahaan_id", $perusahaan_id)
+                ->where("transaction_type", "kas");
+        })
+            ->whereNotIn("akun", $akun)
+            ->with(["akun_instance"])->get();
+
+        $journal = $journal->groupBy("akun_instance.kode_akun");
+        return $journal;
     }
 
 }
