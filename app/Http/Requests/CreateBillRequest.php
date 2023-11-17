@@ -25,7 +25,6 @@ class CreateBillRequest extends FormRequest
             "bill_date" => "required|date",
             "due_date" => "required|date",
             "supplier_id" => "required|integer",
-            "total" => "required|numeric",
             "desc" => "required|string",
             "bill_details" => "required|array",
             "bill_details.*.product_id" => "required|integer",

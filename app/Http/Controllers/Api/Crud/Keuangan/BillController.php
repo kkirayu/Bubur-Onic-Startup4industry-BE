@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Crud\Keuangan;
 
 use App\Http\Requests\CreateBillRequest;
+use App\Http\Requests\PayBillRequest;
 use App\Models\Bill;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -37,6 +38,17 @@ class BillController extends ApiCrudController
 
         return $this->single($model);
     }
+
+    #[Route(method: ['POST'])]
+    public function payBill(PayBillRequest $payInvoiceRequest): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->payBill($payInvoiceRequest);
+
+        return $this->single($model);
+    }
+
 
 
 }

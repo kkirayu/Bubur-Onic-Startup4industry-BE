@@ -22,7 +22,7 @@ class ProfilPegawai extends CrudModel
     public function team () : BelongsTo {
         return $this->belongsTo(Team::class, 'team_id');
     }
-    
+
 
     public function tableValueMapping(): array
     {
@@ -31,5 +31,6 @@ class ProfilPegawai extends CrudModel
             new BaseTableValue("team_id", "hasOne", "team", "nama"),
         ];
     }
+
 
 }

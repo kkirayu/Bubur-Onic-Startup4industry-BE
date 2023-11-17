@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Crud\Keuangan;
 
 use App\Http\Requests\CreateInvoiceRequest;
+use App\Http\Requests\PayInvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -37,6 +38,16 @@ class InvoiceController extends ApiCrudController
 
         $this->guard("CREATE");
         $model = $this->service->createInvoice($createJournalRequest);
+
+        return $this->single($model);
+    }
+
+    #[Route(method: ['POST'])]
+    public function payInvoice(PayInvoiceRequest $payInvoiceRequest): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->bayarInvoice($payInvoiceRequest);
 
         return $this->single($model);
     }
