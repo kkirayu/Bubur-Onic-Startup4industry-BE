@@ -26,5 +26,26 @@ class KasbonBulananController extends ApiCrudController
         return new KasbonBulananService($this->model(), $this->user);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $model = KasbonBulanan::find($id);
+
+        if (!$model) {
+            return response()->json(['error' => 'Model not found'], 404);
+        }
+
+        $request->validate([
+            'status' => 'required|in:CAIR',
+        ]);
+
+        if ($model->status === 'POSTING') {
+            $model->status = $request->input('status');
+            $model->save();
+
+            return $this->single($model);
+        } else {
+            return response()->json(['error' => 'Invalid status update'], 400);
+        }
+    }
 
 }
