@@ -482,5 +482,131 @@ class KasbonBulananTest extends TestCase
         $response->assertJson(["message" => "Data Dengan Status POSTING Tidak bisa di hapus"]);
     }
 
+    public function testUpdateKasbonStatus(): void
+    {
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "1996",
+            "status" => "POSTING",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
+
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+
+        $payload = [
+            'status' => 'CAIR',
+        ];
+
+        $response = $this->postJson("/api/pegawai/kasbon-bulanan/{$kasbon->id}/update_status", $payload);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'data' => [
+                'id' => $kasbon->id,
+                'status' => 'CAIR',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('kasbon_bulanans', [
+            'id' => $kasbon->id,
+            'status' => 'CAIR',
+        ]);
+
+        $kasbon->status = 'CAIR';
+        $kasbon->save();
+
+        $payload = [
+            'status' => 'CAIR',
+        ];
+
+        $response = $this->postJson("/api/pegawai/kasbon-bulanan/{$kasbon->id}/update_status", $payload);
+
+        $response->assertStatus(400);
+
+        $response->assertJson([
+            'error' => 'Invalid status update',
+        ]);
+
+        $this->assertDatabaseHas('kasbon_bulanans', [
+            'id' => $kasbon->id,
+            'status' => 'CAIR',
+        ]);
+    }
+
+    public function testUpdateStatusFromNewToPosting()
+    {
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "1996",
+            "status" => "NEW",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
+
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+
+        $response = $this->json('POST', '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'POSTING']);
+
+        $response->assertStatus(200)
+                 ->assertJson([
+                     'message' => 'Status berhasil diperbarui',
+                 ]);
+
+        $this->assertDatabaseHas('kasbon_bulanans', ['id' => $kasbon->id, 'status' => 'POSTING']);
+    }
+
+    public function testUpdateStatusFromPostingToCair()
+    {
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "1996",
+            "status" => "POSTING",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
+
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+
+        $response = $this->json('POST', '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'CAIR']);
+
+        $response->assertStatus(200)
+                 ->assertJson([
+                     'message' => 'Status berhasil diperbarui',
+                 ]);
+
+        $this->assertDatabaseHas('kasbon_bulanans', ['id' => $kasbon->id, 'status' => 'CAIR']);
+    }
+
+    public function testInvalidStatusUpdate()
+    {
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "1996",
+            "status" => "POSTING",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
+
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+
+        $response = $this->json('POST', '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'NEW']);
+
+        $response->assertStatus(422)
+             ->assertJson([
+                 'message' => 'The selected status is invalid.',
+             ]);
+
+        $this->assertDatabaseHas('kasbon_bulanans', ['id' => $kasbon->id, 'status' => 'POSTING']);
+    }
 
 }

@@ -27,6 +27,30 @@ class KasbonBulananController extends ApiCrudController
         return new KasbonBulananService($this->model(), $this->user);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:POSTING,CAIR',
+        ]);
+
+        $kasbon = KasbonBulanan::find($id);
+
+        if (!$kasbon) {
+            return response()->json(['message' => 'Kasbon tidak ditemukan'], 404);
+        }
+
+        if ($kasbon->status == 'NEW' && $request->status == 'POSTING') {
+            $kasbon->status = 'POSTING';
+        } elseif ($kasbon->status == 'POSTING' && $request->status == 'CAIR') {
+            $kasbon->status = 'CAIR';
+        } else {
+            return response()->json(['message' => 'Perubahan status tidak valid'], 400);
+        }
+
+        $kasbon->save();
+
+        return response()->json(['message' => 'Status berhasil diperbarui', 'data' => $kasbon]);
+    }
 
     #[Route(method: ['POST'],  uri: '{kasbon_id}/ambil-kasbon')]
 
