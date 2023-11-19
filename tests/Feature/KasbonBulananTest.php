@@ -62,6 +62,15 @@ class KasbonBulananTest extends TestCase
 
     public function testAmbilKasbonKaryawan(): void
     {
+
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "1997",
+            "status" => "NEW",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
         $kasbon = KasbonBulanan::where("bulan", 2)
             ->where("tahun", 1997)
             ->where("perusahaan_id", 1)
