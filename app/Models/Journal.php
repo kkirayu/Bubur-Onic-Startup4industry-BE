@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Laravolt\Crud\CrudModel;
 use Laravolt\Crud\Enum\AutoMode;
 use Laravolt\Crud\Input\BaseCustomFieldAtribute;
@@ -53,19 +54,25 @@ class Journal extends CrudModel
         ];
     }
 
-    public function getJournalWithAkuns(Akun $akun)
+    public function getJournalWithAkuns(Akun $akun, $start, $end, $perusahaan_id)
     {
 
         $journalAkun = Journal::join("journal_akuns", "journal_akuns.journal_id", "=", "journals.id")
+            ->where("journals.tanggal_transaksi", "<=", $end)
+            ->where("journals.tanggal_transaksi", ">=", $start)
+            ->where("journals.perusahaan_id", $perusahaan_id)
             ->where("journals.posted_at", "!=", null)
-            ->where("journal_akuns.akun", $akun->id)->with(['akun_instance'])->get();
+            ->where(DB::raw("(select count(id) from  journal_akuns where akun = " .  $akun->id . " and journal_id = journals.id)" ) ,  ">" , 0);
+
+        $journalAkun = $journalAkun
+            ->with(['akun_instance'])->get();
         return $journalAkun;
     }
 
-    public function getJournalLawan(Akun $akun)
+    public function getJournalLawan(Akun $akun, $start, $end, $perusahaan_id)
     {
-        $journalAkun = $this->getJournalWithAkuns($akun);
-        $journalAkun = $journalAkun->where("journal_akuns.akun", "!=", $akun->id);
+        $journalAkun = $this->getJournalWithAkuns($akun, $start, $end, $perusahaan_id);
+        $journalAkun = $journalAkun->where("akun", "!=", $akun->id);
         return $journalAkun;
     }
 
@@ -117,7 +124,7 @@ class Journal extends CrudModel
     public function getSaldoFromAccountsWithRange(array $accounts, $start, $end, $perusahaan_id)
     {
 
-        $journal = $this->getJournalAkunsWithRange($start , $end, $perusahaan_id, $accounts);
+        $journal = $this->getJournalAkunsWithRange($start, $end, $perusahaan_id, $accounts);
 
 
         $journal = $journal->groupBy("akun_instance.kode_akun");
@@ -171,7 +178,7 @@ class Journal extends CrudModel
             $query->where("posted_at", "!=", null)
                 ->where("tanggal_transaksi", "<=", $end)
                 ->where("perusahaan_id", $perusahaan_id);
-            if($start) {
+            if ($start) {
                 $query->where("tanggal_transaksi", ">=", $start);
             }
         })->with(["akun_instance"]);
@@ -186,6 +193,14 @@ class Journal extends CrudModel
 
     public function getJournalAkunsTransactionedWith(array $akun, $start, $end, $perusahaan_id): array|\Illuminate\Database\Eloquent\Collection
     {
+        $journal = $this->getJournalAkunsTransactioned($akun, $start, $end, $perusahaan_id);
+
+        $journal = $journal->groupBy("akun_instance.kode_akun");
+        return $journal;
+    }
+
+    public function getJournalAkunsTransactioned(array $akun, $start, $end, $perusahaan_id): array|\Illuminate\Database\Eloquent\Collection
+    {
         $journal = JournalAkun::whereHas("journal", function ($query) use ($end, $start, $perusahaan_id) {
             $query->where("posted_at", "!=", null)
                 ->where("tanggal_transaksi", "<=", $end)
@@ -193,10 +208,9 @@ class Journal extends CrudModel
                 ->where("perusahaan_id", $perusahaan_id)
                 ->where("transaction_type", "kas");
         })
-            ->whereNotIn("akun", $akun)
+            ->
+            whereNotIn("akun", $akun)
             ->with(["akun_instance"])->get();
-
-        $journal = $journal->groupBy("akun_instance.kode_akun");
         return $journal;
     }
 

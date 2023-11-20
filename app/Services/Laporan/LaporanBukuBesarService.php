@@ -29,14 +29,14 @@ class LaporanBukuBesarService
         $end = Carbon::createFromFormat('d/m/Y', $request->end);
 
         $akun = Akun::where("kode_akun", $coa)->first();
-        
+
 
         $saldoAwal = $akun->getSaldoAt( null, $start ,  $perusahaan_id);
         // $saldoAkhir = $akun->getSaldoAt( null, $end ,  $perusahaan_id);
 
         $groupData = [];
-        $journalLawan = (new Journal())->getJournalLawan($akun)->toArray();
-        
+        $journalLawan = (new Journal())->getJournalLawan($akun,  $start, $end, $perusahaan_id)->toArray();
+
         $groupData = $journalLawan;
         // $groupData =  $data['records'];
         // $moveNames = collect($groupData)->pluck('move_name')->toArray();
@@ -73,7 +73,7 @@ class LaporanBukuBesarService
                 $editor = $valueJournal['posisi_akun']== "DEBIT" ? $valueJournal['jumlah'] : - $valueJournal['jumlah'];
                 $saldoAkhir = $saldoAkhir +  $editor;
                 $groupData[$keyJournal]["saldo_di_line"] = $saldoAkhir;
-            
+
         }
 
 
