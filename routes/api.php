@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Api\Crud\Pegawai\KasbonBulananController;
+use App\Http\Controllers\Api\Crud\BonusKaryawan\BonusKaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('pegawai/kasbon-bulanan/{id}/update_status', [KasbonBulananController::class, 'updateStatus']);
+
+Route::prefix('pegawai')->group(function () {
+    Route::post('bonus-karyawan/create', [BonusKaryawanController::class, 'createBonus']);
+});
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
