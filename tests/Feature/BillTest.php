@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Bill;
 use App\Models\Supplier;
 use App\Models\Product;
+use Database\Factories\ProductFactory;
+use Database\Factories\SupplierFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,14 +19,17 @@ class BillTest extends TestCase
      */
     public function test_example(): void
     {
+        $supplier = SupplierFactory::new()->create();
+        $product1= ProductFactory::new()->create();
+        $product2= ProductFactory::new()->create();
         $payload = [
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
             'bill_details' => [
                 [
-                    'product_id' => Product::first()->id,
+                    'product_id' => $product1->id,
                     'qty' => 2,
                     'account_id' => 1,
                     'price' => 250000,
@@ -34,7 +39,7 @@ class BillTest extends TestCase
                     'subtotal' => 500000,
                 ],
                 [
-                    'product_id' => Product::first()->id,
+                    'product_id' => $product2->id,
                     'qty' => 1,
                     'account_id' => 1,
                     'price' => 500000,
@@ -49,21 +54,24 @@ class BillTest extends TestCase
         $this->actingAs($user);
         $response = $this->postJson('api/keuangan/bill/create-bill', $payload);
 
-        dump($response->getContent());
 
         $response->assertStatus(200);
     }
 
     public function testEditBill(): void
     {
+
+        $product1= ProductFactory::new()->create();
+        $product2= ProductFactory::new()->create();
+        $supplier = SupplierFactory::new()->create();
         $payload = [
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'desc' => "Updated Payload",
             'bill_details' => [
                 [
-                    'product_id' => Product::first()->id,
+                    'product_id' => $product1->id,
                     'qty' => 2,
                     'account_id' => 1,
                     'price' => 250000,
@@ -73,7 +81,7 @@ class BillTest extends TestCase
                     'subtotal' => 500000,
                 ],
                 [
-                    'product_id' => Product::first()->id,
+                    'product_id' => $product2->id,
                     'qty' => 1,
                     'account_id' => 1,
                     'price' => 500000,
@@ -88,7 +96,7 @@ class BillTest extends TestCase
         $bill = Bill::create([
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'bill_number' => "BILL-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
@@ -98,7 +106,6 @@ class BillTest extends TestCase
         $this->actingAs($user);
         $response = $this->putJson('api/keuangan/bill/' . $bill->id, $payload);
 
-        dump($response->getContent());
 
         $response->assertStatus(200);
     }
@@ -114,7 +121,22 @@ class BillTest extends TestCase
             'api/keuangan/bill?filter[supplier_id]=' . $customer->id . "&filter[payment_status][]=UNPAID&filter[payment_status][]=PARTIALPAID"
         );
 
-        dump($response->getContent());
+
+        $response->assertStatus(200);
+    }
+
+
+    public function testListBill()
+    {
+
+        $supplier = SupplierFactory::new()->create();
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $customer = Supplier::first();
+        $response = $this->getJson(
+            'api/keuangan/bill?limit=2'
+        );
+
 
         $response->assertStatus(200);
     }
@@ -122,11 +144,12 @@ class BillTest extends TestCase
     public function testPayMultiBillLunas()
     {
 
+        $supplier = SupplierFactory::new()->create();
 
         $bill = Bill::create([
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'total' => 10000,
             'bill_number' => "INV-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
@@ -138,7 +161,7 @@ class BillTest extends TestCase
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
             'total' => 10000,
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'bill_number' => "INV-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
@@ -167,20 +190,19 @@ class BillTest extends TestCase
         $this->actingAs($user);
         $response = $this->postJson('api/keuangan/bill/pay-bill', $payload);
 
-        dump($response->getContent());
         $response->assertStatus(200);
 
 
     }
     public function testPayMultiBillBelumLunas()
     {
-        $customer = Supplier::first();
 
+        $supplier = SupplierFactory::new()->create();
 
         $bill = Bill::create([
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'total' => 10000,
             'bill_number' => "INV-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
@@ -192,7 +214,7 @@ class BillTest extends TestCase
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
             'total' => 10000,
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'bill_number' => "INV-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
@@ -222,20 +244,19 @@ class BillTest extends TestCase
         $this->actingAs($user);
         $response = $this->postJson('api/keuangan/bill/pay-bill', $payload);
 
-        dump($response->getContent());
         $response->assertStatus(200);
 
 
     }
     public function testPayMultiBillBelumLunasDanLunasi()
     {
-        $customer = Supplier::first();
 
+        $supplier = SupplierFactory::new()->create();
 
         $bill = Bill::create([
             'bill_date' => '2022-11-01',
             'due_date' => '2022-11-30',
-            'supplier_id' => Supplier::first()->id,
+            'supplier_id' => $supplier->id,
             'total' => 10000,
             'bill_number' => "INV-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
@@ -267,7 +288,6 @@ class BillTest extends TestCase
         $this->actingAs($user);
         $response = $this->postJson('api/keuangan/bill/pay-bill', $payload);
 
-        dump($response->getContent());
 
         $payload = $bills->map(function ($item) {
             return [
@@ -287,7 +307,6 @@ class BillTest extends TestCase
         $this->actingAs($user);
         $response = $this->postJson('api/keuangan/bill/pay-bill', $payload);
 
-        dump($response->getContent());
         $response->assertStatus(200);
 
 

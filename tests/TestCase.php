@@ -9,32 +9,65 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
 
-    
     protected $docsUrl = "";
 
-    function initDocs($testCasename) {
-        $this->docsUrl = "test-result/" .$testCasename . '.md';
+    protected $content = "";
+
+
+    function appedHeader($text): void
+    {
+
+        $this->content = $this->content . "## " . $text . "\n\n";
+    }
+
+    function appendContent($text): void
+    {
+
+
+        $this->content = $this->content . $text . "\n\n";
+    }
+
+    function appendJson($text): void
+    {
+
+        $this->content = $this->content . "```json \n" . json_encode($text, JSON_PRETTY_PRINT) . "\n```" . "\n\n";
 
     }
 
-    function appedHeader($text) : void {
-        
-        $myfile = fopen($this->docsUrl, "a") or die("Unable to create file!");
-        $txt = $text;
-        fwrite($myfile ,"## " . $txt . "\n\n");
-        fclose($myfile);
+    public function postJson($uri, array $data = [], array $headers = [], $options = 0)
+    {
+        $response = parent::postJson($uri, $data, $headers, $options);
+        $this->appedHeader("Request");
+        $this->appendContent("POST " . $this->docsUrl . $uri);
+        $this->appendJson($data);
+        $this->appedHeader("Response");
+        $this->appendJson($response->json());
+
+        echo($this->content);
+        return $response;
     }
-    function appendContent($text) : void {
-        
-        $myfile = fopen($this->docsUrl, "a") or die("Unable to create file!");
-        $txt = $text;
-        fwrite($myfile, $txt . "\n\n");
-        fclose($myfile);
+    public function putJson($uri, array $data = [], array $headers = [], $options = 0)
+    {
+        $response = parent::postJson($uri, $data, $headers, $options);
+        $this->appedHeader("Request");
+        $this->appendContent("POST " . $this->docsUrl . $uri);
+        $this->appedHeader("Payload");
+        $this->appendJson($data);
+        $this->appedHeader("Response");
+        $this->appendJson($response->json());
+
+        echo($this->content);
+        return $response;
     }
-    function appendJson($text) : void {
-        
-        $myfile = fopen($this->docsUrl, "a") or die("Unable to create file!");
-        fwrite($myfile, "```json \n" . json_encode($text,  JSON_PRETTY_PRINT).  "\n```" .  "\n\n");
-        fclose($myfile);
+    public function getJson($uri, array $headers = [], $options = 0)
+    {
+        $response = parent::getJson($uri, $headers, $options);
+        $this->appedHeader("Request");
+        $this->appendContent("GET " . $this->docsUrl . $uri);
+        $this->appedHeader("Response");
+        $this->appendJson($response->json());
+
+        echo($this->content);
+        return $response;
     }
 }
