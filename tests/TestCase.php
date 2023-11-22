@@ -70,4 +70,15 @@ abstract class TestCase extends BaseTestCase
         echo($this->content);
         return $response;
     }
+    public function deleteJson($uri, array $data = [], array $headers = [], $options = 0)
+    {
+        $response = parent::deleteJson($uri, $data , $headers, $options);
+        $this->appedHeader("Request");
+        $this->appendContent("DELETE " . $this->docsUrl . $uri);
+        $this->appedHeader("Response");
+        $this->appendJson($response->json());
+
+        echo($this->content);
+        return $response;
+    }
 }

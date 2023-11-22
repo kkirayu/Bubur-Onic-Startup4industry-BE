@@ -541,6 +541,51 @@ class KasbonBulananTest extends TestCase
         ]);
     }
 
+
+    public function testUpdateKasbon(): void
+    {
+        $kasbon = KasbonBulanan::where(
+
+            "bulan" ,  "2",
+        )->where(
+
+            "status",  "POSTING",
+        )->where(
+
+            "tahun",  "2000",
+        )->delete();
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "2000",
+            "status" => "POSTING",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
+
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+
+        $payload = [
+            'status' => 'CAIR',
+            'bulan' => '2',
+            'tahun' => '1996',
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+        ];
+
+        $response = $this->postJson("/api/pegawai/kasbon-bulanan/{$kasbon->id}" , $payload);
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'data' => [
+                'id' => $kasbon->id,
+                'bulan' => '2',
+                'tahun' => '1996',
+            ],
+        ]);
+
+    }
     public function testUpdateStatusFromNewToPosting()
     {
         $kasbon = KasbonBulanan::create([
@@ -555,7 +600,7 @@ class KasbonBulananTest extends TestCase
         $user = UserFactory::new()->create();
         $this->actingAs($user);
 
-        $response = $this->json('POST', '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'POSTING']);
+        $response = $this->postJson( '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'POSTING']);
 
         $response->assertStatus(200)
                  ->assertJson([
@@ -579,7 +624,7 @@ class KasbonBulananTest extends TestCase
         $user = UserFactory::new()->create();
         $this->actingAs($user);
 
-        $response = $this->json('POST', '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'CAIR']);
+        $response = $this->postJson( '/api/pegawai/kasbon-bulanan/'.$kasbon->id.'/update_status', ['status' => 'CAIR']);
 
         $response->assertStatus(200)
                  ->assertJson([
