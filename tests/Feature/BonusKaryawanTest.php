@@ -59,7 +59,7 @@ class BonusKaryawanTest extends TestCase
     }
 
     /** @test */
-    public function createBonusKaryawanWithNoIdProdilePegawau()
+    public function createBonusKaryawanWithNoIdProdilePegawai()
     {
         $response = $this->postJson('api/pegawai/bonus-karyawan/create', [
             'bulan' => 11,
