@@ -21,9 +21,8 @@ class KasbonBulananTest extends TestCase
     {
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $response = $this->get('/api/pegawai/kasbon-bulanan');
+        $response = $this->getJson('/api/pegawai/kasbon-bulanan');
 
-        dump($response->getContent());
         $response->assertStatus(200);
     }
 
@@ -31,9 +30,8 @@ class KasbonBulananTest extends TestCase
     {
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $response = $this->get("/api/pegawai/kasbon-bulanan?filter[bulan]=2&filter[tahun]=2023");
+        $response = $this->getJson("/api/pegawai/kasbon-bulanan?filter[bulan]=2&filter[tahun]=2023");
 
-        dump($response->getContent());
         $response->assertStatus(200);
     }
 
@@ -54,7 +52,6 @@ class KasbonBulananTest extends TestCase
         ];
         $response = $this->postJson("/api/pegawai/kasbon-bulanan", $payload);
 
-        dump($response->getContent());
 
         $response->assertStatus(201);
     }
@@ -124,7 +121,6 @@ class KasbonBulananTest extends TestCase
         $response = $this->postJson("/api/pegawai/kasbon-bulanan/$kasbon->id/ambil-kasbon");
 
 
-        dump($response->getContent());
 
         $response->assertStatus(201);
     }
@@ -194,7 +190,6 @@ class KasbonBulananTest extends TestCase
         $response = $this->postJson("/api/pegawai/kasbon-bulanan/$kasbon->id/batal-kasbon");
 
 
-        dump($response->getContent());
 
         $response->assertStatus(200);
     }
@@ -263,7 +258,6 @@ class KasbonBulananTest extends TestCase
         $response = $this->postJson("/api/pegawai/kasbon-bulanan/$kasbon->id/batal-kasbon");
 
 
-        dump($response->getContent());
 
         $response->assertStatus(422);
     }
@@ -332,7 +326,6 @@ class KasbonBulananTest extends TestCase
         $response = $this->postJson("/api/pegawai/kasbon-bulanan/$kasbon->id/ambil-kasbon");
 
 
-        dump($response->getContent());
 
         $response->assertStatus(200);
     }
@@ -402,7 +395,6 @@ class KasbonBulananTest extends TestCase
         $response = $this->postJson("/api/pegawai/kasbon-bulanan/$kasbon->id/ambil-kasbon");
 
 
-        dump($response->getContent());
 
         $response->assertStatus(422);
     }
@@ -416,26 +408,27 @@ class KasbonBulananTest extends TestCase
             ->where("tahun", 1995)
             ->where("perusahaan_id", 1)
             ->where("cabang_id", 1)->delete();
+
+        $kasbon = KasbonBulanan::create([
+            "bulan" => "2",
+            "tahun" => "1995",
+            "status" => "NEW",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+            "perusahaan_id" => 1,
+            "cabang_id" => 1
+        ]);
+
+        $payload = [
+            "bulan" => "2",
+            "tahun" => "1995",
+            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
+        ];
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $payload = [
-            "bulan" => "2",
-            "tahun" => "1995",
-            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
-        ];
-        $response = $this->postJson("/api/pegawai/kasbon-bulanan", $payload);
-
-        $response->assertStatus(201);
-        $payload = [
-            "bulan" => "2",
-            "tahun" => "1995",
-            "tanggal_pencairan" => Carbon::now()->format("Y-m-d"),
-        ];
         $response = $this->postJson("/api/pegawai/kasbon-bulanan", $payload);
 
         $response->assertStatus(422);
         $response->assertJson(["message" => "Sudah Membuat Kasbon periode tersebut"]);
-        dump($response->getContent());
 
     }
 
@@ -459,7 +452,6 @@ class KasbonBulananTest extends TestCase
         $this->actingAs($user);
         $response = $this->deleteJson("/api/pegawai/kasbon-bulanan/" . $kasbon->id);
 
-        dump($response->getContent());
 
         $response->assertStatus(200);
     }
@@ -485,7 +477,6 @@ class KasbonBulananTest extends TestCase
         $response = $this->deleteJson("/api/pegawai/kasbon-bulanan/" . $kasbon->id);
 
 
-        dump($response->getContent());
 
         $response->assertStatus(422);
         $response->assertJson(["message" => "Data Dengan Status POSTING Tidak bisa di hapus"]);
@@ -534,10 +525,14 @@ class KasbonBulananTest extends TestCase
 
         $response = $this->postJson("/api/pegawai/kasbon-bulanan/{$kasbon->id}/update_status", $payload);
 
-        $response->assertStatus(400);
+        $response->assertStatus(422);
 
         $response->assertJson([
-            'error' => 'Invalid status update',
+            'errors' => [
+                'status' => [
+                    'Status Kasbon Tidak Valid',
+                ],
+            ],
         ]);
 
         $this->assertDatabaseHas('kasbon_bulanans', [

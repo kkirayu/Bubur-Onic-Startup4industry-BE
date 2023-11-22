@@ -36,7 +36,7 @@ class KasbonBulananController extends ApiCrudController
         $kasbon = KasbonBulanan::find($id);
 
         if (!$kasbon) {
-            return response()->json(['message' => 'Kasbon tidak ditemukan'], 404);
+            throw \Illuminate\Validation\ValidationException::withMessages(['id' => 'Kasbon Tidak Ditemukan']);
         }
 
         if ($kasbon->status == 'NEW' && $request->status == 'POSTING') {
@@ -44,7 +44,7 @@ class KasbonBulananController extends ApiCrudController
         } elseif ($kasbon->status == 'POSTING' && $request->status == 'CAIR') {
             $kasbon->status = 'CAIR';
         } else {
-            return response()->json(['message' => 'Perubahan status tidak valid'], 400);
+            throw \Illuminate\Validation\ValidationException::withMessages(['status' => 'Status Kasbon Tidak Valid']);
         }
 
         $kasbon->save();
