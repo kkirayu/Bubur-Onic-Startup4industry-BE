@@ -29,6 +29,7 @@ Route::post('pegawai/kasbon-bulanan/{id}/update_status', [KasbonBulananControlle
 
 Route::prefix('pegawai')->group(function () {
     Route::post('bonus-karyawan/create', [BonusKaryawanController::class, 'createBonus']);
+    Route::post('bonus-karyawan/update/{id}', [BonusKaryawanController::class, 'updateStatusBonus']);
 });
 
 Route::post('/auth/login', [AuthController::class, 'login']);
