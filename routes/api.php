@@ -27,12 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('pegawai/kasbon-bulanan/{id}/update_status', [KasbonBulananController::class, 'updateStatus']);
 
-Route::prefix('pegawai')->group(function () {
-    Route::post('bonus-karyawan/create', [BonusKaryawanController::class, 'createBonus']);
-    Route::post('bonus-karyawan/update/{id}', [BonusKaryawanController::class, 'updateStatusBonus']);
-    Route::delete('bonus-karyawan/delete/{id}', [BonusKaryawanController::class, 'deleteBonus']);
-});
-
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::prefix('/auth/password')->group(function () {
