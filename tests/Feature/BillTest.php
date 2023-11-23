@@ -116,9 +116,9 @@ class BillTest extends TestCase
 
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $customer = Supplier::first();
+        $supplier = Supplier::first();
         $response = $this->getJson(
-            'api/keuangan/bill?filter[supplier_id]=' . $customer->id . "&filter[payment_status][]=UNPAID&filter[payment_status][]=PARTIALPAID"
+            'api/keuangan/bill?filter[supplier_id]=' . $supplier->id . "&filter[payment_status][]=UNPAID&filter[payment_status][]=PARTIALPAID"
         );
 
 
@@ -132,7 +132,7 @@ class BillTest extends TestCase
         $supplier = SupplierFactory::new()->create();
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $customer = Supplier::first();
+        $supplier = Supplier::first();
         $response = $this->getJson(
             'api/keuangan/bill?limit=2'
         );
@@ -151,7 +151,7 @@ class BillTest extends TestCase
             'due_date' => '2022-11-30',
             'supplier_id' => $supplier->id,
             'total' => 10000,
-            'bill_number' => "INV-" . date('YmdHis'),
+            'bill_number' => "BILL-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
             "cabang_id" => 1,
@@ -162,7 +162,7 @@ class BillTest extends TestCase
             'due_date' => '2022-11-30',
             'total' => 10000,
             'supplier_id' => $supplier->id,
-            'bill_number' => "INV-" . date('YmdHis'),
+            'bill_number' => "BILL-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
             "cabang_id" => 1,
@@ -204,7 +204,7 @@ class BillTest extends TestCase
             'due_date' => '2022-11-30',
             'supplier_id' => $supplier->id,
             'total' => 10000,
-            'bill_number' => "INV-" . date('YmdHis'),
+            'bill_number' => "BILL-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
             "cabang_id" => 1,
@@ -215,7 +215,7 @@ class BillTest extends TestCase
             'due_date' => '2022-11-30',
             'total' => 10000,
             'supplier_id' => $supplier->id,
-            'bill_number' => "INV-" . date('YmdHis'),
+            'bill_number' => "BILL-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
             "cabang_id" => 1,
@@ -258,7 +258,7 @@ class BillTest extends TestCase
             'due_date' => '2022-11-30',
             'supplier_id' => $supplier->id,
             'total' => 10000,
-            'bill_number' => "INV-" . date('YmdHis'),
+            'bill_number' => "BILL-" . date('YmdHis'),
             'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
             "perusahaan_id" => 1,
             "cabang_id" => 1,
@@ -311,4 +311,59 @@ class BillTest extends TestCase
 
 
     }
+
+
+    public function testPostBill(): void
+    {
+        $supplier = SupplierFactory::new()->create();
+
+
+        $bill = Bill::create([
+            'bill_date' => '2022-11-01',
+            'due_date' => '2022-11-30',
+            'supplier_id' => $supplier->id,
+            'bill_number' => "BILL-" . date('YmdHis'),
+            'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
+            "perusahaan_id" => 1,
+            "cabang_id" => 1,
+        ]);
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $response = $this->putJson('api/keuangan/bill/' . $bill->id . "/post");
+
+        $this->assertDatabaseHas('bills', [
+            'id' => $bill->id,
+            'post_status' => 'POSTED',
+        ]);
+
+        $response->assertStatus(200);
+    }
+    public function testUnPostBill(): void
+    {
+
+        $supplier = SupplierFactory::new()->create();
+
+
+        $bill = Bill::create([
+            'bill_date' => '2022-11-01',
+            'due_date' => '2022-11-30',
+            'supplier_id' => $supplier->id,
+            'post_status' => 'POSTED',
+            'bill_number' => "BILL-" . date('YmdHis'),
+            'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
+            "perusahaan_id" => 1,
+            "cabang_id" => 1,
+        ]);
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $response = $this->putJson('api/keuangan/bill/' . $bill->id . "/un-post");
+
+
+        $this->assertDatabaseHas('bills', [
+            'id' => $bill->id,
+            'post_status' => 'DRAFT',
+        ]);
+        $response->assertStatus(200);
+    }
+
 }

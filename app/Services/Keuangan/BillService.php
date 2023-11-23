@@ -110,4 +110,22 @@ class BillService extends CrudService
 
     }
 
+
+    public function postBill()
+    {
+        $bill = Bill::where("id", request()->bill_id)->first();
+
+        $bill->post_status = "POSTED";
+        $bill->update();
+        return $bill;
+    }
+    public function unPostBill()
+    {
+        $bill = Bill::where("id", request()->bill_id)->first();
+
+        $bill->post_status = "DRAFT";
+        $bill->update();
+        return $bill;
+    }
+
 }

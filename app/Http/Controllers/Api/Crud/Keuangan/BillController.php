@@ -50,5 +50,26 @@ class BillController extends ApiCrudController
     }
 
 
+    #[Route(method: ['POST'],  uri: '{bill_id}/post')]
+    public function postBill(): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->postBill();
+
+        return $this->single($model);
+    }
+
+    #[Route(method: ['POST'],  uri: '{bill_id}/un-post')]
+    public function unPostBill (): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->unPostBill();
+
+        return $this->single($model);
+    }
+
+
 
 }
