@@ -58,4 +58,46 @@ class BonusKaryawanController extends ApiCrudController
         $bonusData = $bonus->toArray();
         return response()->json(['message' => 'Bonus Karyawan berhasil dibuat', 'data' => $bonusData], 201);
     }
+
+    public function updateStatusBonus(Request $request, $id)
+    {
+        $this->validate($request, [
+            'status' => 'required|in:DIAJUKAN,DIBATALKAN',
+        ]);
+
+        $bonus = BonusKaryawan::find($id);
+
+        if (!$bonus) {
+            return response()->json(['message' => 'Bonus Karyawan not found'], 404);
+        }
+
+        if ($bonus->status === 'BARU') {
+            $bonus->update(['status' => $request->status]);
+
+            $successMessage = ($request->status === 'DIAJUKAN')
+                ? 'Bonus Karyawan berhasil diajukan'
+                : 'Bonus Karyawan berhasil dibatalkan';
+
+            return response()->json(['status' => $request->status, 'message' => $successMessage], 200);
+        } else {
+            return response()->json(['message' => 'Status Bonus Karyawan tidak dapat diupdate'], 422);
+        }
+    }
+
+    public function deleteBonus($id)
+    {
+        $bonus = BonusKaryawan::find($id);
+
+        if (!$bonus) {
+            return response()->json(['message' => 'Bonus Karyawan not found'], 404);
+        }
+
+        if ($bonus->status === 'BARU') {
+            $bonus->delete();
+            return response()->json(['message' => 'Bonus Karyawan berhasil dihapus'], 200);
+        } else {
+            return response()->json(['message' => 'Bonus Karyawan selain statusnya BARU tidak dapat dihapus'], 404);
+        }
+
+    }
 }

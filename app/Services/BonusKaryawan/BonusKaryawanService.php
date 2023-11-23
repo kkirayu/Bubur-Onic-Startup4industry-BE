@@ -10,7 +10,7 @@ class BonusKaryawanService extends CrudService
 {
     public function createBonus(array $data)
     {
-        $data['status'] = 'NEW';
+        $data['status'] = 'BARU';
         $bonus = BonusKaryawan::create($data);
 
         return $bonus;
