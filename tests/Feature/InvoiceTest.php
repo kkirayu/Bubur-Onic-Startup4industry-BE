@@ -119,6 +119,63 @@ class InvoiceTest extends TestCase
         $response->assertStatus(200);
     }
 
+
+    public function testPostInvoice(): void
+    {
+        $faker = $this->faker;
+
+        $customer = $this->createCustomer();
+
+
+        $invoice = Invoice::create([
+            'invoice_date' => '2022-11-01',
+            'due_date' => '2022-11-30',
+            'customer_id' => $customer->id,
+            'invoice_number' => "INV-" . date('YmdHis'),
+            'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
+            "perusahaan_id" => 1,
+            "cabang_id" => 1,
+        ]);
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $response = $this->putJson('api/keuangan/invoice/' . $invoice->id . "/post");
+
+        $this->assertDatabaseHas('invoices', [
+            'id' => $invoice->id,
+            'post_status' => 'POSTED',
+        ]);
+
+        $response->assertStatus(200);
+    }
+    public function testUnPostInvoice(): void
+    {
+        $faker = $this->faker;
+
+        $customer = $this->createCustomer();
+
+
+        $invoice = Invoice::create([
+            'invoice_date' => '2022-11-01',
+            'due_date' => '2022-11-30',
+            'customer_id' => $customer->id,
+            'post_status' => 'POSTED',
+            'invoice_number' => "INV-" . date('YmdHis'),
+            'desc' => "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor",
+            "perusahaan_id" => 1,
+            "cabang_id" => 1,
+        ]);
+        $user = UserFactory::new()->create();
+        $this->actingAs($user);
+        $response = $this->putJson('api/keuangan/invoice/' . $invoice->id . "/un-post");
+
+
+        $this->assertDatabaseHas('invoices', [
+            'id' => $invoice->id,
+            'post_status' => 'DRAFT',
+        ]);
+        $response->assertStatus(200);
+    }
+
     public function testGetInvoiceByCustomerIds()
     {
         $faker = $this->faker;

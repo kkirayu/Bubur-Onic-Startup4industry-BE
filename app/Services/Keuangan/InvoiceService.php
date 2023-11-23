@@ -82,7 +82,7 @@ class InvoiceService extends CrudService
 
         $invoices = $invoices->map(function ($invoice) use ($payInvoiceRequest) {
             $payIn = collect($payInvoiceRequest->invoices)->where("invoice_id", $invoice->id)->first();
-            $rest_amount = $invoice->paid_total ?  $invoice->total -$invoice->paid_total  - $payIn['amount_paid'] : $payIn['amount_paid'];
+            $rest_amount = $invoice->paid_total ? $invoice->total - $invoice->paid_total - $payIn['amount_paid'] : $payIn['amount_paid'];
 
 
             if ($rest_amount == 0) {
@@ -90,9 +90,9 @@ class InvoiceService extends CrudService
                 $invoice->paid_total = $invoice->total;
                 $invoice->payment_status = "PAID";
             } else if ($rest_amount > 0) {
-                $invoice->paid_total = $invoice->paid_total ?  $invoice->total -$invoice->paid_total  - $payIn['amount_paid'] : $payIn['amount_paid'];
+                $invoice->paid_total = $invoice->paid_total ? $invoice->total - $invoice->paid_total - $payIn['amount_paid'] : $payIn['amount_paid'];
                 $invoice->payment_status = "PARTIALPAID";
-            } else  {
+            } else {
                 $invoice->error = true;
             }
             return $invoice;
@@ -105,6 +105,23 @@ class InvoiceService extends CrudService
         });
         return $invoices;
 
+    }
+
+    public function postInvoice()
+    {
+        $invoice = Invoice::where("id", request()->invoice_id)->first();
+
+        $invoice->post_status = "POSTED";
+        $invoice->update();
+        return $invoice;
+    }
+    public function unPostInvoice()
+    {
+        $invoice = Invoice::where("id", request()->invoice_id)->first();
+
+        $invoice->post_status = "DRAFT";
+        $invoice->update();
+        return $invoice;
     }
 
 }

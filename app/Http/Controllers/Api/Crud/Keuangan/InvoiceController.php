@@ -42,6 +42,27 @@ class InvoiceController extends ApiCrudController
         return $this->single($model);
     }
 
+
+    #[Route(method: ['POST'],  uri: '{invoice_id}/post')]
+    public function postInvoice(): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->postInvoice();
+
+        return $this->single($model);
+    }
+
+    #[Route(method: ['POST'],  uri: '{invoice_id}/un-post')]
+    public function unPostInvoice (): JsonResource
+    {
+
+        $this->guard("CREATE");
+        $model = $this->service->unPostInvoice();
+
+        return $this->single($model);
+    }
+
     #[Route(method: ['POST'])]
     public function payInvoice(PayInvoiceRequest $payInvoiceRequest): JsonResource
     {
