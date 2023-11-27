@@ -85,7 +85,7 @@ class PotonganKaryawanTest extends TestCase
 
     }
 
-    public function testPotonganKaryawanWithNoIdProdilePegawai()
+    public function testPotonganKaryawanWithNoIdProfilePegawai()
     {
         $user = UserFactory::new()->create();
         $this->actingAs($user);
