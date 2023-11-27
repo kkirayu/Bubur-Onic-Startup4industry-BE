@@ -112,6 +112,7 @@ class Journal extends CrudModel
 
         $accountSaldo = $journal->map(function ($item) {
             $sumofSaldo = collect($item)->sum(function ($item) {
+                // dd($item->toArray());
                 return $item['posisi_akun'] == "DEBIT" ? $item['jumlah'] : $item['jumlah'] * -1;
             });
             return $sumofSaldo;

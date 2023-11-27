@@ -17,7 +17,7 @@ class LaporanPerubahanModalControllerTest extends TestCase
     {
         $user = UserFactory::new()->create();
         $this->actingAs($user);
-        $response = $this->getJson("/api/laporan/laporan-perubahan-modal?company=1&start=01/01/2022&end=30/11/2023");
+        $response = $this->getJson("/api/laporan/laporan-perubahan-modal?company=1&start=01/01/2021&end=30/11/2023");
 
         dump(json_encode($response->json() ,  JSON_PRETTY_PRINT));
         $response->assertStatus(200);

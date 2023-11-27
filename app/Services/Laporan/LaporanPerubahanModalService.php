@@ -62,12 +62,13 @@ class LaporanPerubahanModalService
     {
         $kategoriModalSkarang = KategoriAkun::whereIn("prefix_akun", $modalSkarang)->get();
         $akunModalSkarang = Akun::whereIn("kategori_akun_id", $kategoriModalSkarang->pluck("id"))->get();
+//        dd($akunModalSkarang->pluck("id", "kode_akun")->toArray());
         $saldoAwal = $journalInstance->getSaldoFromAccountsWithRange($akunModalSkarang->pluck("id")->toArray(), $start, $end, $perusahaan_id);
 
         $akunModalAwal = $akunModalSkarang->map(function ($item) use ($saldoAwal) {
             $item->saldo = 0;
             if ($saldoAwal->has($item->kode_akun)) {
-                $item->saldo_awal = $saldoAwal[$item->kode_akun];
+                $item->saldo = $saldoAwal[$item->kode_akun];
             }
             return $item->toArray();
         });
