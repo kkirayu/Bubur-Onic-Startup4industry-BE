@@ -149,19 +149,19 @@ class SyncJournal extends Command
 
         $akunList = Akun::whereIn("kode_akun", $akun)->get()->pluck("id", "kode_akun");
 
-        $akunLama = DB::connection("onic_db")->select("select da.ak_id ,  CONCAT(dhs.hs_nomor, dhd.hd_nomor,  da.ak_nomor)  as nomor_akun,  da.ak_nama  from  dk_akun da  join dk_hierarki_dua dhd on dhd.hd_id  = da.ak_kelompok
-        join dk_hierarki_satu dhs on dhd.hd_id  = da.ak_kelompok   where ak_perusahaan  =  1");
+        $akunLama = DB::connection("onic_db")->select("select da.ak_id ,  CONCAT(dhs.hs_nomor, dhd.hd_nomor,  da.ak_nomor)  as nomor_akun,  da.ak_nama  from  dk_akun da
+join dk_hierarki_dua dhd on dhd.hd_id  = da.ak_kelompok
+join dk_hierarki_satu dhs on dhd.hd_level_1  = dhs.hs_id   where da.ak_perusahaan  =  1");
 
 
-        $akunLama = collect($akunLama)->map(function ($item) {
-            $item->nomor_akun = str_replace(".", "", $item->nomor_akun);
-            return $item;
-        })->pluck("nomor_akun", "ak_id");
+
+        $akunLama = collect($akunLama)->pluck("nomor_akun", "ak_id")->toArray();
 
 
         $bukuBesar = DB::connection("onic_db")->select("SELECT x.* FROM buburonic.dk_buku_besar x
         WHERE bb_company_id = 1
         ORDER BY x.bb_id DESC");
+
 
 
         $ids = (collect($bukuBesar)->pluck("bb_id"));
@@ -176,8 +176,7 @@ class SyncJournal extends Command
             $akuns = collect($detailBukuBesar)->where("bbdt_buku_besar", $bukuBesarData->bb_id)->map(function ($item) use ($akunLama, $akunList, $map_akun) {
 
                 $item = (object)$item;
-                $akunBaru = collect($map_akun)->where("akun_lama",)->first();
-
+                $akunBaru = collect($map_akun)->where("akun_lama", $akunLama[$item->bbdt_coa])->first();
 
                 $item = [
                     "id" => $akunBaru ? $akunList[$akunBaru['akun_baru']] : null,
