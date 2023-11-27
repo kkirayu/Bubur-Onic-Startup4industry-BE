@@ -154,14 +154,12 @@ join dk_hierarki_dua dhd on dhd.hd_id  = da.ak_kelompok
 join dk_hierarki_satu dhs on dhd.hd_level_1  = dhs.hs_id   where da.ak_perusahaan  =  1");
 
 
-
         $akunLama = collect($akunLama)->pluck("nomor_akun", "ak_id")->toArray();
 
 
         $bukuBesar = DB::connection("onic_db")->select("SELECT x.* FROM buburonic.dk_buku_besar x
         WHERE bb_company_id = 1
         ORDER BY x.bb_id DESC");
-
 
 
         $ids = (collect($bukuBesar)->pluck("bb_id"));
@@ -177,9 +175,14 @@ join dk_hierarki_satu dhs on dhd.hd_level_1  = dhs.hs_id   where da.ak_perusahaa
 
                 $item = (object)$item;
                 $akunBaru = collect($map_akun)->where("akun_lama", $akunLama[$item->bbdt_coa])->first();
+                try {
 
+                    $id = $akunBaru ? $akunList[$akunBaru['akun_baru']] : null;
+                } catch (\Exception $e) {
+                    $id = null;
+                }
                 $item = [
-                    "id" => $akunBaru ? $akunList[$akunBaru['akun_baru']] : null,
+                    "id" => $id,
                     "credit" => $item->bbdt_dk == "K" ? $item->bbdt_value : 0,
                     "debit" => $item->bbdt_dk == "D" ? $item->bbdt_value : 0,
                 ];
@@ -196,8 +199,8 @@ join dk_hierarki_satu dhs on dhd.hd_level_1  = dhs.hs_id   where da.ak_perusahaa
             ];
             $this->info("Inserting " . $data['judul'] . " Journals");
 
-            if(!$this->saveJournal($data)) {
-                    $this->error("Failed Inserting " . $data['judul'] . " Journals");
+            if (!$this->saveJournal($data)) {
+                $this->error("Failed Inserting " . $data['judul'] . " Journals");
             }
         });
 
