@@ -62,7 +62,7 @@ class LaporanPerubahanModalService
     {
         $kategoriModalSkarang = KategoriAkun::whereIn("prefix_akun", $modalSkarang)->get();
         $akunModalSkarang = Akun::whereIn("kategori_akun_id", $kategoriModalSkarang->pluck("id"))->get();
-        $saldoAwal = $journalInstance->getSaldoFromAccountsWithRange($akunModalSkarang->pluck("kode_akun")->toArray(), $start, $end, $perusahaan_id);
+        $saldoAwal = $journalInstance->getSaldoFromAccountsWithRange($akunModalSkarang->pluck("id")->toArray(), $start, $end, $perusahaan_id);
 
         $akunModalAwal = $akunModalSkarang->map(function ($item) use ($saldoAwal) {
             $item->saldo = 0;
